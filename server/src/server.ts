@@ -1,16 +1,17 @@
 import 'reflect-metadata';
-import dotenv from 'dotenv';
+import { createServer, Server } from 'http';
 import { logger } from './utils/logger';
-import App from './app';
+import app from './app';
+import { env } from './config/env';
 
-// Load environment variables from .env file
-dotenv.config();
+// Create HTTP server
+const server: Server = createServer(app);
 
-const PORT = process.env.PORT || 3000;
-
-// Create and start the server
-const server = new App(Number(PORT));
-server.listen();
+// Start the server
+server.listen(env.PORT, () => {
+  logger.info(`Server is running on port ${env.PORT}`);
+  logger.info(`API Documentation available at http://localhost:${env.PORT}/api-docs`);
+});
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err: Error) => {

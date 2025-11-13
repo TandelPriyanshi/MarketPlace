@@ -1,79 +1,43 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+// In src/app.ts
+import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { connectDB } from './config/database';
-import { errorHandler } from './middleware/error.middleware';
-import { notFoundHandler } from './middleware/notFound.middleware';
-import { logger } from './utils/logger';
+import { errorHandler, notFoundHandler } from './middleware/error.middleware';
+import authRoutes from './routes/auth.routes';
+import sellerRoutes from './routes/seller.routes';
+import deliveryRoutes from './routes/delivery.routes';
+import { setupSwagger } from './config/swagger';
+import { connectDB } from './db';
+import { config } from './config/config';
 
-class App {
-  public app: Application;
-  public port: number;
+const app = express();
 
-  constructor(port: number) {
-    this.app = express();
-    this.port = port;
+// Middleware
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
-    this.initializeDatabase();
-    this.initializeMiddlewares();
-    this.initializeRoutes();
-    this.initializeErrorHandling();
-  }
+// Serve uploaded files
+app.use('/uploads', express.static('uploads'));
 
-  private initializeDatabase(): void {
-    connectDB();
-  }
+// API Routes
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/seller', sellerRoutes);
+app.use('/api/v1/delivery', deliveryRoutes);
 
-  private initializeMiddlewares(): void {
-    // Security middleware
-    this.app.use(helmet());
-    
-    // CORS configuration
-    this.app.use(
-      cors({
-        origin: process.env.CORS_ORIGIN || '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true,
-      })
-    );
-
-    // JSON body parser
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
-
-    // Request logging
-    if (process.env.NODE_ENV === 'development') {
-      this.app.use(morgan('dev'));
-    }
-
-    // Health check endpoint
-    this.app.get('/health', (req: Request, res: Response) => {
-      res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
-    });
-  }
-
-  private initializeRoutes(): void {
-    // API routes will be added here
-    this.app.get('/api/v1', (req: Request, res: Response) => {
-      res.json({ message: 'Welcome to Marketplace API' });
-    });
-  }
-
-  private initializeErrorHandling(): void {
-    // Handle 404
-    this.app.use(notFoundHandler);
-    
-    // Handle errors
-    this.app.use(errorHandler);
-  }
-
-  public listen(): void {
-    this.app.listen(this.port, () => {
-      logger.info(`Server is running on port ${this.port}`);
-    });
-  }
+// Swagger Documentation
+if (config.isDevelopment) {
+  setupSwagger(app);
 }
 
-export default App;
+// Error handling
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+// Database connection
+connectDB();
+
+export default app;

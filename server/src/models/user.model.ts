@@ -3,7 +3,8 @@ import { Table, Column, Model, DataType, Default, IsEmail, Unique } from 'sequel
 export enum UserRole {
   ADMIN = 'admin',
   SELLER = 'seller',
-  BUYER = 'buyer'
+  BUYER = 'buyer',
+  DELIVERY_PERSON = 'delivery_person'
 }
 
 @Table({
@@ -17,7 +18,7 @@ export class User extends Model {
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: string;
+  declare id: string;
 
   @IsEmail
   @Unique
@@ -25,39 +26,39 @@ export class User extends Model {
     type: DataType.STRING,
     allowNull: false,
   })
-  email: string;
+  declare email: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  passwordHash: string;
+  declare passwordHash: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  name: string;
+  declare name: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(UserRole)),
     allowNull: false,
     defaultValue: UserRole.BUYER,
   })
-  role: UserRole;
+  declare role: UserRole;
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  phone: string;
+  declare phone: string;
 
   @Default(true)
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
   })
-  isActive: boolean;
+  declare isActive: boolean;
 
   // Timestamps
   @Column({
@@ -65,12 +66,12 @@ export class User extends Model {
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  createdAt: Date;
+  declare createdAt: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  updatedAt: Date;
+  declare updatedAt: Date;
 }

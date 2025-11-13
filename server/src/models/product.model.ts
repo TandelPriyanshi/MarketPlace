@@ -19,76 +19,80 @@ export class Product extends Model {
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  sellerId: string;
+  declare sellerId: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  name: string;
+  declare name: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  description: string;
+  declare description?: string;
 
   @Column({
     type: DataType.DECIMAL(10, 2),
     allowNull: false,
+    validate: {
+      min: 0.01
+    }
   })
-  price: number;
+  declare price: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
     defaultValue: 0,
+    validate: {
+      min: 0
+    }
   })
-  stock: number;
+  declare stock: number;
 
   @Column({
-    type: DataType.ARRAY(DataType.STRING),
+    type: DataType.JSON,
     allowNull: true,
-    defaultValue: [],
+    defaultValue: []
   })
-  images: string[];
+  declare images?: string[];
 
   @Column({
-    type: DataType.ENUM(...Object.values(ProductStatus)),
+    type: DataType.ENUM(...Object.values(ProductStatus) as [string, ...string[]]),
     defaultValue: ProductStatus.DRAFT,
     allowNull: false,
   })
-  status: ProductStatus;
+  declare status: ProductStatus;
 
   @Column({
-    type: DataType.JSONB,
+    type: DataType.JSON,
     allowNull: true,
-    defaultValue: {},
   })
-  metadata: Record<string, any>;
+  declare metadata?: Record<string, any>;
 
-  @BelongsTo(() => User)
-  seller: User;
-
-  // Timestamps
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-  })
-  createdAt: Date;
+  @BelongsTo(() => User, 'sellerId')
+  declare seller?: User;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  updatedAt: Date;
+  declare createdAt?: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+  })
+  declare updatedAt?: Date;
 }

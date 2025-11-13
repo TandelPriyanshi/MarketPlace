@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../utils/logger';
 
+export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
+  const error = new Error(`Not Found - ${req.originalUrl}`) as any;
+  error.status = 404;
+  next(error);
+};
+
 interface HttpException extends Error {
   status?: number;
   statusCode?: number;

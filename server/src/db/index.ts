@@ -1,24 +1,28 @@
+// src/db/index.ts
 import { Sequelize } from 'sequelize-typescript';
 import { User } from '../models/user.model';
+import { Product } from '../models/product.model';
+import { Order, OrderItemModel as OrderItem } from '../models/order.model';
+import { Attachment } from '../models/attachment.model';
+import { config } from '../config/config';
 
 const sequelize = new Sequelize({
   dialect: 'mysql',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306', 10),
-  username: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'marketplace',
-  models: [User],
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
+  host: config.db.host,
+  port: config.db.port,
+  username: config.db.username,
+  password: config.db.password,
+  database: config.db.database,
+  models: [User, Product, Order, OrderItem, Attachment],
+  logging: config.isProduction ? false : console.log,
 });
 
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log('Database connection has been established successfully.');
-    
-    // Sync all models
-    if (process.env.NODE_ENV !== 'production') {
+
+    if (!config.isProduction) {
       await sequelize.sync({ alter: true });
       console.log('Database synchronized');
     }
@@ -29,6 +33,3 @@ const connectDB = async () => {
 };
 
 export { sequelize, connectDB };
-
-// Export models
-export * from '../models/user.model';

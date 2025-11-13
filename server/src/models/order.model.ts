@@ -2,13 +2,14 @@ import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany } from '
 import { User } from './user.model';
 import { Product } from './product.model';
 
-export enum OrderStatus {
+export enum DeliveryStatus {
   PENDING = 'pending',
-  PROCESSING = 'processing',
-  SHIPPED = 'shipped',
+  ASSIGNED = 'assigned',
+  PICKED_UP = 'picked_up',
+  OUT_FOR_DELIVERY = 'out_for_delivery',
   DELIVERED = 'delivered',
-  CANCELLED = 'cancelled',
-  REFUNDED = 'refunded'
+  RETURNED = 'returned',
+  CANCELLED = 'cancelled'
 }
 
 export enum PaymentStatus {
@@ -17,6 +18,17 @@ export enum PaymentStatus {
   FAILED = 'failed',
   REFUNDED = 'refunded',
   PARTIALLY_REFUNDED = 'partially_refunded'
+}
+
+export enum OrderStatus {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  PROCESSING = 'processing',
+  SHIPPED = 'shipped',
+  DELIVERED = 'delivered',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+  REFUNDED = 'refunded'
 }
 
 @Table({
@@ -30,66 +42,98 @@ export class Order extends Model {
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  userId: string;
+  declare userId: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
     unique: true,
   })
-  orderNumber: string;
+  declare orderNumber: string;
 
   @Column({
     type: DataType.DECIMAL(10, 2),
     allowNull: false,
+    validate: {
+      min: 0.01
+    }
   })
-  totalAmount: number;
+  declare totalAmount: number;
 
   @Column({
-    type: DataType.ENUM(...Object.values(OrderStatus)),
-    defaultValue: OrderStatus.PENDING,
+    type: DataType.ENUM(...Object.values(DeliveryStatus) as [string, ...string[]]),
+    defaultValue: DeliveryStatus.PENDING,
     allowNull: false,
+    validate: {
+      isIn: [Object.values(DeliveryStatus)]
+    }
   })
-  status: OrderStatus;
+  declare deliveryStatus: DeliveryStatus;
 
   @Column({
-    type: DataType.ENUM(...Object.values(PaymentStatus)),
+    type: DataType.ENUM(...Object.values(PaymentStatus) as [string, ...string[]]),
     defaultValue: PaymentStatus.PENDING,
     allowNull: false,
+    validate: {
+      isIn: [Object.values(PaymentStatus)]
+    }
   })
-  paymentStatus: PaymentStatus;
+  declare paymentStatus: PaymentStatus;
+
+  @Column({
+    type: DataType.ENUM(...Object.values(OrderStatus) as [string, ...string[]]),
+    defaultValue: OrderStatus.PENDING,
+    allowNull: false,
+    validate: {
+      isIn: [Object.values(OrderStatus)]
+    }
+  })
+  declare status: OrderStatus;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  declare isCancelled: boolean;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  shippingAddress: string;
+  shippingAddress?: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  billingAddress: string;
+  billingAddress?: string;
 
   @Column({
-    type: DataType.JSONB,
+    type: DataType.JSON,
     allowNull: true,
-    defaultValue: {},
+    defaultValue: null,
+    validate: {
+      isValidMetadata(value: unknown) {
+        if (value !== null && (typeof value !== 'object' || Array.isArray(value))) {
+          throw new Error('Metadata must be an object');
+        }
+      }
+    }
   })
-  metadata: Record<string, any>;
+  declare metadata: Record<string, unknown> | null;
 
   @BelongsTo(() => User)
-  user: User;
+  user?: User;
 
   @HasMany(() => OrderItem)
-  items: OrderItem[];
+  items?: OrderItem[];
 
   // Timestamps
   @Column({
@@ -97,89 +141,97 @@ export class Order extends Model {
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  createdAt: Date;
+  createdAt?: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
-@Table({
-  tableName: 'order_items',
-  timestamps: true,
-  underscored: true
-})
+// Explicitly export OrderItem
+export { OrderItem as OrderItemModel };
+
+@Table({ tableName: 'order_items', timestamps: true, underscored: true })
 export class OrderItem extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => Order)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  orderId: string;
+  orderId?: string;
 
   @ForeignKey(() => Product)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  productId: string;
+  productId?: string;
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  sellerId: string;
+  sellerId?: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
+    validate: {
+      min: 1
+    }
   })
-  quantity: number;
+  declare quantity: number;
 
   @Column({
     type: DataType.DECIMAL(10, 2),
     allowNull: false,
+    validate: {
+      min: 0.01
+    }
   })
-  price: number;
+  declare price: number;
 
   @Column({
-    type: DataType.ENUM(...Object.values(OrderStatus)),
+    type: DataType.ENUM(...Object.values(OrderStatus) as [string, ...string[]]),
     defaultValue: OrderStatus.PENDING,
     allowNull: false,
+    validate: {
+      isIn: [Object.values(OrderStatus)]
+    }
   })
-  status: OrderStatus;
+  declare status: OrderStatus;
 
   @Column({
     type: DataType.BOOLEAN,
     defaultValue: false,
   })
-  isCancelled: boolean;
+  declare isCancelled: boolean;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  cancellationReason: string;
+  cancellationReason?: string;
 
   @BelongsTo(() => Order)
-  order: Order;
+  order?: Order;
 
   @BelongsTo(() => Product)
-  product: Product;
+  product?: Product;
 
   @BelongsTo(() => User, 'sellerId')
-  seller: User;
+  seller?: User;
 
   // Timestamps
   @Column({
@@ -187,12 +239,12 @@ export class OrderItem extends Model {
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  createdAt: Date;
+  createdAt?: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  updatedAt: Date;
+  updatedAt?: Date;
 }

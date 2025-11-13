@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { User, UserRole } from '../models/user.model';
 import { logger } from '../utils/logger';
+import { env } from '../config/env';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_here';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
+const { JWT_SECRET, JWT_EXPIRES_IN } = env;
 
 class AuthService {
   async registerUser(email: string, password: string, name: string, phone: string, role: UserRole = UserRole.BUYER) {
@@ -74,28 +74,44 @@ class AuthService {
     }
   }
 
-  private generateToken(user: User) {
+  private generateToken(user: User): string {
     const payload = {
       id: user.id,
       email: user.email,
       role: user.role
     };
 
-    return jwt.sign(payload, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN
-    });
+    return jwt.sign(
+      payload,
+      JWT_SECRET,
+      { 
+        expiresIn: JWT_EXPIRES_IN 
+      } as jwt.SignOptions
+    );
   }
 
   private getUserWithoutPassword(user: User) {
     const userJson = user.toJSON();
-    delete userJson.passwordHash;
+    delete (userJson as any).passwordHash;
     return userJson;
   }
 
   async validateToken(token: string) {
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
-      const user = await User.findByPk(decoded.id);
+      // First, verify the token and get the payload
+      const payload = jwt.verify(token, JWT_SECRET);
+      
+      // Check if the payload has the expected shape
+      if (typeof payload === 'string' || !('id' in payload)) {
+        throw new Error('Invalid token payload');
+      }
+
+      const userId = (payload as jwt.JwtPayload).id;
+      if (!userId) {
+        throw new Error('User ID not found in token');
+      }
+
+      const user = await User.findByPk(userId);
       
       if (!user || !user.isActive) {
         throw new Error('User not found or inactive');
@@ -109,4 +125,6 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+// Export a singleton instance
+export const authService = new AuthService();
+export default authService;

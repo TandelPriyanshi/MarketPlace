@@ -1,4 +1,4 @@
-import { Op, Transaction } from 'sequelize';
+import { Op, QueryTypes, Transaction } from 'sequelize';
 import { Product, ProductStatus } from '../models/product.model';
 import { Order, OrderItem, OrderStatus, PaymentStatus } from '../models/order.model';
 import { User } from '../models/user.model';
@@ -180,7 +180,7 @@ class SellerService {
 
       const allItemsHaveSameStatus = orderItems.every(item => item.status === status);
       
-      if (allItemsHaveSameStatus) {
+      if (allItemsHaveSameStatus && orderItem.order) {
         await orderItem.order.update({ status }, { transaction });
       }
 
@@ -201,18 +201,34 @@ class SellerService {
   // Dashboard
   async getSellerDashboard(sellerId: string) {
     try {
-      const [totalProducts, totalOrders, totalRevenue] = await Promise.all([
+      const [totalProducts, totalOrders, totalRevenueResult] = await Promise.all([
         Product.count({ where: { sellerId } }),
         OrderItem.count({ where: { sellerId } }),
-        OrderItem.sum('price', {
-          where: { 
-            sellerId,
-            status: OrderStatus.DELIVERED,
-            '$order.paymentStatus$': PaymentStatus.PAID,
-          },
-          include: [{ model: Order, as: 'order' }],
-        }) || 0,
+        // Get total revenue using a raw query for better type safety
+        (async () => {
+          const result = await sequelize.query<{ total: string }>(
+            `SELECT COALESCE(SUM(oi.price), 0) as total 
+             FROM order_items oi 
+             INNER JOIN orders o ON oi.orderId = o.id 
+             WHERE oi.sellerId = :sellerId 
+             AND oi.status = :status 
+             AND o.paymentStatus = :paymentStatus`, 
+            {
+              replacements: { 
+                sellerId, 
+                status: OrderStatus.DELIVERED,
+                paymentStatus: PaymentStatus.PAID 
+              },
+              type: QueryTypes.SELECT
+            }
+          );
+          return { total: result[0]?.total ? parseFloat(result[0].total) : 0 };
+        })()
       ]);
+      
+      const totalRevenue = typeof totalRevenueResult === 'object' && totalRevenueResult !== null 
+        ? (totalRevenueResult as { total: number }).total 
+        : 0;
 
       const recentOrders = await OrderItem.findAll({
         where: { sellerId },
@@ -253,11 +269,13 @@ class SellerService {
   private validateStatusTransition(currentStatus: OrderStatus, newStatus: OrderStatus) {
     const allowedTransitions: Record<OrderStatus, OrderStatus[]> = {
       [OrderStatus.PENDING]: [OrderStatus.PROCESSING, OrderStatus.CANCELLED],
+      [OrderStatus.CONFIRMED]: [OrderStatus.PROCESSING, OrderStatus.CANCELLED],
       [OrderStatus.PROCESSING]: [OrderStatus.SHIPPED, OrderStatus.CANCELLED],
       [OrderStatus.SHIPPED]: [OrderStatus.DELIVERED, OrderStatus.CANCELLED],
-      [OrderStatus.DELIVERED]: [],
+      [OrderStatus.DELIVERED]: [OrderStatus.COMPLETED],
+      [OrderStatus.COMPLETED]: [],
       [OrderStatus.CANCELLED]: [],
-      [OrderStatus.REFUNDED]: [],
+      [OrderStatus.REFUNDED]: []
     };
 
     if (!allowedTransitions[currentStatus]?.includes(newStatus)) {
