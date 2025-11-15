@@ -29,7 +29,7 @@ __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => order_model_1.Order),
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.UUID,
-        allowNull: false,
+        allowNull: true,
     }),
     __metadata("design:type", String)
 ], Attachment.prototype, "orderId", void 0);
@@ -64,11 +64,40 @@ __decorate([
 ], Attachment.prototype, "mimeType", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.ENUM('signature', 'delivery_proof', 'return_proof'),
+        type: sequelize_typescript_1.DataType.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    }),
+    __metadata("design:type", Number)
+], Attachment.prototype, "size", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.ENUM('signature', 'delivery_proof', 'return_proof', 'complaint', 'order', 'profile'),
         allowNull: false,
     }),
     __metadata("design:type", String)
 ], Attachment.prototype, "type", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.UUID,
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Attachment.prototype, "referenceId", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.UUID,
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Attachment.prototype, "userId", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Attachment.prototype, "originalName", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.TEXT,
@@ -76,6 +105,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Attachment.prototype, "notes", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.JSON,
+        allowNull: true,
+    }),
+    __metadata("design:type", Object)
+], Attachment.prototype, "metadata", void 0);
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => order_model_1.Order),
     __metadata("design:type", order_model_1.Order)

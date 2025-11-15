@@ -1,0 +1,24 @@
+2025-11-14 05:14:29:1429 [31merror[39m: [31m[GET] /favicon.ico >> StatusCode:: 404, Message:: Not Found - /favicon.ico[39m
+2025-11-14 05:14:29:1429 [31merror[39m: [31mError: Not Found - /favicon.ico[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at logger (D:\React\Project\marketplace\server\node_modules\morgan\index.js:144:5)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+2025-11-14 05:16:18:1618 [31merror[39m: [31m[GET] /docs >> StatusCode:: 404, Message:: Not Found - /docs[39m
+2025-11-14 05:16:18:1618 [31merror[39m: [31mError: Not Found - /docs[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at logger (D:\React\Project\marketplace\server\node_modules\morgan\index.js:144:5)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m

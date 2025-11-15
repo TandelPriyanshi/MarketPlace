@@ -1,111 +1,170 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SalesmanController = void 0;
-const common_1 = require("@nestjs/common");
-const swagger_1 = require("@nestjs/swagger");
-const passport_1 = require("@nestjs/passport");
-const salesman_service_1 = require("../services/salesman.service");
-const salesman_dto_1 = require("../dto/salesman.dto");
-let SalesmanController = class SalesmanController {
-    constructor(salesmanService) {
-        this.salesmanService = salesmanService;
+exports.salesmanController = exports.SalesmanController = void 0;
+const logger_1 = require("../utils/logger");
+const beat_model_1 = require("../models/beat.model");
+const visit_model_1 = require("../models/visit.model");
+class SalesmanController {
+    async createBeat(req, res, next) {
+        try {
+            const salesmanId = req.user.id;
+            const beat = await beat_model_1.Beat.create({
+                ...req.body,
+                salesmanId,
+            });
+            res.status(201).json({
+                success: true,
+                data: beat,
+                message: 'Beat created successfully',
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error in createBeat controller:', error);
+            next(error);
+        }
     }
-    async getBeats(req) {
-        return this.salesmanService.getSalesmanBeats(req.user.id);
+    async getBeats(req, res, next) {
+        try {
+            const salesmanId = req.user.id;
+            const beats = await beat_model_1.Beat.findAll({
+                where: { salesmanId },
+                order: [['createdAt', 'DESC']],
+            });
+            res.json({
+                success: true,
+                data: beats,
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error in getBeats controller:', error);
+            next(error);
+        }
     }
-    async createBeat(req, createBeatDto) {
-        return this.salesmanService.createBeat(req.user.id, createBeatDto);
+    async getBeatById(req, res, next) {
+        try {
+            const salesmanId = req.user.id;
+            const { id } = req.params;
+            const beat = await beat_model_1.Beat.findOne({
+                where: { id, salesmanId },
+            });
+            if (!beat) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Beat not found',
+                });
+            }
+            res.json({
+                success: true,
+                data: beat,
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error in getBeatById controller:', error);
+            next(error);
+        }
     }
-    async logVisit(req, createVisitDto) {
-        return this.salesmanService.logVisit(req.user.id, createVisitDto);
+    async createVisit(req, res, next) {
+        try {
+            const salesmanId = req.user.id;
+            const visit = await visit_model_1.Visit.create({
+                ...req.body,
+                salesmanId,
+                status: 'scheduled',
+            });
+            res.status(201).json({
+                success: true,
+                data: visit,
+                message: 'Visit created successfully',
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error in createVisit controller:', error);
+            next(error);
+        }
     }
-    async updateVisit(req, visitId, updateVisitDto) {
-        return this.salesmanService.updateVisit(visitId, req.user.id, updateVisitDto);
+    async getVisits(req, res, next) {
+        try {
+            const salesmanId = req.user.id;
+            const { status, storeId } = req.query;
+            const where = { salesmanId };
+            if (status)
+                where.status = status;
+            if (storeId)
+                where.storeId = storeId;
+            const visits = await visit_model_1.Visit.findAll({
+                where,
+                order: [['scheduledAt', 'DESC']],
+            });
+            res.json({
+                success: true,
+                data: visits,
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error in getVisits controller:', error);
+            next(error);
+        }
     }
-    async recordAttendance(req, attendanceData) {
-        return this.salesmanService.recordAttendance(req.user.id, attendanceData);
+    async getVisitById(req, res, next) {
+        try {
+            const salesmanId = req.user.id;
+            const { id } = req.params;
+            const visit = await visit_model_1.Visit.findOne({
+                where: { id, salesmanId },
+            });
+            if (!visit) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Visit not found',
+                });
+            }
+            res.json({
+                success: true,
+                data: visit,
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error in getVisitById controller:', error);
+            next(error);
+        }
     }
-    async getPerformance(req, query) {
-        return this.salesmanService.getPerformanceMetrics(req.user.id, query);
+    async updateVisitStatus(req, res, next) {
+        try {
+            const salesmanId = req.user.id;
+            const { id } = req.params;
+            const { status, checkIn, checkOut } = req.body;
+            const visit = await visit_model_1.Visit.findOne({
+                where: { id, salesmanId },
+            });
+            if (!visit) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Visit not found',
+                });
+            }
+            const updateData = { status };
+            if (status === 'in_progress' && visit.status === 'scheduled') {
+                updateData.startedAt = new Date();
+                if (checkIn)
+                    updateData.checkIn = checkIn;
+            }
+            if (status === 'completed' && visit.status !== 'completed') {
+                updateData.completedAt = new Date();
+                if (checkOut)
+                    updateData.checkOut = checkOut;
+            }
+            await visit.update(updateData);
+            res.json({
+                success: true,
+                data: visit,
+                message: 'Visit status updated successfully',
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error in updateVisitStatus controller:', error);
+            next(error);
+        }
     }
-};
+}
 exports.SalesmanController = SalesmanController;
-__decorate([
-    (0, common_1.Get)('beats'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get all beats for the logged-in salesman' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns all beats for the salesman' }),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], SalesmanController.prototype, "getBeats", null);
-__decorate([
-    (0, common_1.Post)('beats'),
-    (0, swagger_1.ApiOperation)({ summary: 'Create a new beat' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'Creates a new beat' }),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, salesman_dto_1.CreateBeatDto]),
-    __metadata("design:returntype", Promise)
-], SalesmanController.prototype, "createBeat", null);
-__decorate([
-    (0, common_1.Post)('visits'),
-    (0, swagger_1.ApiOperation)({ summary: 'Log a new store visit' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'Logs a new store visit' }),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, salesman_dto_1.CreateVisitDto]),
-    __metadata("design:returntype", Promise)
-], SalesmanController.prototype, "logVisit", null);
-__decorate([
-    (0, common_1.Put)('visits/:id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Update a visit' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Updates a visit' }),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)('id')),
-    __param(2, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, salesman_dto_1.UpdateVisitDto]),
-    __metadata("design:returntype", Promise)
-], SalesmanController.prototype, "updateVisit", null);
-__decorate([
-    (0, common_1.Post)('attendance'),
-    (0, swagger_1.ApiOperation)({ summary: 'Record salesman attendance' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'Records salesman attendance' }),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, salesman_dto_1.RecordAttendanceDto]),
-    __metadata("design:returntype", Promise)
-], SalesmanController.prototype, "recordAttendance", null);
-__decorate([
-    (0, common_1.Get)('performance'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get salesman performance metrics' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns performance metrics' }),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, salesman_dto_1.PerformanceQueryDto]),
-    __metadata("design:returntype", Promise)
-], SalesmanController.prototype, "getPerformance", null);
-exports.SalesmanController = SalesmanController = __decorate([
-    (0, swagger_1.ApiTags)('salesman'),
-    (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    (0, common_1.Controller)('salesman'),
-    __metadata("design:paramtypes", [salesman_service_1.SalesmanService])
-], SalesmanController);
+exports.salesmanController = new SalesmanController();

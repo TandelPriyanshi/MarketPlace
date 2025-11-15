@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
-import { User } from './user.model';
+import { Seller } from './seller.model';
 
 export enum ProductStatus {
   DRAFT = 'draft',
@@ -21,10 +21,11 @@ export class Product extends Model {
   })
   declare id: string;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => Seller)
   @Column({
     type: DataType.UUID,
     allowNull: false,
+    field: 'seller_id'
   })
   declare sellerId: string;
 
@@ -33,6 +34,14 @@ export class Product extends Model {
     allowNull: false,
   })
   declare name: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    unique: true,
+    comment: 'Stock Keeping Unit - unique identifier for the product'
+  })
+  declare sku?: string;
 
   @Column({
     type: DataType.TEXT,
@@ -79,8 +88,8 @@ export class Product extends Model {
   })
   declare metadata?: Record<string, any>;
 
-  @BelongsTo(() => User, 'sellerId')
-  declare seller?: User;
+  @BelongsTo(() => Seller, 'sellerId')
+  declare seller?: Seller;
 
   @Column({
     type: DataType.DATE,

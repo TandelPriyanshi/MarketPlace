@@ -45,7 +45,7 @@ const upload = multer({
 
 // Apply authentication middleware to all customer routes
 router.use(authenticate);
-router.use(authorize([UserRole.BUYER]));
+router.use(authorize([UserRole.CUSTOMER]));
 
 // Seller routes
 router.get('/sellers', getSellersValidation, validateRequest, customerController.getSellers);
@@ -70,4 +70,4 @@ router.get(
   customerController.getComplaints
 );
 
-export { router as customerRoutes };
+export default router;

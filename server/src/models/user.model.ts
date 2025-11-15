@@ -1,10 +1,12 @@
-import { Table, Column, Model, DataType, Default, IsEmail, Unique } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, Default, IsEmail, Unique, HasMany } from 'sequelize-typescript';
+import { Product } from './product.model';
 
 export enum UserRole {
   ADMIN = 'admin',
   SELLER = 'seller',
-  BUYER = 'buyer',
-  DELIVERY_PERSON = 'delivery_person'
+  CUSTOMER = 'customer',
+  DELIVERY_PERSON = 'delivery_person',
+  SALESMAN = 'salesman'
 }
 
 @Table({
@@ -43,7 +45,7 @@ export class User extends Model {
   @Column({
     type: DataType.ENUM(...Object.values(UserRole)),
     allowNull: false,
-    defaultValue: UserRole.BUYER,
+    defaultValue: UserRole.CUSTOMER,
   })
   declare role: UserRole;
 
@@ -60,18 +62,7 @@ export class User extends Model {
   })
   declare isActive: boolean;
 
-  // Timestamps
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-  })
-  declare createdAt: Date;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-  })
-  declare updatedAt: Date;
+  // Associations
+  @HasMany(() => Product, 'sellerId')
+  declare products?: Product[];
 }

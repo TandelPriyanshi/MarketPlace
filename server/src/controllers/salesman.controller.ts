@@ -1,80 +1,184 @@
-import { Controller, Get, Post, Body, Param, Put, UseGuards, Query, Req } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import { SalesmanService } from '../services/salesman.service';
-import { CreateVisitDto, UpdateVisitDto, RecordAttendanceDto, PerformanceQueryDto, CreateBeatDto } from '../dto/salesman.dto';
+import { Request, Response, NextFunction } from 'express';
+import salesmanService from '../services/salesman.service';
+import { logger } from '../utils/logger';
+import { Beat } from '../models/beat.model';
+import { Visit } from '../models/visit.model';
+import { sequelize } from '../db';
+import { Op } from 'sequelize';
 
-// Extend the Express Request type to include the user property
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-    // Add other user properties as needed
-  };
-}
-
-@ApiTags('salesman')
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
-@Controller('salesman')
 export class SalesmanController {
-  constructor(private readonly salesmanService: SalesmanService) {}
+  async createBeat(req: Request, res: Response, next: NextFunction) {
+    try {
+      const salesmanId = req.user!.id;
+      const beat = await Beat.create({
+        ...req.body,
+        salesmanId,
+      });
 
-  @Get('beats')
-  @ApiOperation({ summary: 'Get all beats for the logged-in salesman' })
-  @ApiResponse({ status: 200, description: 'Returns all beats for the salesman' })
-  async getBeats(@Req() req: AuthenticatedRequest) {
-    return this.salesmanService.getSalesmanBeats(req.user.id);
+      res.status(201).json({
+        success: true,
+        data: beat,
+        message: 'Beat created successfully',
+      });
+    } catch (error: any) {
+      logger.error('Error in createBeat controller:', error);
+      next(error);
+    }
   }
 
-  @Post('beats')
-  @ApiOperation({ summary: 'Create a new beat' })
-  @ApiResponse({ status: 201, description: 'Creates a new beat' })
-  async createBeat(
-    @Req() req: AuthenticatedRequest,
-    @Body() createBeatDto: CreateBeatDto
-  ) {
-    return this.salesmanService.createBeat(req.user.id, createBeatDto);
+  async getBeats(req: Request, res: Response, next: NextFunction) {
+    try {
+      const salesmanId = req.user!.id;
+      const beats = await Beat.findAll({
+        where: { salesmanId },
+        order: [['createdAt', 'DESC']],
+      });
+
+      res.json({
+        success: true,
+        data: beats,
+      });
+    } catch (error: any) {
+      logger.error('Error in getBeats controller:', error);
+      next(error);
+    }
   }
 
-  @Post('visits')
-  @ApiOperation({ summary: 'Log a new store visit' })
-  @ApiResponse({ status: 201, description: 'Logs a new store visit' })
-  async logVisit(
-    @Req() req: AuthenticatedRequest,
-    @Body() createVisitDto: CreateVisitDto
-  ) {
-    return this.salesmanService.logVisit(req.user.id, createVisitDto);
+  async getBeatById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const salesmanId = req.user!.id;
+      const { id } = req.params;
+      const beat = await Beat.findOne({
+        where: { id, salesmanId },
+      });
+
+      if (!beat) {
+        return res.status(404).json({
+          success: false,
+          message: 'Beat not found',
+        });
+      }
+
+      res.json({
+        success: true,
+        data: beat,
+      });
+    } catch (error: any) {
+      logger.error('Error in getBeatById controller:', error);
+      next(error);
+    }
   }
 
-  @Put('visits/:id')
-  @ApiOperation({ summary: 'Update a visit' })
-  @ApiResponse({ status: 200, description: 'Updates a visit' })
-  async updateVisit(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') visitId: string,
-    @Body() updateVisitDto: UpdateVisitDto,
-  ) {
-    return this.salesmanService.updateVisit(visitId, req.user.id, updateVisitDto);
+  async createVisit(req: Request, res: Response, next: NextFunction) {
+    try {
+      const salesmanId = req.user!.id;
+      const visit = await Visit.create({
+        ...req.body,
+        salesmanId,
+        status: 'scheduled',
+      });
+
+      res.status(201).json({
+        success: true,
+        data: visit,
+        message: 'Visit created successfully',
+      });
+    } catch (error: any) {
+      logger.error('Error in createVisit controller:', error);
+      next(error);
+    }
   }
 
-  @Post('attendance')
-  @ApiOperation({ summary: 'Record salesman attendance' })
-  @ApiResponse({ status: 201, description: 'Records salesman attendance' })
-  async recordAttendance(
-    @Req() req: AuthenticatedRequest,
-    @Body() attendanceData: RecordAttendanceDto,
-  ) {
-    return this.salesmanService.recordAttendance(req.user.id, attendanceData);
+  async getVisits(req: Request, res: Response, next: NextFunction) {
+    try {
+      const salesmanId = req.user!.id;
+      const { status, storeId } = req.query;
+      const where: any = { salesmanId };
+
+      if (status) where.status = status;
+      if (storeId) where.storeId = storeId;
+
+      const visits = await Visit.findAll({
+        where,
+        order: [['scheduledAt', 'DESC']],
+      });
+
+      res.json({
+        success: true,
+        data: visits,
+      });
+    } catch (error: any) {
+      logger.error('Error in getVisits controller:', error);
+      next(error);
+    }
   }
 
-  @Get('performance')
-  @ApiOperation({ summary: 'Get salesman performance metrics' })
-  @ApiResponse({ status: 200, description: 'Returns performance metrics' })
-  async getPerformance(
-    @Req() req: AuthenticatedRequest,
-    @Query() query: PerformanceQueryDto,
-  ) {
-    return this.salesmanService.getPerformanceMetrics(req.user.id, query);
+  async getVisitById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const salesmanId = req.user!.id;
+      const { id } = req.params;
+      const visit = await Visit.findOne({
+        where: { id, salesmanId },
+      });
+
+      if (!visit) {
+        return res.status(404).json({
+          success: false,
+          message: 'Visit not found',
+        });
+      }
+
+      res.json({
+        success: true,
+        data: visit,
+      });
+    } catch (error: any) {
+      logger.error('Error in getVisitById controller:', error);
+      next(error);
+    }
+  }
+
+  async updateVisitStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const salesmanId = req.user!.id;
+      const { id } = req.params;
+      const { status, checkIn, checkOut } = req.body;
+
+      const visit = await Visit.findOne({
+        where: { id, salesmanId },
+      });
+
+      if (!visit) {
+        return res.status(404).json({
+          success: false,
+          message: 'Visit not found',
+        });
+      }
+
+      const updateData: any = { status };
+
+      if (status === 'in_progress' && visit.status === 'scheduled') {
+        updateData.startedAt = new Date();
+        if (checkIn) updateData.checkIn = checkIn;
+      }
+
+      if (status === 'completed' && visit.status !== 'completed') {
+        updateData.completedAt = new Date();
+        if (checkOut) updateData.checkOut = checkOut;
+      }
+
+      await visit.update(updateData);
+
+      res.json({
+        success: true,
+        data: visit,
+        message: 'Visit status updated successfully',
+      });
+    } catch (error: any) {
+      logger.error('Error in updateVisitStatus controller:', error);
+      next(error);
+    }
   }
 }
+
+export const salesmanController = new SalesmanController();

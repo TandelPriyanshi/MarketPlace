@@ -72,7 +72,7 @@ __decorate([
     __metadata("design:type", String)
 ], Beat.prototype, "status", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSONB),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSON),
     __metadata("design:type", Object)
 ], Beat.prototype, "route", void 0);
 __decorate([

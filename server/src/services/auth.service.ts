@@ -7,7 +7,7 @@ import { env } from '../config/env';
 const { JWT_SECRET, JWT_EXPIRES_IN } = env;
 
 class AuthService {
-  async registerUser(email: string, password: string, name: string, phone: string, role: UserRole = UserRole.BUYER) {
+  async registerUser(email: string, password: string, name: string, phone: string, role: UserRole = UserRole.CUSTOMER) {
     try {
       // Check if user already exists
       const existingUser = await User.findOne({ where: { email } });
@@ -52,7 +52,7 @@ class AuthService {
 
       // Check if user is active
       if (!user.isActive) {
-        throw new Error('Account is deactivated. Please contact support.');
+        throw new Error('Account is deactivated. Please contact salesman.');
       }
 
       // Check password

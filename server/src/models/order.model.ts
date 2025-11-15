@@ -1,6 +1,8 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
 import { User } from './user.model';
 import { Product } from './product.model';
+import { Seller } from './seller.model';
+import { DeliveryPerson } from './deliveryPerson.model';
 
 export enum DeliveryStatus {
   PENDING = 'pending',
@@ -14,6 +16,8 @@ export enum DeliveryStatus {
 
 export enum PaymentStatus {
   PENDING = 'pending',
+  PROCESSING = 'processing',
+  COMPLETED = 'completed',
   PAID = 'paid',
   FAILED = 'failed',
   REFUNDED = 'refunded',
@@ -28,7 +32,11 @@ export enum OrderStatus {
   DELIVERED = 'delivered',
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
-  REFUNDED = 'refunded'
+  REFUNDED = 'refunded',
+  RETURN_REQUESTED = 'return_requested',
+  RETURN_APPROVED = 'return_approved',
+  RETURN_REJECTED = 'return_rejected',
+  RETURN_COMPLETED = 'return_completed'
 }
 
 @Table({
@@ -129,8 +137,28 @@ export class Order extends Model {
   })
   declare metadata: Record<string, unknown> | null;
 
+  @ForeignKey(() => Seller)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  declare sellerId: string;
+
   @BelongsTo(() => User)
   user?: User;
+
+  @BelongsTo(() => Seller)
+  seller?: Seller;
+
+  @ForeignKey(() => DeliveryPerson)
+  @Column({
+    type: DataType.UUID,
+    allowNull: true,
+  })
+  declare deliveryPersonId?: string;
+
+  @BelongsTo(() => DeliveryPerson)
+  deliveryPerson?: DeliveryPerson;
 
   @HasMany(() => OrderItem)
   items?: OrderItem[];

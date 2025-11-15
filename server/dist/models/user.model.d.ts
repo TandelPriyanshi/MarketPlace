@@ -2,7 +2,7 @@ import { Model } from 'sequelize-typescript';
 export declare enum UserRole {
     ADMIN = "admin",
     SELLER = "seller",
-    BUYER = "buyer",
+    CUSTOMER = "customer",
     DELIVERY_PERSON = "delivery_person"
 }
 export declare class User extends Model {

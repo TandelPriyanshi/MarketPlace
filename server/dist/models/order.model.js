@@ -26,6 +26,8 @@ var DeliveryStatus;
 var PaymentStatus;
 (function (PaymentStatus) {
     PaymentStatus["PENDING"] = "pending";
+    PaymentStatus["PROCESSING"] = "processing";
+    PaymentStatus["COMPLETED"] = "completed";
     PaymentStatus["PAID"] = "paid";
     PaymentStatus["FAILED"] = "failed";
     PaymentStatus["REFUNDED"] = "refunded";
@@ -41,6 +43,10 @@ var OrderStatus;
     OrderStatus["COMPLETED"] = "completed";
     OrderStatus["CANCELLED"] = "cancelled";
     OrderStatus["REFUNDED"] = "refunded";
+    OrderStatus["RETURN_REQUESTED"] = "return_requested";
+    OrderStatus["RETURN_APPROVED"] = "return_approved";
+    OrderStatus["RETURN_REJECTED"] = "return_rejected";
+    OrderStatus["RETURN_COMPLETED"] = "return_completed";
 })(OrderStatus || (exports.OrderStatus = OrderStatus = {}));
 let Order = class Order extends sequelize_typescript_1.Model {
 };

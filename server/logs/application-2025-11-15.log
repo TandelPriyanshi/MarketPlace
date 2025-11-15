@@ -1,0 +1,194 @@
+2025-11-15 01:02:25:225 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 01:02:25:225 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 01:02:44:244 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 01:02:44:244 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 01:22:32:2232 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 01:22:32:2232 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 01:50:03:503 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 01:50:03:503 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 02:06:36:636 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 02:06:36:636 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 02:07:56:756 [31merror[39m: [31m[GET] /favicon.ico >> StatusCode:: 404, Message:: Not Found - /favicon.ico[39m
+2025-11-15 02:07:56:756 [31merror[39m: [31mError: Not Found - /favicon.ico[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 13:19:52:1952 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 13:19:52:1952 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 13:42:17:4217 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 13:42:17:4217 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 13:42:38:4238 [31merror[39m: [31m[GET] /favicon.ico >> StatusCode:: 404, Message:: Not Found - /favicon.ico[39m
+2025-11-15 13:42:38:4238 [31merror[39m: [31mError: Not Found - /favicon.ico[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 20:25:02:252 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 20:25:02:252 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 20:26:50:2650 [31merror[39m: [31m[GET] / >> StatusCode:: 404, Message:: Not Found - /[39m
+2025-11-15 20:26:50:2650 [31merror[39m: [31mError: Not Found - /[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 20:29:47:2947 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 20:29:47:2947 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 20:29:52:2952 [31merror[39m: [31m[GET] /api >> StatusCode:: 404, Message:: Not Found - /api[39m
+2025-11-15 20:29:52:2952 [31merror[39m: [31mError: Not Found - /api[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 20:30:30:3030 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 20:30:30:3030 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 20:32:16:3216 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 20:32:16:3216 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 20:54:58:5458 [31merror[39m: [31m[GET] /api >> StatusCode:: 404, Message:: Not Found - /api[39m
+2025-11-15 20:54:58:5458 [31merror[39m: [31mError: Not Found - /api[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 20:55:04:554 [31merror[39m: [31m[GET] /api >> StatusCode:: 404, Message:: Not Found - /api[39m
+2025-11-15 20:55:04:554 [31merror[39m: [31mError: Not Found - /api[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 20:57:04:574 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 20:57:04:574 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 20:58:34:5834 [31merror[39m: [31m[GET] /api >> StatusCode:: 404, Message:: Not Found - /api[39m
+2025-11-15 20:58:34:5834 [31merror[39m: [31mError: Not Found - /api[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 20:59:00:590 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 20:59:00:590 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:01:03:13 [31merror[39m: [31m[GET] /api >> StatusCode:: 404, Message:: Not Found - /api[39m
+2025-11-15 21:01:03:13 [31merror[39m: [31mError: Not Found - /api[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 21:02:12:212 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:02:12:212 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:05:41:541 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:05:41:541 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:06:53:653 [31merror[39m: [31mError in registerUser: Unknown column 'createdAt' in 'field list'[39m
+2025-11-15 21:06:53:653 [31merror[39m: [31mRegistration error: Unknown column 'createdAt' in 'field list'[39m
+2025-11-15 21:12:31:1231 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:12:31:1231 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:16:08:168 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:16:08:168 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:16:45:1645 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:16:45:1645 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:16:55:1655 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:16:55:1655 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:19:11:1911 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:19:11:1911 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:19:32:1932 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:19:32:1932 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:23:07:237 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:23:07:237 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:24:35:2435 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:24:35:2435 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:25:51:2551 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:25:51:2551 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:25:53:2553 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:25:53:2553 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:28:11:2811 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:28:11:2811 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:28:53:2853 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:28:53:2853 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:28:59:2859 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:28:59:2859 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:31:13:3113 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:31:13:3113 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:31:50:3150 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:31:50:3150 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:32:04:324 [31merror[39m: [31m[POST] /api/v1/auth/register >> StatusCode:: 400, Message:: Expected property name or '}' in JSON at position 1 (line 1 column 2)[39m
+2025-11-15 21:32:04:324 [31merror[39m: [31mSyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)[39m
+[31m    at JSON.parse (<anonymous>)[39m
+[31m    at parse (D:\React\Project\marketplace\server\node_modules\body-parser\lib\types\json.js:92:19)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\body-parser\lib\read.js:128:18[39m
+[31m    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)[39m
+[31m    at invokeCallback (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:238:16)[39m
+[31m    at done (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:227:7)[39m
+[31m    at IncomingMessage.onEnd (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:287:7)[39m
+[31m    at IncomingMessage.emit (node:events:518:28)[39m
+[31m    at IncomingMessage.emit (node:domain:489:12)[39m
+[31m    at endReadableNT (node:internal/streams/readable:1698:12)[39m
+2025-11-15 21:32:42:3242 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:32:42:3242 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:34:09:349 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:34:09:349 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:34:15:3415 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:34:15:3415 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:35:03:353 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:35:03:353 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:35:29:3529 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:35:29:3529 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:38:58:3858 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:38:58:3858 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:41:24:4124 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:41:24:4124 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:41:41:4141 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:41:41:4141 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:42:08:428 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:42:08:428 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:43:08:438 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:43:08:438 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:48:48:4848 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:48:48:4848 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-15 21:50:16:5016 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-15 21:50:16:5016 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m

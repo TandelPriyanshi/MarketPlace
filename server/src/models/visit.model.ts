@@ -61,14 +61,14 @@ export class Visit extends Model {
   @Column(DataType.TEXT)
   declare remarks: string;
 
-  @Column(DataType.JSONB)
+  @Column(DataType.JSON)
   declare location: {
     latitude: number;
     longitude: number;
     address: string;
   };
 
-  @Column(DataType.JSONB)
+  @Column(DataType.JSON)
   declare checkIn: {
     timestamp: Date;
     location: {
@@ -79,7 +79,7 @@ export class Visit extends Model {
     imageUrl?: string;
   };
 
-  @Column(DataType.JSONB)
+  @Column(DataType.JSON)
   declare checkOut: {
     timestamp: Date;
     location: {

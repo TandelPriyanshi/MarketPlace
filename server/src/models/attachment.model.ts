@@ -3,80 +3,131 @@ import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize
 import { Order } from './order.model';
 import { User } from './user.model';
 
+export type AttachmentType = 'signature' | 'delivery_proof' | 'return_proof' | 'complaint' | 'order' | 'profile';
+
+export interface IAttachmentAttributes {
+  id: string;
+  orderId: string;
+  uploadedById: string;
+  fileName: string;
+  filePath: string;
+  mimeType: string;
+  size: number;
+  type: AttachmentType;
+  referenceId?: string;
+  userId?: string;
+  originalName?: string;
+  notes?: string;
+  metadata?: Record<string, any>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 @Table({
   tableName: 'attachments',
   timestamps: true,
   underscored: true
 })
-export class Attachment extends Model {
+export class Attachment extends Model<IAttachmentAttributes> implements IAttachmentAttributes {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id!: string;
+  declare id: string;
 
   @ForeignKey(() => Order)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
   })
-  orderId!: string;
+  declare orderId: string;
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  uploadedById!: string;
+  declare uploadedById: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  fileName!: string;
+  declare fileName: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  filePath!: string;
+  declare filePath: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  mimeType!: string;
+  declare mimeType: string;
 
   @Column({
-    type: DataType.ENUM('signature', 'delivery_proof', 'return_proof'),
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  })
+  declare size: number;
+
+  @Column({
+    type: DataType.ENUM('signature', 'delivery_proof', 'return_proof', 'complaint', 'order', 'profile'),
     allowNull: false,
   })
-  type!: 'signature' | 'delivery_proof' | 'return_proof';
+  declare type: AttachmentType;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: true,
+  })
+  declare referenceId?: string;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: true,
+  })
+  declare userId?: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare originalName?: string;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  notes?: string;
+  declare notes?: string;
+
+  @Column({
+    type: DataType.JSON,
+    allowNull: true,
+  })
+  declare metadata?: Record<string, any>;
 
   @BelongsTo(() => Order)
-  order!: Order;
+  declare order?: Order;
 
   @BelongsTo(() => User, 'uploadedById')
-  uploadedBy!: User;
+  declare uploadedBy: User;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  updatedAt!: Date;
+  declare updatedAt: Date;
 }

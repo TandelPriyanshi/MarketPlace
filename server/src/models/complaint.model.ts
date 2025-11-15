@@ -7,7 +7,8 @@ export enum ComplaintStatus {
   IN_PROGRESS = 'in_progress',
   RESOLVED = 'resolved',
   REJECTED = 'rejected',
-  CLOSED = 'closed'
+  CLOSED = 'closed',
+  REOPENED = 'reopened'
 }
 
 export enum ComplaintType {
@@ -72,7 +73,7 @@ export class Complaint extends Model {
   declare status: ComplaintStatus;
 
   @Column({
-    type: DataType.ARRAY(DataType.STRING),
+    type: DataType.JSON,
     allowNull: true,
     defaultValue: [],
   })

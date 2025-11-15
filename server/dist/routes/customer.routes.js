@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.customerRoutes = void 0;
 const express_1 = require("express");
 const customer_controller_1 = require("../controllers/customer.controller");
 const customer_validations_1 = require("../validations/customer.validations");
@@ -14,7 +13,6 @@ const user_model_1 = require("../models/user.model");
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const router = (0, express_1.Router)();
-exports.customerRoutes = router;
 // Configure multer for file uploads
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, cb) {
@@ -42,7 +40,7 @@ const upload = (0, multer_1.default)({
 });
 // Apply authentication middleware to all customer routes
 router.use(auth_middleware_1.authenticate);
-router.use((0, role_middleware_1.authorize)([user_model_1.UserRole.BUYER]));
+router.use((0, role_middleware_1.authorize)([user_model_1.UserRole.CUSTOMER]));
 // Seller routes
 router.get('/sellers', customer_validations_1.getSellersValidation, validate_request_1.validateRequest, customer_controller_1.customerController.getSellers);
 // Order routes
@@ -52,3 +50,4 @@ router.get('/orders/:id', customer_validations_1.getOrderDetailsValidation, vali
 router.post('/complaints', upload.array('attachments', 5), // Max 5 files
 customer_validations_1.createComplaintValidation, validate_request_1.validateRequest, customer_controller_1.customerController.createComplaint);
 router.get('/complaints', customer_validations_1.getComplaintsValidation, validate_request_1.validateRequest, customer_controller_1.customerController.getComplaints);
+exports.default = router;

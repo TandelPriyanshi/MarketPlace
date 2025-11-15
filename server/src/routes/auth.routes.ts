@@ -34,8 +34,8 @@ const router = Router();
  *                 type: string
  *               role:
  *                 type: string
- *                 enum: [buyer, seller, admin]
- *                 default: buyer
+ *                 enum: [customer, seller, admin]
+ *                 default: customer
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -50,7 +50,8 @@ router.post(
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
     check('name', 'Name is required').not().isEmpty(),
-    check('phone', 'Please include a valid phone number').optional().isMobilePhone('any')
+    check('phone', 'Please include a valid phone number').optional().isMobilePhone('any'),
+    check('role', 'Valid role is required').isIn(['customer', 'seller', 'delivery_person', 'salesman', 'admin'])
   ],
   authController.register
 );

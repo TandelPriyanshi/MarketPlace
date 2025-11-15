@@ -28,3 +28,39 @@
 2025-11-14 05:13:01:131 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
 2025-11-14 05:13:38:1338 [32minfo[39m: [32mServer is running on port 3000[39m
 2025-11-14 05:13:38:1338 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-14 05:14:12:1412 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-14 05:14:12:1412 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-14 05:14:29:1429 [31merror[39m: [31m[GET] /favicon.ico >> StatusCode:: 404, Message:: Not Found - /favicon.ico[39m
+2025-11-14 05:14:29:1429 [31merror[39m: [31mError: Not Found - /favicon.ico[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at logger (D:\React\Project\marketplace\server\node_modules\morgan\index.js:144:5)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+2025-11-14 05:16:18:1618 [31merror[39m: [31m[GET] /docs >> StatusCode:: 404, Message:: Not Found - /docs[39m
+2025-11-14 05:16:18:1618 [31merror[39m: [31mError: Not Found - /docs[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at logger (D:\React\Project\marketplace\server\node_modules\morgan\index.js:144:5)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+2025-11-14 17:45:10:4510 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-14 17:45:10:4510 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-14 17:48:09:489 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-14 17:48:09:489 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-14 17:48:31:4831 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-14 17:48:31:4831 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-14 18:13:42:1342 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-14 18:13:42:1342 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m
+2025-11-14 18:15:32:1532 [32minfo[39m: [32mServer is running on port 3000[39m
+2025-11-14 18:15:32:1532 [32minfo[39m: [32mAPI Documentation available at http://localhost:3000/api-docs[39m

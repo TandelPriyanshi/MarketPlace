@@ -37,8 +37,8 @@ const router = (0, express_1.Router)();
  *                 type: string
  *               role:
  *                 type: string
- *                 enum: [buyer, seller, admin]
- *                 default: buyer
+ *                 enum: [customer, seller, admin]
+ *                 default: customer
  *     responses:
  *       201:
  *         description: User registered successfully

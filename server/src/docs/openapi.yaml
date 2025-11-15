@@ -1,0 +1,1645 @@
+openapi: 3.0.0
+info:
+  title: Marketplace API
+  version: 1.0.0
+  description: Backend API for marketplace application with TypeScript, Express, Sequelize, and MySQL
+  contact:
+    name: API Salesman
+    email: salesman@marketplace.com
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.marketplace.com
+    description: Production server
+
+tags:
+  - name: Auth
+    description: Authentication endpoints
+  - name: Seller
+    description: Seller operations
+  - name: Product
+    description: Product management
+  - name: Order
+    description: Order management
+  - name: Delivery
+    description: Delivery operations
+  - name: Salesman
+    description: Salesman operations
+  - name: Customer
+    description: Customer operations
+  - name: Complaint
+    description: Complaint management
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /sellers/dashboard:
+    get:
+      tags:
+        - Seller
+      summary: Get seller dashboard
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellerDashboard'
+
+  /sellers/products:
+    get:
+      tags:
+        - Seller
+      summary: Get seller products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+    post:
+      tags:
+        - Seller
+      summary: Create a new product
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProduct'
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+
+  /sellers/products/{id}:
+    put:
+      tags:
+        - Seller
+      summary: Update a product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProduct'
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+    delete:
+      tags:
+        - Seller
+      summary: Delete a product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Product deleted
+
+  /sellers/orders:
+    get:
+      tags:
+        - Seller
+      summary: Get seller orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of orders
+
+  /sellers/orders/{id}/status:
+    put:
+      tags:
+        - Seller
+      summary: Update order status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatus'
+      responses:
+        '200':
+          description: Order status updated
+
+  /products:
+    get:
+      tags:
+        - Product
+      summary: Get all products
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: sellerId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+
+  /products/{id}:
+    get:
+      tags:
+        - Product
+      summary: Get product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /orders:
+    get:
+      tags:
+        - Order
+      summary: Get user orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+
+  /orders/{id}:
+    get:
+      tags:
+        - Order
+      summary: Get order by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /orders/{id}/cancel:
+    put:
+      tags:
+        - Order
+      summary: Cancel an order
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Order cancelled
+
+  /complaints:
+    post:
+      tags:
+        - Complaint
+      summary: Create a complaint
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateComplaint'
+      responses:
+        '201':
+          description: Complaint created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplaintResponse'
+    get:
+      tags:
+        - Complaint
+      summary: Get user complaints
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of complaints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplaintListResponse'
+
+  /complaints/{id}:
+    get:
+      tags:
+        - Complaint
+      summary: Get complaint by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Complaint details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplaintResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /complaints/{id}/status:
+    put:
+      tags:
+        - Complaint
+      summary: Update complaint status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [pending, in_progress, resolved, rejected]
+      responses:
+        '200':
+          description: Complaint status updated
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Delivery endpoints
+  /delivery/orders:
+    get:
+      tags:
+        - Delivery
+      summary: Get assigned delivery orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of assigned orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /delivery/orders/{id}/status:
+    put:
+      tags:
+        - Delivery
+      summary: Update delivery order status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [pending, picked_up, in_transit, delivered, failed]
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Order status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /delivery/orders/{id}/proof:
+    post:
+      tags:
+        - Delivery
+      summary: Upload delivery proof
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                proof:
+                  type: string
+                  format: binary
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Delivery proof uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attachment'
+
+  /delivery/route/today:
+    get:
+      tags:
+        - Delivery
+      summary: Get today's delivery route
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Today's delivery route
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  route:
+                    type: object
+                    properties:
+                      coordinates:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            lat:
+                              type: number
+                            lng:
+                              type: number
+                      waypoints:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Order'
+
+  # Salesman endpoints
+  /salesman/beats:
+    get:
+      tags:
+        - Salesman
+      summary: Get salesman beats
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of beats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  beats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Beat'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      tags:
+        - Salesman
+      summary: Create a new beat
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBeat'
+      responses:
+        '201':
+          description: Beat created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Beat'
+
+  /salesman/beats/{id}:
+    get:
+      tags:
+        - Salesman
+      summary: Get beat by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Beat details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Beat'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /salesman/visits:
+    get:
+      tags:
+        - Salesman
+      summary: Get salesman visits
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of visits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  visits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Visit'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      tags:
+        - Salesman
+      summary: Create a new visit
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVisit'
+      responses:
+        '201':
+          description: Visit created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+
+  /salesman/visits/{id}:
+    get:
+      tags:
+        - Salesman
+      summary: Get visit by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Visit details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /salesman/visits/{id}/status:
+    put:
+      tags:
+        - Salesman
+      summary: Update visit status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [scheduled, in_progress, completed, cancelled]
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Visit status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+
+  # Customer endpoints
+  /customer/sellers:
+    get:
+      tags:
+        - Customer
+      summary: Get all sellers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of sellers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sellers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Seller'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /customer/orders:
+    post:
+      tags:
+        - Customer
+      summary: Place a new order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrder'
+      responses:
+        '201':
+          description: Order placed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /customer/orders/{id}:
+    get:
+      tags:
+        - Customer
+      summary: Get order details
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /customer/complaints:
+    post:
+      tags:
+        - Customer
+      summary: Create a complaint
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateComplaint'
+      responses:
+        '201':
+          description: Complaint created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Complaint'
+    get:
+      tags:
+        - Customer
+      summary: Get customer complaints
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of complaints
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  complaints:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Complaint'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /customer/complaints/{id}:
+    get:
+      tags:
+        - Customer
+      summary: Get complaint by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Complaint details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Complaint'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+        - phone
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+        name:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [seller, deliveryPerson, salesman, customer, admin]
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        name:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateProduct:
+      type: object
+      required:
+        - name
+        - price
+        - stock
+      properties:
+        name:
+          type: string
+        sku:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: integer
+        images:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [draft, published, archived, out_of_stock]
+
+    UpdateProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        sku:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: integer
+        images:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [draft, published, archived, out_of_stock]
+
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sellerId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        sku:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: integer
+        images:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ProductListResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    UpdateOrderStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [pending, confirmed, processing, shipped, delivered, completed, cancelled, refunded, return_requested, return_approved, return_rejected, return_completed]
+        reason:
+          type: string
+
+    OrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        orderNumber:
+          type: string
+        totalAmount:
+          type: number
+        status:
+          type: string
+        paymentStatus:
+          type: string
+        deliveryStatus:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemResponse'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    OrderItemResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        sellerId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        price:
+          type: number
+        status:
+          type: string
+
+    OrderListResponse:
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    CreateComplaint:
+      type: object
+      required:
+        - type
+        - title
+        - description
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [order_issue, delivery_issue, product_quality, seller_behavior, payment_issue, other]
+        title:
+          type: string
+        description:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: string
+            format: binary
+
+    UpdateComplaintStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [open, in_progress, resolved, rejected, closed, reopened]
+        resolutionNotes:
+          type: string
+
+    ComplaintResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: string
+        resolutionNotes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ComplaintListResponse:
+      type: object
+      properties:
+        complaints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComplaintResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    SellerDashboard:
+      type: object
+      properties:
+        stats:
+          type: object
+          properties:
+            totalProducts:
+              type: integer
+            totalOrders:
+              type: integer
+            totalRevenue:
+              type: number
+        recentOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderResponse'
+
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        totalPages:
+          type: integer
+        limit:
+          type: integer
+        hasNext:
+          type: boolean
+        hasPrev:
+          type: boolean
+
+    Beat:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        area:
+          type: string
+        assignedTo:
+          type: string
+          format: uuid
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateBeat:
+      type: object
+      required:
+        - name
+        - area
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        area:
+          type: string
+        assignedTo:
+          type: string
+          format: uuid
+
+    Visit:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        beatId:
+          type: string
+          format: uuid
+        salesmanId:
+          type: string
+          format: uuid
+        storeId:
+          type: string
+          format: uuid
+        scheduledDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [scheduled, in_progress, completed, cancelled]
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateVisit:
+      type: object
+      required:
+        - beatId
+        - storeId
+        - scheduledDate
+      properties:
+        beatId:
+          type: string
+          format: uuid
+        storeId:
+          type: string
+          format: uuid
+        scheduledDate:
+          type: string
+          format: date
+        notes:
+          type: string
+
+    Store:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        ownerName:
+          type: string
+        beatId:
+          type: string
+          format: uuid
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateOrder:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - productId
+              - quantity
+            properties:
+              productId:
+                type: string
+                format: uuid
+              quantity:
+                type: integer
+                minimum: 1
+        deliveryAddress:
+          type: string
+        notes:
+          type: string
+
+    Complaint:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+        subject:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [pending, in_progress, resolved, rejected]
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateComplaint:
+      type: object
+      required:
+        - subject
+        - description
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        subject:
+          type: string
+        description:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: string
+            format: binary
+
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        originalName:
+          type: string
+        mimeType:
+          type: string
+        size:
+          type: integer
+        url:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    Seller:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        businessName:
+          type: string
+        businessType:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        gstNumber:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        orderNumber:
+          type: string
+        totalAmount:
+          type: number
+        status:
+          type: string
+          enum: [pending, confirmed, processing, shipped, delivered, completed, cancelled, refunded, return_requested, return_approved, return_rejected, return_completed]
+        paymentStatus:
+          type: string
+          enum: [pending, paid, failed, refunded]
+        deliveryStatus:
+          type: string
+          enum: [pending, assigned, picked_up, in_transit, delivered, failed]
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        deliveryAddress:
+          type: string
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        sellerId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        price:
+          type: number
+        totalPrice:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+              errors:
+                type: array
+                items:
+                  type: object
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+

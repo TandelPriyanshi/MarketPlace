@@ -15,8 +15,9 @@ var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
     UserRole["SELLER"] = "seller";
-    UserRole["BUYER"] = "buyer";
+    UserRole["CUSTOMER"] = "customer";
     UserRole["DELIVERY_PERSON"] = "delivery_person";
+    UserRole["SALESMAN"] = "salesman";
 })(UserRole || (exports.UserRole = UserRole = {}));
 let User = class User extends sequelize_typescript_1.Model {
 };
@@ -56,7 +57,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.ENUM(...Object.values(UserRole)),
         allowNull: false,
-        defaultValue: UserRole.BUYER,
+        defaultValue: UserRole.CUSTOMER,
     }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);

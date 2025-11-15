@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadFile = void 0;
+exports.uploadFile = exports.upload = void 0;
 // src/middleware/upload.middleware.ts
 const multer_1 = __importDefault(require("multer"));
 const logger_1 = require("../utils/logger");
-const upload = (0, multer_1.default)({
+exports.upload = (0, multer_1.default)({
     storage: multer_1.default.memoryStorage(),
     limits: {
         fileSize: 5 * 1024 * 1024, // 5MB
@@ -23,7 +23,7 @@ const upload = (0, multer_1.default)({
 });
 const uploadFile = (fieldName) => {
     return (req, res, next) => {
-        const uploadSingle = upload.single(fieldName);
+        const uploadSingle = exports.upload.single(fieldName);
         uploadSingle(req, res, (err) => {
             if (err) {
                 logger_1.logger.error('File upload error:', err);

@@ -1,125 +1,114 @@
-import { IsEnum, IsString, IsUUID, IsDateString, IsNumber, IsBoolean, IsOptional, IsObject, ValidateNested, IsArray, IsNotEmpty } from 'class-validator';
-import { Type } from 'class-transformer';
+import { VisitStatus } from '../models/visit.model';
+import { BeatStatus } from '../models/beat.model';
 
-export class LocationDto {
-  @IsNumber()
-  latitude!: number;
-
-  @IsNumber()
-  longitude!: number;
-
-  @IsString()
-  address!: string;
-}
-
-export class CheckInOutDto {
-  @IsDateString()
-  timestamp!: Date;
-
-  @ValidateNested()
-  @Type(() => LocationDto)
-  location!: LocationDto;
-
-  @IsString()
-  @IsOptional()
-  imageUrl?: string;
-
-  @IsString()
-  @IsOptional()
-  summary?: string;
-}
-
-export class CreateVisitDto {
-  @IsUUID()
-  storeId!: string;
-
-  @IsDateString()
-  scheduledAt!: Date;
-
-  @IsString()
-  @IsOptional()
-  purpose?: string;
-}
-
-export class UpdateVisitDto {
-  @IsEnum(['scheduled', 'in_progress', 'completed', 'cancelled'])
-  @IsOptional()
-  status?: string;
-
-  @IsObject()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CheckInOutDto)
-  checkIn?: CheckInOutDto;
-
-  @IsObject()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CheckInOutDto)
-  checkOut?: CheckInOutDto;
-
-  @IsString()
-  @IsOptional()
-  remarks?: string;
-
-  // These fields are managed by the server, not the client
-  startedAt?: Date;
-  completedAt?: Date;
-}
-
-export class RecordAttendanceDto {
-  @IsDateString()
-  @IsOptional()
-  timestamp: Date = new Date();
-
-  @ValidateNested()
-  @Type(() => LocationDto)
-  location!: LocationDto;
-
-  @IsString()
-  @IsOptional()
-  imageUrl?: string;
-}
-
-export class PerformanceQueryDto {
-  @IsString()
-  @IsOptional()
-  @IsEnum(['day', 'week', 'month', 'year'])
-  period?: string = 'month';
-
-  @IsDateString()
-  @IsOptional()
-  startDate?: string;
-
-  @IsDateString()
-  @IsOptional()
-  endDate?: string;
-}
-
-export class CreateBeatDto {
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
-
-  @IsString()
-  @IsOptional()
+export interface CreateBeatDto {
+  name: string;
   description?: string;
-
-  @IsDateString()
-  startDate!: Date;
-
-  @IsDateString()
-  @IsOptional()
-  endDate?: Date;
-
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  storeIds!: string[];
-
-  @IsObject()
-  @IsOptional()
+  salesmanId: string;
+  startDate: Date;
+  endDate: Date;
   route?: {
     coordinates: Array<{ lat: number; lng: number }>;
     waypoints: Array<{ storeId: string; order: number }>;
   };
+}
+
+export interface CreateVisitDto {
+  salesmanId: string;
+  storeId: string;
+  scheduledAt: Date;
+  purpose: string;
+  remarks?: string;
+  location?: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  };
+}
+
+export interface UpdateVisitStatusDto {
+  status: VisitStatus;
+  checkIn?: {
+    timestamp: Date;
+    location: {
+      latitude: number;
+      longitude: number;
+      address: string;
+    };
+    imageUrl?: string;
+  };
+  checkOut?: {
+    timestamp: Date;
+    location: {
+      latitude: number;
+      longitude: number;
+      address: string;
+    };
+    summary?: string;
+  };
+}
+
+export interface BeatResponseDto {
+  id: string;
+  name: string;
+  description?: string;
+  salesmanId: string;
+  startDate: Date;
+  endDate: Date;
+  status: BeatStatus;
+  route?: {
+    coordinates: Array<{ lat: number; lng: number }>;
+    waypoints: Array<{ storeId: string; order: number }>;
+  };
+  stores?: Array<{
+    id: string;
+    name: string;
+    address: string;
+  }>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface VisitResponseDto {
+  id: string;
+  salesmanId: string;
+  storeId: string;
+  status: VisitStatus;
+  scheduledAt: Date;
+  startedAt?: Date;
+  completedAt?: Date;
+  purpose: string;
+  remarks?: string;
+  location?: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  };
+  checkIn?: {
+    timestamp: Date;
+    location: {
+      latitude: number;
+      longitude: number;
+      address: string;
+    };
+    imageUrl?: string;
+  };
+  checkOut?: {
+    timestamp: Date;
+    location: {
+      latitude: number;
+      longitude: number;
+      address: string;
+    };
+    summary?: string;
+  };
+  store?: {
+    id: string;
+    name: string;
+    address: string;
+    contactPerson: string;
+    phone: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }

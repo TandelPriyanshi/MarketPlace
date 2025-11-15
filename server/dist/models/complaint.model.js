@@ -21,6 +21,7 @@ var ComplaintStatus;
     ComplaintStatus["RESOLVED"] = "resolved";
     ComplaintStatus["REJECTED"] = "rejected";
     ComplaintStatus["CLOSED"] = "closed";
+    ComplaintStatus["REOPENED"] = "reopened";
 })(ComplaintStatus || (exports.ComplaintStatus = ComplaintStatus = {}));
 var ComplaintType;
 (function (ComplaintType) {
@@ -89,7 +90,7 @@ __decorate([
 ], Complaint.prototype, "status", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.ARRAY(sequelize_typescript_1.DataType.STRING),
+        type: sequelize_typescript_1.DataType.JSON,
         allowNull: true,
         defaultValue: [],
     }),

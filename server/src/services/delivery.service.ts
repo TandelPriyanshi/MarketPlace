@@ -10,6 +10,49 @@ import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
+// Helper function to create an attachment with all required fields
+async function createAttachment(
+  orderId: string,
+  uploadedById: string,
+  fileName: string,
+  filePath: string,
+  mimeType: string,
+  type: 'signature' | 'delivery_proof' | 'return_proof',
+  notes?: string | null,
+  transaction?: Transaction
+) {
+  try {
+    // Get file stats to get the actual file size
+    const stats = await fs.promises.stat(filePath);
+    
+    const attachmentData: any = {
+      id: uuidv4(),
+      orderId,
+      uploadedById,
+      fileName,
+      filePath,
+      mimeType,
+      type,
+      size: stats.size,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    // Only include notes if it's provided
+    if (notes !== undefined) {
+      attachmentData.notes = notes;
+    }
+    
+    return await Attachment.create(attachmentData, { transaction });
+  } catch (error) {
+    logger.error('Error creating attachment:', error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to create attachment: ${error.message}`);
+    }
+    throw new Error('Failed to create attachment: Unknown error occurred');
+  }
+}
+
 class DeliveryService {
   async getAssignedOrders(deliveryPersonId: string, status?: DeliveryStatus) {
     try {
@@ -124,16 +167,17 @@ class DeliveryService {
       // Save file
       fs.writeFileSync(path.join(__dirname, '../../', filePath), file.buffer);
 
-      // Create attachment record
-      const attachment = await Attachment.create({
+      // Create attachment for delivery proof
+      const attachment = await createAttachment(
         orderId,
-        uploadedById: deliveryPersonId,
-        fileName: file.originalname,
+        deliveryPersonId,
+        fileName,
         filePath,
-        mimeType: file.mimetype,
-        type,
+        file.mimetype,
+        'delivery_proof',
         notes,
-      }, { transaction });
+        transaction
+      );
 
       await transaction.commit();
       return attachment;

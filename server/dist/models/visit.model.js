@@ -79,15 +79,15 @@ __decorate([
     __metadata("design:type", String)
 ], Visit.prototype, "remarks", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSONB),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSON),
     __metadata("design:type", Object)
 ], Visit.prototype, "location", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSONB),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSON),
     __metadata("design:type", Object)
 ], Visit.prototype, "checkIn", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSONB),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.JSON),
     __metadata("design:type", Object)
 ], Visit.prototype, "checkOut", void 0);
 __decorate([

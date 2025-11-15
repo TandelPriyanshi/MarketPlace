@@ -3,7 +3,7 @@ import multer from 'multer';
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../utils/logger';
 
-const upload = multer({
+export const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB

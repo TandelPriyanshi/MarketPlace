@@ -1,15 +1,14 @@
 // In src/app.ts
+import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
-import authRoutes from './routes/auth.routes';
-import sellerRoutes from './routes/seller.routes';
-import deliveryRoutes from './routes/delivery.routes';
+import routes from './routes/index';
 import { setupSwagger } from './config/swagger';
 import { connectDB } from './db';
-import { config } from './config/config';
+import { currentConfig } from './config/config';
 
 const app = express();
 
@@ -24,12 +23,10 @@ app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
 
 // API Routes
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/seller', sellerRoutes);
-app.use('/api/v1/delivery', deliveryRoutes);
+app.use(routes);
 
 // Swagger Documentation
-if (config.isDevelopment) {
+if (currentConfig.isDevelopment) {
   setupSwagger(app);
 }
 

@@ -239,7 +239,11 @@ class SellerService {
             [order_model_1.OrderStatus.DELIVERED]: [order_model_1.OrderStatus.COMPLETED],
             [order_model_1.OrderStatus.COMPLETED]: [],
             [order_model_1.OrderStatus.CANCELLED]: [],
-            [order_model_1.OrderStatus.REFUNDED]: []
+            [order_model_1.OrderStatus.REFUNDED]: [],
+            [order_model_1.OrderStatus.RETURN_REQUESTED]: [order_model_1.OrderStatus.RETURN_APPROVED, order_model_1.OrderStatus.RETURN_REJECTED],
+            [order_model_1.OrderStatus.RETURN_APPROVED]: [order_model_1.OrderStatus.RETURN_COMPLETED],
+            [order_model_1.OrderStatus.RETURN_REJECTED]: [],
+            [order_model_1.OrderStatus.RETURN_COMPLETED]: []
         };
         if (!allowedTransitions[currentStatus]?.includes(newStatus)) {
             throw new Error(`Invalid status transition from ${currentStatus} to ${newStatus}`);

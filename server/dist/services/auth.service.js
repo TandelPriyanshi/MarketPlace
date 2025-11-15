@@ -44,7 +44,7 @@ const logger_1 = require("../utils/logger");
 const env_1 = require("../config/env");
 const { JWT_SECRET, JWT_EXPIRES_IN } = env_1.env;
 class AuthService {
-    async registerUser(email, password, name, phone, role = user_model_1.UserRole.BUYER) {
+    async registerUser(email, password, name, phone, role = user_model_1.UserRole.CUSTOMER) {
         try {
             // Check if user already exists
             const existingUser = await user_model_1.User.findOne({ where: { email } });
@@ -84,7 +84,7 @@ class AuthService {
             }
             // Check if user is active
             if (!user.isActive) {
-                throw new Error('Account is deactivated. Please contact support.');
+                throw new Error('Account is deactivated. Please contact salesman.');
             }
             // Check password
             const isPasswordValid = await bcryptjs_1.default.compare(password, user.passwordHash);

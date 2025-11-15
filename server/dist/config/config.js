@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = void 0;
+exports.config = exports.currentConfig = void 0;
 // src/config/config.ts
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-exports.config = {
+const baseConfig = {
     port: parseInt(process.env.PORT || '3000', 10),
     isProduction: process.env.NODE_ENV === 'production',
     isDevelopment: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV,
@@ -27,3 +27,45 @@ exports.config = {
         allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif'],
     },
 };
+const config = {
+    development: {
+        ...baseConfig,
+        db: {
+            ...baseConfig.db,
+            dialect: 'mysql',
+            logging: console.log,
+            pool: {
+                max: 5,
+                min: 0,
+                acquire: 30000,
+                idle: 10000,
+            },
+        },
+    },
+    test: {
+        ...baseConfig,
+        db: {
+            ...baseConfig.db,
+            database: 'marketplace_test',
+            dialect: 'mysql',
+            logging: false,
+        },
+    },
+    production: {
+        ...baseConfig,
+        db: {
+            ...baseConfig.db,
+            dialect: 'mysql',
+            logging: false,
+            pool: {
+                max: 10,
+                min: 2,
+                acquire: 30000,
+                idle: 10000,
+            },
+        },
+    },
+};
+exports.config = config;
+// Update the export in config.ts
+exports.currentConfig = config[process.env.NODE_ENV || 'development'];

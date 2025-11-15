@@ -14,6 +14,37 @@ const logger_1 = require("../utils/logger");
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const uuid_1 = require("uuid");
+// Helper function to create an attachment with all required fields
+async function createAttachment(orderId, uploadedById, fileName, filePath, mimeType, type, notes, transaction) {
+    try {
+        // Get file stats to get the actual file size
+        const stats = await fs_1.default.promises.stat(filePath);
+        const attachmentData = {
+            id: (0, uuid_1.v4)(),
+            orderId,
+            uploadedById,
+            fileName,
+            filePath,
+            mimeType,
+            type,
+            size: stats.size,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        // Only include notes if it's provided
+        if (notes !== undefined) {
+            attachmentData.notes = notes;
+        }
+        return await attachment_model_1.Attachment.create(attachmentData, { transaction });
+    }
+    catch (error) {
+        logger_1.logger.error('Error creating attachment:', error);
+        if (error instanceof Error) {
+            throw new Error(`Failed to create attachment: ${error.message}`);
+        }
+        throw new Error('Failed to create attachment: Unknown error occurred');
+    }
+}
 class DeliveryService {
     async getAssignedOrders(deliveryPersonId, status) {
         try {
@@ -101,16 +132,8 @@ class DeliveryService {
             const filePath = path_1.default.join('uploads', fileName);
             // Save file
             fs_1.default.writeFileSync(path_1.default.join(__dirname, '../../', filePath), file.buffer);
-            // Create attachment record
-            const attachment = await attachment_model_1.Attachment.create({
-                orderId,
-                uploadedById: deliveryPersonId,
-                fileName: file.originalname,
-                filePath,
-                mimeType: file.mimetype,
-                type,
-                notes,
-            }, { transaction });
+            // Create attachment for delivery proof
+            const attachment = await createAttachment(orderId, deliveryPersonId, fileName, filePath, file.mimetype, 'delivery_proof', notes, transaction);
             await transaction.commit();
             return attachment;
         }

@@ -15,8 +15,8 @@ const swaggerDefinition = {
     version: '1.0.0',
     description: 'API documentation for the Marketplace application',
     contact: {
-      name: 'API Support',
-      email: 'support@marketplace.com',
+      name: 'API Salesman',
+      email: 'salesman@marketplace.com',
     },
   },
   servers: [
@@ -50,7 +50,7 @@ const swaggerDefinition = {
           id: { type: 'string', format: 'uuid' },
           email: { type: 'string', format: 'email' },
           name: { type: 'string' },
-          role: { type: 'string', enum: ['admin', 'seller', 'buyer'] },
+          role: { type: 'string', enum: ['admin', 'seller', 'customer'] },
           phone: { type: 'string' },
           isActive: { type: 'boolean', default: true },
           createdAt: { type: 'string', format: 'date-time' },

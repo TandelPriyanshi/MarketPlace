@@ -56,7 +56,7 @@ export class Beat extends Model {
   })
   declare status: BeatStatus;
 
-  @Column(DataType.JSONB)
+  @Column(DataType.JSON)
   declare route: {
     coordinates: Array<{ lat: number; lng: number }>;
     waypoints: Array<{ storeId: string; order: number }>;

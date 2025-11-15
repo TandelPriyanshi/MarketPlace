@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { customerService } from '../services/customer.service';
+import customerService from '../services/customer.service';
 import { logger } from '../utils/logger';
 import { validationResult } from 'express-validator';
 

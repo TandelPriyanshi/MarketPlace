@@ -275,7 +275,11 @@ class SellerService {
       [OrderStatus.DELIVERED]: [OrderStatus.COMPLETED],
       [OrderStatus.COMPLETED]: [],
       [OrderStatus.CANCELLED]: [],
-      [OrderStatus.REFUNDED]: []
+      [OrderStatus.REFUNDED]: [],
+      [OrderStatus.RETURN_REQUESTED]: [OrderStatus.RETURN_APPROVED, OrderStatus.RETURN_REJECTED],
+      [OrderStatus.RETURN_APPROVED]: [OrderStatus.RETURN_COMPLETED],
+      [OrderStatus.RETURN_REJECTED]: [],
+      [OrderStatus.RETURN_COMPLETED]: []
     };
 
     if (!allowedTransitions[currentStatus]?.includes(newStatus)) {

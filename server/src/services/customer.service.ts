@@ -225,4 +225,4 @@ class CustomerService {
   }
 }
 
-export const customerService = new CustomerService();
+export default new CustomerService();
