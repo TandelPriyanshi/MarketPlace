@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -10,41 +9,84 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { assignDelivery } from '@/app/slices/sellerSlice';
+import { sellerApi, DeliveryPerson } from '../../api/seller.api';
 import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
 interface AssignDeliveryModalProps {
   isOpen: boolean;
   onClose: () => void;
   orderId: string;
+  onSuccess?: () => void;
 }
 
-// Mock delivery persons
-const deliveryPersons = [
-  { id: 'DP001', name: 'Rajesh Kumar', zone: 'North Zone' },
-  { id: 'DP002', name: 'Amit Singh', zone: 'South Zone' },
-  { id: 'DP003', name: 'Priya Sharma', zone: 'East Zone' },
-  { id: 'DP004', name: 'Vikram Patel', zone: 'West Zone' },
-];
-
-export const AssignDeliveryModal = ({ isOpen, onClose, orderId }: AssignDeliveryModalProps) => {
-  const dispatch = useDispatch();
+export const AssignDeliveryModal: React.FC<AssignDeliveryModalProps> = ({
+  isOpen,
+  onClose,
+  orderId,
+  onSuccess,
+}) => {
   const [selectedDeliveryPerson, setSelectedDeliveryPerson] = useState('');
+  const [deliveryPersons, setDeliveryPersons] = useState<DeliveryPerson[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [fetchingPersons, setFetchingPersons] = useState(false);
 
-  const handleAssign = () => {
+  useEffect(() => {
+    if (isOpen) {
+      fetchDeliveryPersons();
+    }
+  }, [isOpen]);
+
+  const fetchDeliveryPersons = async () => {
+    try {
+      setFetchingPersons(true);
+      const response = await sellerApi.getAvailableDeliveryPersons();
+      setDeliveryPersons(response.data);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to fetch delivery persons');
+    } finally {
+      setFetchingPersons(false);
+    }
+  };
+
+  const handleAssign = async () => {
     if (!selectedDeliveryPerson) {
       toast.error('Please select a delivery person');
       return;
     }
 
-    dispatch(assignDelivery({ orderId, deliveryPersonId: selectedDeliveryPerson }));
-    toast.success('Delivery person assigned successfully');
-    onClose();
+    try {
+      setLoading(true);
+      
+      await sellerApi.assignDelivery(orderId, {
+        deliveryPersonId: selectedDeliveryPerson,
+        estimatedDeliveryTime: 60, // Default 60 minutes
+        notes: `Assigned delivery person ${selectedDeliveryPerson}`
+      });
+
+      toast.success('Delivery person assigned successfully');
+      onSuccess?.();
+      onClose();
+      
+      // Reset form
+      setSelectedDeliveryPerson('');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to assign delivery person');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (!loading) {
+      onClose();
+      setSelectedDeliveryPerson('');
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[400px]">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Assign Delivery Person</DialogTitle>
         </DialogHeader>
@@ -56,25 +98,60 @@ export const AssignDeliveryModal = ({ isOpen, onClose, orderId }: AssignDelivery
 
           <div className="space-y-2">
             <Label htmlFor="delivery-person">Select Delivery Person</Label>
-            <Select value={selectedDeliveryPerson} onValueChange={setSelectedDeliveryPerson}>
-              <SelectTrigger>
-                <SelectValue placeholder="Choose delivery person" />
-              </SelectTrigger>
-              <SelectContent>
-                {deliveryPersons.map((person) => (
-                  <SelectItem key={person.id} value={person.id}>
-                    {person.name} - {person.zone}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {fetchingPersons ? (
+              <div className="flex items-center justify-center py-4">
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <span className="text-sm text-muted-foreground">Loading delivery persons...</span>
+              </div>
+            ) : (
+              <Select 
+                value={selectedDeliveryPerson} 
+                onValueChange={setSelectedDeliveryPerson}
+                disabled={loading}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose delivery person" />
+                </SelectTrigger>
+                <SelectContent>
+                  {deliveryPersons.map((person) => (
+                    <SelectItem 
+                      key={person.id} 
+                      value={person.id}
+                      disabled={!person.isAvailable}
+                    >
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {person.name}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {person.phone} • {person.email}
+                        </span>
+                        {person.currentOrders !== undefined && (
+                          <span className="text-xs text-muted-foreground">
+                            Current orders: {person.currentOrders}
+                          </span>
+                        )}
+                        {!person.isAvailable && (
+                          <span className="text-xs text-red-600">
+                            Currently unavailable
+                          </span>
+                        )}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outline" onClick={handleClose} disabled={loading}>
               Cancel
             </Button>
-            <Button onClick={handleAssign}>
+            <Button onClick={handleAssign} disabled={!selectedDeliveryPerson || loading}>
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
               Assign
             </Button>
           </div>

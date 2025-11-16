@@ -10,7 +10,7 @@ export declare class Salesman extends Model {
     beats?: Beat[];
     visits?: Visit[];
     lastActiveAt: Date;
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
 }
 //# sourceMappingURL=salesman.model.d.ts.map

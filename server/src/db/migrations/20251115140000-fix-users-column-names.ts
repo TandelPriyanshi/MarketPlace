@@ -3,12 +3,12 @@ import { QueryInterface, DataTypes } from 'sequelize';
 module.exports = {
   async up(queryInterface: QueryInterface) {
     // Check if camelCase columns exist
-    const [createdAtResult] = await queryInterface.sequelize.query(`
+    const [created_atResult] = await queryInterface.sequelize.query(`
       SELECT COLUMN_NAME 
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
       AND TABLE_NAME = 'users' 
-      AND COLUMN_NAME = 'createdAt'
+      AND COLUMN_NAME = 'created_at'
     `);
 
     const [updatedAtResult] = await queryInterface.sequelize.query(`
@@ -20,9 +20,9 @@ module.exports = {
     `);
 
     // If camelCase columns exist, rename them to snake_case
-    if (createdAtResult.length > 0) {
+    if (created_atResult.length > 0) {
       await queryInterface.sequelize.query(`
-        ALTER TABLE users CHANGE COLUMN createdAt created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ALTER TABLE users CHANGE COLUMN created_at created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       `);
     }
 
@@ -52,7 +52,7 @@ module.exports = {
 
   async down(queryInterface: QueryInterface) {
     // Revert back to camelCase if needed
-    const [createdAtResult] = await queryInterface.sequelize.query(`
+    const [created_atResult] = await queryInterface.sequelize.query(`
       SELECT COLUMN_NAME 
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
@@ -68,9 +68,9 @@ module.exports = {
       AND COLUMN_NAME = 'updated_at'
     `);
 
-    if (createdAtResult.length > 0) {
+    if (created_atResult.length > 0) {
       await queryInterface.sequelize.query(`
-        ALTER TABLE users CHANGE COLUMN created_at createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ALTER TABLE users CHANGE COLUMN created_at created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       `);
     }
 

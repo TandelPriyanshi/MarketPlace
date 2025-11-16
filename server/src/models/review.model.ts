@@ -63,7 +63,7 @@ export class Review extends Model {
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  declare createdAt?: Date;
+  declare created_at?: Date;
 
   @Column({
     type: DataType.DATE,

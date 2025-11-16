@@ -33,7 +33,7 @@ export interface DeliveryOrderResponseDto {
     quantity: number;
     price: number;
   }>;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }
 

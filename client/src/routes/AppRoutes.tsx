@@ -7,10 +7,11 @@ import { getRoleDashboardPath } from '@/utils/roles';
 
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
-import SellerPage from '@/pages/SellerPage';
-import DeliveryPage from '@/pages/DeliveryPage';
-import SalesmanPage from '@/pages/SalesmanPage';
-import CustomerPage from '@/pages/CustomerPage';
+import SellerPage, { SellerDashboard, ProductTable } from '@/pages/SellerPage';
+import DeliveryPage, { DeliveryDashboard, DeliveryRoutesPage, DeliveryDeliveriesPage } from '@/pages/DeliveryPage';
+import SalesmanPage, { SalesmanDashboard, SalesmanBeatsPage, SalesmanAttendancePage, SalesmanVisitsPage, SalesmanOrdersPage, SalesmanPerformancePage } from '@/pages/SalesmanPage';
+import CustomerPage, { CustomerDashboard, OrderHistory, CustomerProductsPage, CustomerComplaintsPage } from '@/pages/CustomerPage';
+import { OrderTable } from '@/components/seller/OrderTable';
 import NotFound from '@/pages/NotFound';
 
 const AppRoutes = () => {
@@ -39,7 +40,12 @@ const AppRoutes = () => {
             <SellerPage />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<SellerDashboard />} />
+        <Route path="dashboard" element={<SellerDashboard />} />
+        <Route path="products" element={<ProductTable />} />
+        <Route path="orders" element={<OrderTable />} />
+      </Route>
 
       <Route
         path="/delivery/*"
@@ -48,7 +54,12 @@ const AppRoutes = () => {
             <DeliveryPage />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<DeliveryDashboard />} />
+        <Route path="dashboard" element={<DeliveryDashboard />} />
+        <Route path="routes" element={<DeliveryRoutesPage />} />
+        <Route path="deliveries" element={<DeliveryDeliveriesPage />} />
+      </Route>
 
       <Route
         path="/salesman/*"
@@ -57,7 +68,15 @@ const AppRoutes = () => {
             <SalesmanPage />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<SalesmanDashboard />} />
+        <Route path="dashboard" element={<SalesmanDashboard />} />
+        <Route path="beats" element={<SalesmanBeatsPage />} />
+        <Route path="attendance" element={<SalesmanAttendancePage />} />
+        <Route path="visits" element={<SalesmanVisitsPage />} />
+        <Route path="orders" element={<SalesmanOrdersPage />} />
+        <Route path="performance" element={<SalesmanPerformancePage />} />
+      </Route>
 
       <Route
         path="/customer/*"
@@ -66,7 +85,13 @@ const AppRoutes = () => {
             <CustomerPage />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<CustomerDashboard />} />
+        <Route path="dashboard" element={<CustomerDashboard />} />
+        <Route path="products" element={<CustomerProductsPage />} />
+        <Route path="orders" element={<OrderHistory />} />
+        <Route path="complaints" element={<CustomerComplaintsPage />} />
+      </Route>
 
       <Route path="*" element={<NotFound />} />
     </Routes>

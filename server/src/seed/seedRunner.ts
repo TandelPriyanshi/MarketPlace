@@ -4,7 +4,8 @@ import { Seller } from '../models/seller.model';
 import { DeliveryPerson } from '../models/deliveryPerson.model';
 import { Salesman } from '../models/salesman.model';
 import { Product } from '../models/product.model';
-import { Order, OrderItem } from '../models/order.model';
+import { Order } from '../models/order.model';
+import { OrderItem } from '../models/orderItem.model';
 import { Beat } from '../models/beat.model';
 import { Store } from '../models/store.model';
 import { seedData } from './seedData';
@@ -26,7 +27,7 @@ export async function runSeeds() {
       const hashedPassword = await bcrypt.hash('password123', 10);
       const user = await User.create({
         ...userData,
-        passwordHash: hashedPassword,
+        password_hash: hashedPassword,
       });
       users.push(user);
     }

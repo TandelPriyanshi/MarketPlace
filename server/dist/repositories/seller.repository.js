@@ -36,7 +36,7 @@ class SellerRepository {
             limit,
             offset,
             include: [user_model_1.User],
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async update(id, sellerData) {

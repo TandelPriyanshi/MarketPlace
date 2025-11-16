@@ -11,7 +11,7 @@ type SalesmanAttributes = {
   phone: string;
   isActive: boolean;
   lastActiveAt: Date | null;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
@@ -27,7 +27,7 @@ class SalesmanRepository {
     return SalesmanRepository.instance;
   }
 
-  async create(salesmanData: Omit<SalesmanAttributes, 'id' | 'createdAt' | 'updatedAt' | 'lastActiveAt'>): Promise<Salesman> {
+  async create(salesmanData: Omit<SalesmanAttributes, 'id' | 'created_at' | 'updatedAt' | 'lastActiveAt'>): Promise<Salesman> {
     const salesman = new Salesman();
     Object.assign(salesman, {
       ...salesmanData,
@@ -64,11 +64,11 @@ class SalesmanRepository {
       where,
       limit,
       offset,
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
-  async update(id: string, salesmanData: Partial<Omit<SalesmanAttributes, 'id' | 'createdAt' | 'updatedAt'>>): Promise<[number, Salesman[]]> {
+  async update(id: string, salesmanData: Partial<Omit<SalesmanAttributes, 'id' | 'created_at' | 'updatedAt'>>): Promise<[number, Salesman[]]> {
     return await Salesman.update(salesmanData, {
       where: { id },
       returning: true
@@ -107,7 +107,7 @@ class SalesmanRepository {
       Visit.count({ 
         where: { 
           salesmanId,
-          createdAt: {
+          created_at: {
             [Op.gte]: new Date(new Date().setDate(1)), // First day of current month
             [Op.lte]: new Date() // Now
           }

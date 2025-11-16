@@ -44,7 +44,7 @@ class ComplaintRepository {
             ],
             limit,
             offset,
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async findByOrder(orderId) {
@@ -54,7 +54,7 @@ class ComplaintRepository {
                 { model: user_model_1.User, as: 'user' },
                 { model: user_model_1.User, as: 'resolvedBy' }
             ],
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async findAll(limit = 10, offset = 0, filter) {
@@ -71,11 +71,11 @@ class ComplaintRepository {
             if (filter.resolvedById !== undefined)
                 where.resolvedById = filter.resolvedById;
             if (filter.startDate || filter.endDate) {
-                where.createdAt = {};
+                where.created_at = {};
                 if (filter.startDate)
-                    where.createdAt[sequelize_1.Op.gte] = filter.startDate;
+                    where.created_at[sequelize_1.Op.gte] = filter.startDate;
                 if (filter.endDate)
-                    where.createdAt[sequelize_1.Op.lte] = filter.endDate;
+                    where.created_at[sequelize_1.Op.lte] = filter.endDate;
             }
         }
         return await complaint_model_1.Complaint.findAndCountAll({
@@ -87,7 +87,7 @@ class ComplaintRepository {
             ],
             limit,
             offset,
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async updateStatus(id, status, resolvedById, resolutionNotes) {

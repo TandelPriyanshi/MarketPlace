@@ -210,7 +210,7 @@ class CustomerService {
       
       const complaints = await Complaint.findAll({
         where: whereClause,
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         include: [
           { model: Order, attributes: ['id', 'orderNumber'] },
           { model: User, as: 'resolvedBy', attributes: ['id', 'name', 'email'] },

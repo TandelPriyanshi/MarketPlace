@@ -18,7 +18,7 @@ export interface SellerResponseDto {
     email: string;
     phone?: string;
   };
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }
 

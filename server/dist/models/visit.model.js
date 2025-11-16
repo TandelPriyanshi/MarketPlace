@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Visit = exports.VisitStatus = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const salesman_model_1 = require("./salesman.model");
-const store_model_1 = require("./store.model");
 var VisitStatus;
 (function (VisitStatus) {
     VisitStatus["SCHEDULED"] = "scheduled";
@@ -39,14 +38,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Visit.prototype, "salesmanId", void 0);
-__decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => store_model_1.Store),
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.UUID,
-        allowNull: false,
-    }),
-    __metadata("design:type", String)
-], Visit.prototype, "storeId", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.ENUM(...Object.values(VisitStatus)),
@@ -94,22 +85,10 @@ __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => salesman_model_1.Salesman),
     __metadata("design:type", salesman_model_1.Salesman)
 ], Visit.prototype, "salesman", void 0);
-__decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => store_model_1.Store),
-    __metadata("design:type", store_model_1.Store)
-], Visit.prototype, "store", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
-    __metadata("design:type", Date)
-], Visit.prototype, "createdAt", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
-    __metadata("design:type", Date)
-], Visit.prototype, "updatedAt", void 0);
 exports.Visit = Visit = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'visits',
-        timestamps: true,
+        timestamps: false,
         underscored: true
     })
 ], Visit);

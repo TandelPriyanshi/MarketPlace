@@ -10,7 +10,7 @@ export enum StoreType {
 
 @Table({
   tableName: 'stores',
-  timestamps: true,
+  timestamps: false,
   underscored: true
 })
 export class Store extends Model {
@@ -27,14 +27,8 @@ export class Store extends Model {
   })
   declare name: string;
 
-  @Column(DataType.TEXT)
-  declare address: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  declare contactPerson: string;
+  @Column(DataType.STRING)
+  declare email: string;
 
   @Column({
     type: DataType.STRING,
@@ -42,8 +36,15 @@ export class Store extends Model {
   })
   declare phone: string;
 
-  @Column(DataType.STRING)
-  declare email: string;
+  @Column(DataType.TEXT)
+  declare address: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'contact_person'
+  })
+  declare contactPerson: string;
 
   @Column({
     type: DataType.DECIMAL(10, 8),
@@ -64,28 +65,19 @@ export class Store extends Model {
   })
   declare type: StoreType;
 
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: true,
-  })
-  declare isActive: boolean;
-
   @ForeignKey(() => Beat)
-  @Column(DataType.UUID)
+  @Column({
+    type: DataType.UUID,
+    field: 'beat_id'
+  })
   declare beatId: string;
 
   @BelongsTo(() => Beat)
   declare beat: Beat;
 
-  @HasMany(() => Visit)
-  declare visits: Visit[];
-
-  @Column(DataType.DATE)
+  @Column({
+    type: DataType.DATE,
+    field: 'last_visited_at'
+  })
   declare lastVisitedAt: Date;
-
-  @Column(DataType.DATE)
-  declare createdAt: Date;
-
-  @Column(DataType.DATE)
-  declare updatedAt: Date;
 }

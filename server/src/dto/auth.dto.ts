@@ -21,7 +21,7 @@ export interface AuthResponseDto {
     phone?: string;
     role: UserRole;
     isActive: boolean;
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
   };
   token: string;

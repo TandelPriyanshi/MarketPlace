@@ -24,7 +24,7 @@ class CustomerRepository {
                     model: order_model_1.Order,
                     as: 'orders',
                     limit: 10,
-                    order: [['createdAt', 'DESC']]
+                    order: [['created_at', 'DESC']]
                 }
             ];
         }
@@ -38,7 +38,7 @@ class CustomerRepository {
             }
         });
     }
-    async findAll(limit = 10, offset = 0, filter, sortBy = 'createdAt', sortOrder = 'DESC') {
+    async findAll(limit = 10, offset = 0, filter, sortBy = 'created_at', sortOrder = 'DESC') {
         const where = {
             role: user_model_1.UserRole.CUSTOMER,
             ...filter
@@ -74,8 +74,8 @@ class CustomerRepository {
                     userId: customerId,
                     status: 'completed'
                 },
-                attributes: ['totalAmount', 'createdAt'],
-                order: [['createdAt', 'DESC']],
+                attributes: ['totalAmount', 'created_at'],
+                order: [['created_at', 'DESC']],
                 limit: 1
             }),
             order_model_1.Order.count({

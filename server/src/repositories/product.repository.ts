@@ -15,7 +15,7 @@ type ProductAttributes = {
   isActive: boolean;
   rating: number;
   reviewCount: number;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
@@ -31,7 +31,7 @@ class ProductRepository {
     return ProductRepository.instance;
   }
 
-  async create(productData: Omit<ProductAttributes, 'id' | 'createdAt' | 'updatedAt' | 'rating' | 'reviewCount'>): Promise<Product> {
+  async create(productData: Omit<ProductAttributes, 'id' | 'created_at' | 'updatedAt' | 'rating' | 'reviewCount'>): Promise<Product> {
     const product = new Product();
     Object.assign(product, {
       ...productData,
@@ -54,7 +54,7 @@ class ProductRepository {
       where: { sellerId },
       limit,
       offset,
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
@@ -79,12 +79,12 @@ class ProductRepository {
       where,
       limit,
       offset,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
       include: [Seller]
     });
   }
 
-  async update(id: string, productData: Partial<Omit<ProductAttributes, 'id' | 'sellerId' | 'createdAt' | 'updatedAt'>>): Promise<[number, Product[]]> {
+  async update(id: string, productData: Partial<Omit<ProductAttributes, 'id' | 'sellerId' | 'created_at' | 'updatedAt'>>): Promise<[number, Product[]]> {
     return await Product.update(productData, {
       where: { id },
       returning: true

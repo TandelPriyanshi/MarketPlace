@@ -30,6 +30,8 @@ tags:
     description: Customer operations
   - name: Complaint
     description: Complaint management
+  - name: Notifications
+    description: Notification management endpoints
 
 paths:
   /auth/register:
@@ -956,6 +958,158 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get logged-in user notifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: Maximum number of notifications to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+          description: Number of notifications to skip
+        - name: unreadOnly
+          in: query
+          schema:
+            type: boolean
+          description: Return only unread notifications
+      responses:
+        '200':
+          description: Notifications fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      notifications:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Notification'
+                      unreadCount:
+                        type: integer
+                      total:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Notifications
+      summary: Create notification (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNotification'
+      responses:
+        '201':
+          description: Notification created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Notification'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/readAll:
+    put:
+      tags:
+        - Notifications
+      summary: Mark all notifications as read
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: All notifications marked as read successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      markedCount:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications/{id}/read:
+    put:
+      tags:
+        - Notifications
+      summary: Mark single notification as read
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Notification ID
+      responses:
+        '200':
+          description: Notification marked as read successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1022,7 +1176,7 @@ components:
           type: string
         isActive:
           type: boolean
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1100,7 +1254,7 @@ components:
             type: string
         status:
           type: string
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1151,7 +1305,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OrderItemResponse'
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1247,7 +1401,7 @@ components:
             type: string
         resolutionNotes:
           type: string
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1314,7 +1468,7 @@ components:
           format: uuid
         isActive:
           type: boolean
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1360,7 +1514,7 @@ components:
           enum: [scheduled, in_progress, completed, cancelled]
         notes:
           type: string
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1407,7 +1561,7 @@ components:
           format: uuid
         isActive:
           type: boolean
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1461,12 +1615,89 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Attachment'
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Notification unique identifier
+        userId:
+          type: string
+          format: uuid
+          description: User ID who owns this notification
+        type:
+          type: string
+          enum: [order_placed, order_confirmed, order_shipped, order_delivered, order_cancelled, payment_received, payment_failed, complaint_created, complaint_resolved, product_low_stock, delivery_assigned, delivery_completed, system_update]
+          description: Type of notification
+        title:
+          type: string
+          description: Notification title
+        message:
+          type: string
+          description: Notification message content
+        data:
+          type: object
+          description: Additional data payload
+        isRead:
+          type: boolean
+          description: Whether notification has been read
+        readAt:
+          type: string
+          format: date-time
+          description: When notification was marked as read
+        createdAt:
+          type: string
+          format: date-time
+          description: When notification was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: When notification was last updated
+      example:
+        id: "550e8400-e29b-41d4-a716-446655440000"
+        title: "Order Update"
+        message: "Your order has been dispatched"
+        type: "order_shipped"
+        isRead: false
+
+    CreateNotification:
+      type: object
+      required:
+        - userId
+        - type
+        - title
+        - message
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: User ID to receive notification
+        type:
+          type: string
+          enum: [order_placed, order_confirmed, order_shipped, order_delivered, order_cancelled, payment_received, payment_failed, complaint_created, complaint_resolved, product_low_stock, delivery_assigned, delivery_completed, system_update]
+          description: Type of notification
+        title:
+          type: string
+          description: Notification title
+          example: "Order Update"
+        message:
+          type: string
+          description: Notification message
+          example: "Your order has been dispatched"
+        data:
+          type: object
+          description: Additional notification data
+          example:
+            orderId: "123e4567-e89b-12d3-a456-426614174000"
+            orderNumber: "ORD-001"
 
     CreateComplaint:
       type: object
@@ -1503,7 +1734,7 @@ components:
           type: integer
         url:
           type: string
-        createdAt:
+        created_at:
           type: string
           format: date-time
 
@@ -1530,7 +1761,7 @@ components:
           type: string
         isActive:
           type: boolean
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1567,7 +1798,7 @@ components:
           type: string
         notes:
           type: string
-        createdAt:
+        created_at:
           type: string
           format: date-time
         updatedAt:
@@ -1595,7 +1826,7 @@ components:
           type: number
         totalPrice:
           type: number
-        createdAt:
+        created_at:
           type: string
           format: date-time
 

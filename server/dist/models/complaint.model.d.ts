@@ -31,7 +31,7 @@ export declare class Complaint extends Model {
     user?: User;
     order?: Order;
     resolvedBy?: User;
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
 }
 export declare function setupComplaintAssociations(): void;

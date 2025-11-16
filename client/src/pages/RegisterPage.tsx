@@ -1,5 +1,4 @@
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,32 +11,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { setCredentials } from '@/app/slices/authSlice';
-import { getRoleDashboardPath } from '@/utils/roles';
-import { USER_ROLES } from '@/utils/constants';
+import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/app/slices/authSlice';
 import { toast } from 'sonner';
 
+interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  phone?: string;
+  address?: string;
+}
+
 const RegisterPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
+  const { register: registerUser, isAuthenticated, isLoading, error } = useAuth();
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<RegisterFormData>();
+  
+  const selectedRole = watch('role');
 
-  const onSubmit = (data: any) => {
-    const userData = {
-      id: `USER-${Date.now()}`,
-      name: data.name,
-      email: data.email,
-      role: data.role,
-      phone: data.phone,
-    };
-
-    dispatch(setCredentials({
-      user: userData,
-      token: 'mock-jwt-token-' + Date.now(),
-    }));
-
-    toast.success('Registration successful!');
-    navigate(getRoleDashboardPath(data.role));
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      await registerUser(data);
+      // Success toast and redirect are handled by useAuth hook
+    } catch (error: any) {
+      toast.error(error || 'Registration failed');
+    }
   };
 
   return (
@@ -61,10 +61,11 @@ const RegisterPage = () => {
               <Input
                 id="name"
                 placeholder="Enter your full name"
+                disabled={isLoading}
                 {...register('name', { required: 'Name is required' })}
               />
               {errors.name && (
-                <p className="text-sm text-destructive">{errors.name.message as string}</p>
+                <p className="text-sm text-destructive">{errors.name.message}</p>
               )}
             </div>
 
@@ -74,7 +75,8 @@ const RegisterPage = () => {
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                {...register('email', { 
+                disabled={isLoading}
+                {...register('email', {
                   required: 'Email is required',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -83,7 +85,7 @@ const RegisterPage = () => {
                 })}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message as string}</p>
+                <p className="text-sm text-destructive">{errors.email.message}</p>
               )}
             </div>
 
@@ -93,11 +95,22 @@ const RegisterPage = () => {
                 id="phone"
                 type="tel"
                 placeholder="Enter your phone number"
+                disabled={isLoading}
                 {...register('phone', { required: 'Phone is required' })}
               />
               {errors.phone && (
-                <p className="text-sm text-destructive">{errors.phone.message as string}</p>
+                <p className="text-sm text-destructive">{errors.phone.message}</p>
               )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address">Address (Optional)</Label>
+              <Input
+                id="address"
+                placeholder="Enter your address"
+                disabled={isLoading}
+                {...register('address')}
+              />
             </div>
 
             <div className="space-y-2">
@@ -106,6 +119,7 @@ const RegisterPage = () => {
                 id="password"
                 type="password"
                 placeholder="Create a password"
+                disabled={isLoading}
                 {...register('password', { 
                   required: 'Password is required',
                   minLength: {
@@ -115,30 +129,30 @@ const RegisterPage = () => {
                 })}
               />
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message as string}</p>
+                <p className="text-sm text-destructive">{errors.password.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="role">Select Role</Label>
-              <Select onValueChange={(value) => setValue('role', value)}>
+              <Select onValueChange={(value) => setValue('role', value as UserRole)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose your role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={USER_ROLES.SELLER}>Seller</SelectItem>
-                  <SelectItem value={USER_ROLES.DELIVERY}>Delivery Person</SelectItem>
-                  <SelectItem value={USER_ROLES.SALESMAN}>Salesman</SelectItem>
-                  <SelectItem value={USER_ROLES.CUSTOMER}>Customer</SelectItem>
+                  <SelectItem value="seller">Seller</SelectItem>
+                  <SelectItem value="delivery_person">Delivery Person</SelectItem>
+                  <SelectItem value="salesman">Salesman</SelectItem>
+                  <SelectItem value="customer">Customer</SelectItem>
                 </SelectContent>
               </Select>
               {errors.role && (
-                <p className="text-sm text-destructive">{errors.role.message as string}</p>
+                <p className="text-sm text-destructive">{errors.role.message}</p>
               )}
             </div>
 
-            <Button type="submit" className="w-full">
-              Create Account
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
 

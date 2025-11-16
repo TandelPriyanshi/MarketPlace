@@ -12,11 +12,11 @@ type AttachmentAttributes = {
   mimeType: string;
   type: 'signature' | 'delivery_proof' | 'return_proof';
   notes: string | null;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
-type CreateAttachmentData = Omit<AttachmentAttributes, 'id' | 'createdAt' | 'updatedAt'>;
+type CreateAttachmentData = Omit<AttachmentAttributes, 'id' | 'created_at' | 'updatedAt'>;
 
 class AttachmentRepository {
   private static instance: AttachmentRepository;
@@ -58,7 +58,7 @@ class AttachmentRepository {
       include: [
         { model: User, as: 'uploadedBy' }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
@@ -70,13 +70,13 @@ class AttachmentRepository {
       ],
       limit,
       offset,
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
   async update(
     id: string, 
-    updateData: Partial<Omit<AttachmentAttributes, 'id' | 'orderId' | 'uploadedById' | 'createdAt' | 'updatedAt'>>
+    updateData: Partial<Omit<AttachmentAttributes, 'id' | 'orderId' | 'uploadedById' | 'created_at' | 'updatedAt'>>
   ): Promise<[number, Attachment[]]> {
     // Use type assertion to handle the notes field
     const updateValues: any = { ...updateData };
@@ -111,7 +111,7 @@ class AttachmentRepository {
   }> {
     const attachments = await Attachment.findAll({
       where: { orderId },
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
 
     const result = {
@@ -160,7 +160,7 @@ class AttachmentRepository {
       Attachment.findAll({
         where,
         limit: 5,
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         include: [
           { model: Order, as: 'order' },
           { model: User, as: 'uploadedBy' }

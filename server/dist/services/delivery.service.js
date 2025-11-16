@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // src/services/delivery.service.ts
 const sequelize_1 = require("sequelize");
 const order_model_1 = require("../models/order.model");
+const orderItem_model_1 = require("../models/orderItem.model");
 const user_model_1 = require("../models/user.model");
 const product_model_1 = require("../models/product.model");
 const attachment_model_1 = require("../models/attachment.model");
@@ -28,7 +29,7 @@ async function createAttachment(orderId, uploadedById, fileName, filePath, mimeT
             mimeType,
             type,
             size: stats.size,
-            createdAt: new Date(),
+            created_at: new Date(),
             updatedAt: new Date()
         };
         // Only include notes if it's provided
@@ -64,7 +65,7 @@ class DeliveryService {
                         attributes: ['id', 'name', 'phone', 'email'],
                     },
                     {
-                        model: order_model_1.OrderItem,
+                        model: orderItem_model_1.OrderItem,
                         as: 'items',
                         include: [{
                                 model: product_model_1.Product,
@@ -73,7 +74,7 @@ class DeliveryService {
                             }],
                     },
                 ],
-                order: [['deliveryDate', 'ASC']],
+                order: [['createdAt', 'ASC']],
             });
             return orders;
         }
@@ -96,7 +97,6 @@ class DeliveryService {
             const updateData = { deliveryStatus: status };
             if (status === order_model_1.DeliveryStatus.DELIVERED) {
                 updateData.status = order_model_1.OrderStatus.COMPLETED;
-                updateData.deliveryDate = new Date();
             }
             if (notes) {
                 updateData.deliveryNotes = notes;
@@ -152,7 +152,7 @@ class DeliveryService {
             const orders = await order_model_1.Order.findAll({
                 where: {
                     deliveryPersonId,
-                    deliveryDate: {
+                    createdAt: {
                         [sequelize_1.Op.gte]: today,
                         [sequelize_1.Op.lt]: tomorrow,
                     },
@@ -172,7 +172,7 @@ class DeliveryService {
                         attributes: ['id', 'name', 'phone', 'email', 'address'],
                     },
                     {
-                        model: order_model_1.OrderItem,
+                        model: orderItem_model_1.OrderItem,
                         as: 'items',
                         include: [{
                                 model: product_model_1.Product,
@@ -181,7 +181,7 @@ class DeliveryService {
                             }],
                     },
                 ],
-                order: [['deliveryDate', 'ASC']],
+                order: [['createdAt', 'ASC']],
             });
             return orders;
         }

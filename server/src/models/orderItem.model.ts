@@ -1,12 +1,12 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
-import { Order, OrderStatus } from './order.model';
+import { Order } from './order.model';
 import { Product } from './product.model';
 import { User } from './user.model';
 
 @Table({
   tableName: 'order_items',
   timestamps: true,
-  underscored: true,
+  underscored: false,
 })
 export class OrderItem extends Model {
   @Column({
@@ -56,24 +56,16 @@ export class OrderItem extends Model {
   declare price: number;
 
   @Column({
-    type: DataType.ENUM(...Object.values(OrderStatus) as [string, ...string[]]),
-    defaultValue: OrderStatus.PENDING,
-    allowNull: false,
-    validate: {
-      isIn: [Object.values(OrderStatus)],
-    },
-  })
-  declare status: OrderStatus;
-
-  @Column({
     type: DataType.BOOLEAN,
     defaultValue: false,
+    field: 'is_cancelled'
   })
   declare isCancelled: boolean;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
+    field: 'cancellation_reason'
   })
   declare cancellationReason?: string;
 

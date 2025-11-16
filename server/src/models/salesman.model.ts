@@ -50,7 +50,7 @@ export class Salesman extends Model {
   declare lastActiveAt: Date;
 
   @Column(DataType.DATE)
-  declare createdAt: Date;
+  declare created_at: Date;
 
   @Column(DataType.DATE)
   declare updatedAt: Date;

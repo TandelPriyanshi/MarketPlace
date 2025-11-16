@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Edit, Trash2, Power, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Edit, Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -12,29 +11,66 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency } from '@/utils/helpers';
-import { RootState } from '@/app/store';
-import { updateProduct, deleteProduct } from '@/app/slices/sellerSlice';
+import { listProductsBySeller, deleteProduct as deleteProductApi } from '@/api/product.api';
 import { ProductModal } from './ProductModal';
+import { toast } from 'sonner';
 
 export const ProductTable = () => {
-  const dispatch = useDispatch();
-  const { products } = useSelector((state: RootState) => state.seller);
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
 
-  const handleToggleStatus = (product: any) => {
-    dispatch(updateProduct({ ...product, isActive: !product.isActive }));
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      console.log('Fetching products...');
+      const response = await listProductsBySeller();
+      console.log('Products fetched:', response);
+      setProducts(response.products);
+    } catch (error: any) {
+      console.error('Fetch products error:', error);
+      toast.error('Failed to fetch products');
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const handleEdit = (product: any) => {
     setEditingProduct(product);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (productId: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      dispatch(deleteProduct(productId));
-    }
+  const handleDelete = async (productId: string) => {
+    console.log('Attempting to delete product:', productId);
+    
+    toast('Are you sure you want to delete this product?', {
+      action: {
+        label: 'Delete',
+        onClick: async () => {
+          console.log('Delete confirmed for product:', productId);
+          try {
+            await deleteProductApi(productId);
+            console.log('Product deleted successfully, refreshing list...');
+            toast.success('Product deleted successfully');
+            fetchProducts();
+          } catch (error: any) {
+            console.error('Delete error:', error);
+            toast.error(error.message || 'Failed to delete product');
+          }
+        }
+      },
+      cancel: {
+        label: 'Cancel',
+        onClick: () => {
+          console.log('Delete cancelled');
+        }
+      }
+    });
   };
 
   return (
@@ -62,7 +98,13 @@ export const ProductTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.length === 0 ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                  Loading products...
+                </TableCell>
+              </TableRow>
+            ) : products.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                   No products found. Add your first product to get started.
@@ -82,11 +124,13 @@ export const ProductTable = () => {
                   </TableCell>
                   <TableCell>{product.unit}</TableCell>
                   <TableCell>
-                    {product.isActive ? (
-                      <Badge className="bg-accent/10 text-accent border-accent/20">Active</Badge>
-                    ) : (
-                      <Badge variant="secondary">Inactive</Badge>
-                    )}
+                    <Badge 
+                      variant={product.status === 'published' ? 'default' : 
+                              product.status === 'draft' ? 'secondary' : 
+                              product.status === 'out_of_stock' ? 'destructive' : 'outline'}
+                    >
+                      {product.status?.replace('_', ' ') || 'draft'}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
@@ -96,13 +140,6 @@ export const ProductTable = () => {
                         onClick={() => handleEdit(product)}
                       >
                         <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleToggleStatus(product)}
-                      >
-                        <Power className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -125,6 +162,7 @@ export const ProductTable = () => {
         isOpen={isModalOpen}
         onClose={() => { setIsModalOpen(false); setEditingProduct(null); }}
         product={editingProduct}
+        onProductSaved={fetchProducts}
       />
     </div>
   );

@@ -10,8 +10,7 @@ export enum ProductStatus {
 
 @Table({
   tableName: 'products',
-  timestamps: true,
-  underscored: true
+  timestamps: true
 })
 export class Product extends Model {
   @Column({

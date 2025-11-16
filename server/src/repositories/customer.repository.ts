@@ -16,7 +16,7 @@ type CustomerAttributes = {
   lastOrderAt: Date | null;
   totalOrders: number;
   totalSpent: number;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
@@ -46,7 +46,7 @@ class CustomerRepository {
           model: Order, 
           as: 'orders',
           limit: 10,
-          order: [['createdAt', 'DESC']]
+          order: [['created_at', 'DESC']]
         }
       ];
     }
@@ -67,7 +67,7 @@ class CustomerRepository {
     limit: number = 10, 
     offset: number = 0, 
     filter?: Partial<CustomerAttributes>,
-    sortBy: string = 'createdAt',
+    sortBy: string = 'created_at',
     sortOrder: 'ASC' | 'DESC' = 'DESC'
   ): Promise<{ rows: User[]; count: number }> {
     const where: any = { 
@@ -85,7 +85,7 @@ class CustomerRepository {
 
   async update(
     id: string, 
-    customerData: Partial<Omit<CustomerAttributes, 'id' | 'role' | 'createdAt' | 'updatedAt' | 'totalOrders' | 'totalSpent'>>
+    customerData: Partial<Omit<CustomerAttributes, 'id' | 'role' | 'created_at' | 'updatedAt' | 'totalOrders' | 'totalSpent'>>
   ): Promise<[number, User[]]> {
     return await User.update(customerData, {
       where: { 
@@ -117,8 +117,8 @@ class CustomerRepository {
           userId: customerId,
           status: 'completed' 
         },
-        attributes: ['totalAmount', 'createdAt'],
-        order: [['createdAt', 'DESC']],
+        attributes: ['totalAmount', 'created_at'],
+        order: [['created_at', 'DESC']],
         limit: 1
       }),
       Order.count({ 

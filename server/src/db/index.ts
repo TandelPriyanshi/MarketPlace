@@ -4,12 +4,14 @@ import { Seller } from '../models/seller.model';
 import { DeliveryPerson } from '../models/deliveryPerson.model';
 import { Salesman } from '../models/salesman.model';
 import { Product } from '../models/product.model';
-import { Order, OrderItemModel as OrderItem } from '../models/order.model';
+import { Order } from '../models/order.model';
+import { OrderItem } from '../models/orderItem.model';
 import { Beat } from '../models/beat.model';
 import { Store } from '../models/store.model';
 import { Visit } from '../models/visit.model';
 import { Complaint } from '../models/complaint.model';
 import { Attachment } from '../models/attachment.model';
+import { Notification } from '../models/notification.model';
 import { currentConfig } from '../config/config';
 
 const sequelize = new Sequelize(
@@ -38,6 +40,7 @@ sequelize.addModels([
   Visit as any,
   Complaint as any,
   Attachment as any,
+  Notification as any,
 ]);
 
 const connectDB = async () => {

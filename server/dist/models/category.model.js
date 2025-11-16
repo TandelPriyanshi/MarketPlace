@@ -56,7 +56,7 @@ __decorate([
         defaultValue: sequelize_typescript_1.DataType.NOW,
     }),
     __metadata("design:type", Date)
-], Category.prototype, "createdAt", void 0);
+], Category.prototype, "created_at", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.DATE,

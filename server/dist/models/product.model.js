@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = exports.ProductStatus = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-const user_model_1 = require("./user.model");
+const seller_model_1 = require("./seller.model");
 var ProductStatus;
 (function (ProductStatus) {
     ProductStatus["DRAFT"] = "draft";
@@ -31,10 +31,11 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => user_model_1.User),
+    (0, sequelize_typescript_1.ForeignKey)(() => seller_model_1.Seller),
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.UUID,
         allowNull: false,
+        field: 'seller_id'
     }),
     __metadata("design:type", String)
 ], Product.prototype, "sellerId", void 0);
@@ -106,8 +107,8 @@ __decorate([
     __metadata("design:type", Object)
 ], Product.prototype, "metadata", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User, 'sellerId'),
-    __metadata("design:type", user_model_1.User)
+    (0, sequelize_typescript_1.BelongsTo)(() => seller_model_1.Seller, 'sellerId'),
+    __metadata("design:type", seller_model_1.Seller)
 ], Product.prototype, "seller", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
@@ -128,7 +129,6 @@ __decorate([
 exports.Product = Product = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'products',
-        timestamps: true,
-        underscored: true
+        timestamps: true
     })
 ], Product);

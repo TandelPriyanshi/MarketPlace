@@ -14,7 +14,7 @@ module.exports = {
           o.paymentStatus as payment_status,
           o.deliveryStatus as delivery_status,
           o.totalAmount as total_amount,
-          o.createdAt as createdAt,
+          o.created_at as created_at,
           CONCAT(u.firstName, ' ', u.lastName) as customer_name,
           u.email as customer_email,
           s.businessName as seller_name,
@@ -39,7 +39,7 @@ module.exports = {
           p.isActive as is_active,
           s.businessName as seller_name,
           s.id as seller_id,
-          p.createdAt as createdAt,
+          p.created_at as created_at,
           p.updatedAt as updated_at
         FROM products p
         JOIN sellers s ON p.sellerId = s.id
@@ -50,7 +50,7 @@ module.exports = {
       await queryInterface.sequelize.query(`
         CREATE OR REPLACE VIEW sales_reports AS
         SELECT 
-          DATE(o.createdAt) as sale_date,
+          DATE(o.created_at) as sale_date,
           s.id as seller_id,
           s.businessName as seller_name,
           COUNT(DISTINCT o.id) as total_orders,
@@ -61,7 +61,7 @@ module.exports = {
         LEFT JOIN order_items oi ON o.id = oi.orderId
         JOIN sellers s ON o.sellerId = s.id
         WHERE o.status NOT IN ('cancelled', 'refunded')
-        GROUP BY DATE(o.createdAt), s.id, s.businessName
+        GROUP BY DATE(o.created_at), s.id, s.businessName
         ORDER BY sale_date DESC;
       `);
     } catch (error) {

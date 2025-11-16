@@ -65,7 +65,7 @@ export interface BeatResponseDto {
     name: string;
     address: string;
   }>;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }
 
@@ -109,6 +109,6 @@ export interface VisitResponseDto {
     contactPerson: string;
     phone: string;
   };
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }

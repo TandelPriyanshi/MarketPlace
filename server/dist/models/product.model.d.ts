@@ -17,7 +17,7 @@ export declare class Product extends Model {
     status: ProductStatus;
     metadata?: Record<string, any>;
     seller?: User;
-    createdAt?: Date;
+    created_at?: Date;
     updatedAt?: Date;
 }
 //# sourceMappingURL=product.model.d.ts.map

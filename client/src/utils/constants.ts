@@ -1,3 +1,4 @@
+//src/utils/constants.ts
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export const ORDER_STATUS = {
@@ -23,7 +24,7 @@ export const DELIVERY_STATUS = {
 
 export const USER_ROLES = {
   SELLER: 'seller',
-  DELIVERY: 'delivery',
+  DELIVERY: 'delivery_person',
   SALESMAN: 'salesman',
   CUSTOMER: 'customer',
 } as const;

@@ -34,6 +34,7 @@ export class Beat extends Model {
   @Column({
     type: DataType.UUID,
     allowNull: false,
+    field: 'salesman_id'
   })
   declare salesmanId: string;
 
@@ -67,10 +68,4 @@ export class Beat extends Model {
 
   @HasMany(() => Store)
   declare stores: Store[];
-
-  @Column(DataType.DATE)
-  declare createdAt: Date;
-
-  @Column(DataType.DATE)
-  declare updatedAt: Date;
 }

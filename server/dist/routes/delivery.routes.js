@@ -61,6 +61,108 @@ router.use(auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)(...[
 router.get('/orders', delivery_controller_1.default.getAssignedOrders);
 /**
  * @swagger
+ * /delivery/assigned:
+ *   get:
+ *     summary: Get assigned deliveries for delivery person
+ *     tags: [Delivery]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [assigned, picked_up, in_transit, delivered, failed]
+ *         description: Filter deliveries by status
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Start date filter
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: End date filter
+ *     responses:
+ *       200:
+ *         description: List of assigned deliveries
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     deliveries:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Delivery'
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         page:
+ *                           type: integer
+ *                         limit:
+ *                           type: integer
+ *                         total:
+ *                           type: integer
+ *                         totalPages:
+ *                           type: integer
+ */
+router.get('/assigned', delivery_controller_1.default.getAssignedDeliveries);
+/**
+ * @swagger
+ * /delivery/stats:
+ *   get:
+ *     summary: Get delivery statistics for delivery person
+ *     tags: [Delivery]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Delivery statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     totalDeliveries:
+ *                       type: integer
+ *                     completedDeliveries:
+ *                       type: integer
+ *                     failedDeliveries:
+ *                       type: integer
+ *                     averageDeliveryTime:
+ *                       type: number
+ *                     totalDistance:
+ *                       type: number
+ */
+router.get('/stats', delivery_controller_1.default.getDeliveryStats);
+/**
+ * @swagger
  * /delivery/orders/{id}/status:
  *   put:
  *     summary: Update delivery status

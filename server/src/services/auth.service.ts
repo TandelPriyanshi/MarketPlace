@@ -34,7 +34,7 @@ class AuthService {
       
       return {
         user: this.getUserWithoutPassword(user),
-        token
+        accessToken: token
       };
     } catch (error) {
       logger.error('Error in registerUser:', error);
@@ -66,7 +66,7 @@ class AuthService {
 
       return {
         user: this.getUserWithoutPassword(user),
-        token
+        accessToken: token
       };
     } catch (error) {
       logger.error('Error in loginUser:', error);

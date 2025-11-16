@@ -7,7 +7,7 @@ export abstract class BaseModel<T extends Model = Model> extends Model<T> {
 
   // Common fields that all models will have
   declare id: string;
-  declare readonly createdAt: Date;
+  declare readonly created_at: Date;
   declare readonly updatedAt: Date;
   declare readonly deletedAt?: Date | null;
 }

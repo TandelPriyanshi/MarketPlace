@@ -1,7 +1,8 @@
-// server/src/db/migrations/20231114000003-create-products.js
+// server/src/db/migrations/20231114000003-create-products.ts
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
+        // First create the table without the foreign key
         await queryInterface.createTable('products', {
             id: {
                 type: Sequelize.UUID,
@@ -11,12 +12,6 @@ module.exports = {
             sellerId: {
                 type: Sequelize.UUID,
                 allowNull: false,
-                references: {
-                    model: 'sellers',
-                    key: 'id',
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE',
             },
             name: {
                 type: Sequelize.STRING,
@@ -66,7 +61,7 @@ module.exports = {
                 type: Sequelize.JSON,
                 allowNull: true,
             },
-            createdAt: {
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -86,8 +81,23 @@ module.exports = {
         await queryInterface.addIndex('products', ['category']);
         await queryInterface.addIndex('products', ['brand']);
         await queryInterface.addIndex('products', ['isActive']);
+        // Then add the foreign key constraint
+        await queryInterface.addConstraint('products', {
+            fields: ['sellerId'],
+            type: 'foreign key',
+            name: 'products_sellerId_fk',
+            references: {
+                table: 'sellers',
+                field: 'id'
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+        });
     },
     down: async (queryInterface, Sequelize) => {
+        // First remove the foreign key constraint
+        await queryInterface.removeConstraint('products', 'products_sellerId_fk');
+        // Then drop the table
         await queryInterface.dropTable('products');
     },
 };

@@ -35,7 +35,7 @@ class AttachmentRepository {
             include: [
                 { model: user_model_1.User, as: 'uploadedBy' }
             ],
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async findByUploader(uploadedById, limit = 10, offset = 0) {
@@ -46,7 +46,7 @@ class AttachmentRepository {
             ],
             limit,
             offset,
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async update(id, updateData) {
@@ -74,7 +74,7 @@ class AttachmentRepository {
     async getOrderAttachments(orderId) {
         const attachments = await attachment_model_1.Attachment.findAll({
             where: { orderId },
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
         const result = {
             signature: null,
@@ -114,7 +114,7 @@ class AttachmentRepository {
             attachment_model_1.Attachment.findAll({
                 where,
                 limit: 5,
-                order: [['createdAt', 'DESC']],
+                order: [['created_at', 'DESC']],
                 include: [
                     { model: order_model_1.Order, as: 'order' },
                     { model: user_model_1.User, as: 'uploadedBy' }

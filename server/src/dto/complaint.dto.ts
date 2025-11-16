@@ -34,7 +34,7 @@ export interface ComplaintResponseDto {
     id: string;
     orderNumber: string;
   };
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }
 

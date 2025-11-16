@@ -42,7 +42,7 @@ export declare class Visit extends Model {
     };
     salesman: Salesman;
     store: Store;
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
 }
 //# sourceMappingURL=visit.model.d.ts.map

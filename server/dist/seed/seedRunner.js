@@ -11,6 +11,7 @@ const deliveryPerson_model_1 = require("../models/deliveryPerson.model");
 const salesman_model_1 = require("../models/salesman.model");
 const product_model_1 = require("../models/product.model");
 const order_model_1 = require("../models/order.model");
+const orderItem_model_1 = require("../models/orderItem.model");
 const beat_model_1 = require("../models/beat.model");
 const store_model_1 = require("../models/store.model");
 const seedData_1 = require("./seedData");
@@ -29,7 +30,7 @@ async function runSeeds() {
             const hashedPassword = await bcryptjs_1.default.hash('password123', 10);
             const user = await user_model_1.User.create({
                 ...userData,
-                passwordHash: hashedPassword,
+                password_hash: hashedPassword,
             });
             users.push(user);
         }
@@ -113,7 +114,7 @@ async function runSeeds() {
                     productId: products[i].id,
                     sellerId: products[i].sellerId,
                 };
-                await order_model_1.OrderItem.create(orderItemData);
+                await orderItem_model_1.OrderItem.create(orderItemData);
             }
         }
         logger_1.logger.info('Seeding completed successfully!');

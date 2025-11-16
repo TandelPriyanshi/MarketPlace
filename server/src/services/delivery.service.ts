@@ -1,6 +1,7 @@
 // src/services/delivery.service.ts
 import { Op, Transaction } from 'sequelize';
-import { Order, OrderStatus, DeliveryStatus, OrderItem } from '../models/order.model';
+import { Order, OrderStatus, DeliveryStatus } from '../models/order.model';
+import { OrderItem } from '../models/orderItem.model';
 import { User } from '../models/user.model';
 import { Product } from '../models/product.model';
 import { Attachment } from '../models/attachment.model';
@@ -34,7 +35,7 @@ async function createAttachment(
       mimeType,
       type,
       size: stats.size,
-      createdAt: new Date(),
+      created_at: new Date(),
       updatedAt: new Date()
     };
 
@@ -83,7 +84,7 @@ class DeliveryService {
             }],
           },
         ],
-        order: [['deliveryDate', 'ASC']],
+        order: [['createdAt', 'ASC']],
       });
 
       return orders;
@@ -116,7 +117,6 @@ class DeliveryService {
       const updateData: any = { deliveryStatus: status };
       if (status === DeliveryStatus.DELIVERED) {
         updateData.status = OrderStatus.COMPLETED;
-        updateData.deliveryDate = new Date();
       }
 
       if (notes) {
@@ -199,7 +199,7 @@ class DeliveryService {
       const orders = await Order.findAll({
         where: {
           deliveryPersonId,
-          deliveryDate: {
+          createdAt: {
             [Op.gte]: today,
             [Op.lt]: tomorrow,
           },
@@ -228,7 +228,7 @@ class DeliveryService {
             }],
           },
         ],
-        order: [['deliveryDate', 'ASC']],
+        order: [['createdAt', 'ASC']],
       });
 
       return orders;

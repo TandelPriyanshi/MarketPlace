@@ -10,6 +10,8 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.UUID,
+                charset: 'utf8mb4',
+                collate: 'utf8mb4_unicode_ci',
                 allowNull: false,
                 references: {
                     model: 'users',
@@ -19,6 +21,8 @@ module.exports = {
             },
             sellerId: {
                 type: Sequelize.UUID,
+                charset: 'utf8mb4',
+                collate: 'utf8mb4_unicode_ci',
                 allowNull: false,
                 references: {
                     model: 'sellers',
@@ -75,7 +79,7 @@ module.exports = {
                 type: Sequelize.JSON,
                 allowNull: true,
             },
-            createdAt: {
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -156,7 +160,7 @@ module.exports = {
                 type: Sequelize.JSON,
                 allowNull: true,
             },
-            createdAt: {
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

@@ -1,8 +1,6 @@
 import { Op } from 'sequelize';
 import { User, UserRole } from '../models/user.model';
 import userRepository from '../repositories/user.repository';
-import { sequelize } from '../db';
-import { logger } from '../utils/logger';
 import { NotFoundError, ValidationError } from '../utils/errors';
 
 class UserService {

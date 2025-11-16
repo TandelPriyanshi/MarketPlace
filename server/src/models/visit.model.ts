@@ -11,7 +11,7 @@ export enum VisitStatus {
 
 @Table({
   tableName: 'visits',
-  timestamps: true,
+  timestamps: false,
   underscored: true
 })
 export class Visit extends Model {
@@ -28,13 +28,6 @@ export class Visit extends Model {
     allowNull: false,
   })
   declare salesmanId: string;
-
-  @ForeignKey(() => Store)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  declare storeId: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(VisitStatus) as [string, ...string[]]),
@@ -92,13 +85,4 @@ export class Visit extends Model {
 
   @BelongsTo(() => Salesman)
   declare salesman: Salesman;
-
-  @BelongsTo(() => Store)
-  declare store: Store;
-
-  @Column(DataType.DATE)
-  declare createdAt: Date;
-
-  @Column(DataType.DATE)
-  declare updatedAt: Date;
 }

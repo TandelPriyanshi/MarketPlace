@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { addProduct, updateProduct } from '@/app/slices/sellerSlice';
+import { createProduct, updateProduct } from '@/api/product.api';
 import { generateSKU } from '@/utils/helpers';
 import { PRODUCT_UNITS } from '@/utils/constants';
 import { toast } from 'sonner';
@@ -22,10 +21,11 @@ interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   product?: any;
+  onProductSaved?: () => void;
 }
 
-export const ProductModal = ({ isOpen, onClose, product }: ProductModalProps) => {
-  const dispatch = useDispatch();
+export const ProductModal = ({ isOpen, onClose, product, onProductSaved }: ProductModalProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, reset, setValue, watch } = useForm();
 
   useEffect(() => {
@@ -44,24 +44,34 @@ export const ProductModal = ({ isOpen, onClose, product }: ProductModalProps) =>
     }
   }, [product, reset]);
 
-  const onSubmit = (data: any) => {
-    const productData = {
-      ...data,
-      id: product?.id || `PROD-${Date.now()}`,
-      price: parseFloat(data.price),
-      stock: parseInt(data.stock),
-      createdAt: product?.createdAt || new Date().toISOString(),
-    };
+  const onSubmit = async (data: any) => {
+    setIsLoading(true);
+    try {
+      const productData = {
+        name: data.name,
+        sku: data.sku,
+        description: data.description,
+        price: parseFloat(data.price),
+        stock: parseInt(data.stock),
+        status: data.status || 'draft',
+      };
 
-    if (product) {
-      dispatch(updateProduct(productData));
-      toast.success('Product updated successfully');
-    } else {
-      dispatch(addProduct(productData));
-      toast.success('Product added successfully');
+      if (product) {
+        await updateProduct(product.id, productData);
+        toast.success('Product updated successfully');
+      } else {
+        await createProduct(productData);
+        toast.success('Product added successfully');
+      }
+
+      reset();
+      onProductSaved?.();
+      onClose();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to save product');
+    } finally {
+      setIsLoading(false);
     }
-
-    onClose();
   };
 
   return (
@@ -76,10 +86,10 @@ export const ProductModal = ({ isOpen, onClose, product }: ProductModalProps) =>
             <Input id="name" {...register('name', { required: true })} />
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="sku">SKU</Label>
             <Input id="sku" {...register('sku', { required: true })} readOnly />
-          </div>
+          </div> */}
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
@@ -108,6 +118,21 @@ export const ProductModal = ({ isOpen, onClose, product }: ProductModalProps) =>
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="status">Status</Label>
+            <Select onValueChange={(value) => setValue('status', value)} defaultValue={product?.status || 'draft'}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
+                <SelectItem value="out_of_stock">Out of Stock</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="unit">Unit</Label>
             <Select
               value={watch('unit')}
@@ -130,8 +155,8 @@ export const ProductModal = ({ isOpen, onClose, product }: ProductModalProps) =>
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit">
-              {product ? 'Update' : 'Add'} Product
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? 'Saving...' : (product ? 'Update' : 'Add')} Product
             </Button>
           </div>
         </form>

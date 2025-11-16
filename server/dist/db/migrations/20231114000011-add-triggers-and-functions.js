@@ -2,16 +2,6 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        // Create a function to update updated_at timestamp
-        await queryInterface.sequelize.query(`
-      CREATE OR REPLACE FUNCTION update_updated_at_column()
-      RETURNS TRIGGER AS $$
-      BEGIN
-        NEW.updated_at = NOW();
-        RETURN NEW;
-      END;
-      $$ LANGUAGE plpgsql;
-    `);
         // Create triggers for all tables with updated_at column
         const tables = [
             'users',
@@ -26,53 +16,49 @@ module.exports = {
             'visits',
             'complaints',
         ];
+        // MySQL doesn't salesman CREATE OR REPLACE TRIGGER, so we'll drop and create
         for (const table of tables) {
-            const triggerName = `${table}_update_updated_at`;
+            const triggerName = `${table}_before_update`;
             try {
                 // Drop trigger if it exists
-                await queryInterface.sequelize.query(`
-          DROP TRIGGER IF EXISTS ${triggerName} ON "${table}";
-        `);
-                // Create trigger
-                await queryInterface.sequelize.query(`
-          CREATE TRIGGER ${triggerName}
-          BEFORE UPDATE ON "${table}"
+                await queryInterface.sequelize.query(`DROP TRIGGER IF EXISTS ${triggerName}`, { raw: true });
+                // Create trigger to update updated_at
+                await queryInterface.sequelize.query(`CREATE TRIGGER ${triggerName}
+          BEFORE UPDATE ON \`${table}\`
           FOR EACH ROW
-          EXECUTE FUNCTION update_updated_at_column();
-        `);
+          SET NEW.updated_at = NOW();`, { raw: true });
             }
             catch (error) {
                 const errorMessage = error instanceof Error ? error.message : 'Unknown error';
                 console.warn(`Failed to create trigger for ${table}:`, errorMessage);
             }
         }
-        // Create a function to handle order status changes
-        await queryInterface.sequelize.query(`
-      CREATE OR REPLACE FUNCTION handle_order_status_change()
-      RETURNS TRIGGER AS $$
-      BEGIN
-        -- Update order status timestamp based on status
-        IF NEW.status = 'delivered' AND OLD.status != 'delivered' THEN
-          NEW.delivered_at = NOW();
-        ELSIF NEW.status = 'cancelled' AND OLD.status != 'cancelled' THEN
-          NEW.cancelled_at = NOW();
-        ELSIF NEW.status = 'shipped' AND OLD.status != 'shipped' THEN
-          NEW.shipped_at = NOW();
-        END IF;
-        
-        RETURN NEW;
-      END;
-      $$ LANGUAGE plpgsql;
-    `);
         // Create trigger for order status changes
-        await queryInterface.sequelize.query(`
-      DROP TRIGGER IF EXISTS orders_handle_status_change ON orders;
-      CREATE TRIGGER orders_handle_status_change
-      BEFORE UPDATE OF status ON orders
-      FOR EACH ROW
-      WHEN (OLD.status IS DISTINCT FROM NEW.status)
-      EXECUTE FUNCTION handle_order_status_change();
-    `);
+        try {
+            // Drop trigger if it exists
+            await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS orders_before_status_update', { raw: true });
+            // Create trigger to handle order status changes
+            await queryInterface.sequelize.query(`CREATE TRIGGER orders_before_status_update
+        BEFORE UPDATE ON \`orders\`
+        FOR EACH ROW
+        BEGIN
+          -- Update order status timestamp based on status
+          IF NEW.status = 'delivered' AND (OLD.status IS NULL OR OLD.status != 'delivered') THEN
+            SET NEW.delivered_at = NOW();
+          ELSEIF NEW.status = 'cancelled' AND (OLD.status IS NULL OR OLD.status != 'cancelled') THEN
+            SET NEW.cancelled_at = NOW();
+          ELSEIF NEW.status = 'shipped' AND (OLD.status IS NULL OR OLD.status != 'shipped') THEN
+            SET NEW.shipped_at = NOW();
+          END IF;
+          
+          -- Always update updated_at
+          SET NEW.updated_at = NOW();
+        END;`, { raw: true });
+        }
+        catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            console.warn('Failed to create order status trigger:', errorMessage);
+        }
     },
     down: async (queryInterface, Sequelize) => {
         // Drop triggers
@@ -89,46 +75,24 @@ module.exports = {
             'visits',
             'complaints',
         ];
+        // Drop update triggers
         for (const table of tables) {
-            const triggerName = `${table}_update_updated_at`;
+            const triggerName = `${table}_before_update`;
             try {
-                await queryInterface.sequelize.query(`
-          DROP TRIGGER IF EXISTS ${triggerName} ON "${table}";
-        `);
+                await queryInterface.sequelize.query(`DROP TRIGGER IF EXISTS ${triggerName}`, { raw: true });
             }
             catch (error) {
                 const errorMessage = error instanceof Error ? error.message : 'Unknown error';
                 console.warn(`Failed to drop trigger ${triggerName}:`, errorMessage);
             }
         }
-        // Drop order status change trigger
+        // Drop order status trigger
         try {
-            await queryInterface.sequelize.query(`
-        DROP TRIGGER IF EXISTS orders_handle_status_change ON orders;
-      `);
+            await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS orders_before_status_update', { raw: true });
         }
         catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            console.warn('Failed to drop orders_handle_status_change trigger:', errorMessage);
-        }
-        // Drop functions
-        try {
-            await queryInterface.sequelize.query(`
-        DROP FUNCTION IF EXISTS update_updated_at_column();
-      `);
-        }
-        catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            console.warn('Failed to drop update_updated_at_column function:', errorMessage);
-        }
-        try {
-            await queryInterface.sequelize.query(`
-        DROP FUNCTION IF EXISTS handle_order_status_change();
-      `);
-        }
-        catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            console.warn('Failed to drop handle_order_status_change function:', errorMessage);
+            console.warn('Failed to drop orders_before_status_update trigger:', errorMessage);
         }
     },
 };

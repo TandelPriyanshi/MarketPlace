@@ -30,7 +30,7 @@ export interface OrderResponseDto {
   billingAddress?: string;
   metadata?: Record<string, any>;
   items: OrderItemResponseDto[];
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }
 

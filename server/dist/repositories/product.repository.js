@@ -32,7 +32,7 @@ class ProductRepository {
             where: { sellerId },
             limit,
             offset,
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async search(query, category, minPrice, maxPrice, limit = 10, offset = 0) {
@@ -57,7 +57,7 @@ class ProductRepository {
             where,
             limit,
             offset,
-            order: [['createdAt', 'DESC']],
+            order: [['created_at', 'DESC']],
             include: [seller_model_1.Seller]
         });
     }

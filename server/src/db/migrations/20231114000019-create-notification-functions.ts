@@ -30,8 +30,8 @@ module.exports = {
             title,
             message,
             data,
-            is_read,
-            createdAt,
+            isRead,
+            created_at,
             updated_at
           ) 
           SELECT 
@@ -103,8 +103,8 @@ module.exports = {
           title,
           message,
           data,
-          is_read,
-          createdAt,
+          isRead,
+          created_at,
           updated_at
         ) VALUES (
           user_id,

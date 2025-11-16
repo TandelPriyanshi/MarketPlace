@@ -54,7 +54,7 @@ class ComplaintService {
     async getComplaintById(complaintId, userId, userRole) {
         const where = { id: complaintId };
         // Regular users can only see their own complaints
-        // Admins/salesmansalesman can see all complaints
+        // Admins/salesman can see all complaints
         if (userRole !== user_model_1.UserRole.ADMIN && userRole !== user_model_1.UserRole.SALESMAN) {
             where.userId = userId;
         }
@@ -99,7 +99,7 @@ class ComplaintService {
             ],
             limit,
             offset: (page - 1) * limit,
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
         return {
             complaints: rows,
@@ -245,7 +245,7 @@ class ComplaintService {
             complaint_model_1.Complaint.findAll({
                 where,
                 limit: 5,
-                order: [['createdAt', 'DESC']],
+                order: [['created_at', 'DESC']],
                 include: [
                     { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] }
                 ]

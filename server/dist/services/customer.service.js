@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.customerService = void 0;
 const sequelize_1 = require("sequelize");
 const user_model_1 = require("../models/user.model");
 const order_model_1 = require("../models/order.model");
@@ -181,7 +180,7 @@ class CustomerService {
             }
             const complaints = await complaint_model_1.Complaint.findAll({
                 where: whereClause,
-                order: [['createdAt', 'DESC']],
+                order: [['created_at', 'DESC']],
                 include: [
                     { model: order_model_1.Order, attributes: ['id', 'orderNumber'] },
                     { model: user_model_1.User, as: 'resolvedBy', attributes: ['id', 'name', 'email'] },
@@ -195,4 +194,4 @@ class CustomerService {
         }
     }
 }
-exports.customerService = new CustomerService();
+exports.default = new CustomerService();

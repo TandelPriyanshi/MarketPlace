@@ -67,7 +67,7 @@ class AuthService {
             const token = this.generateToken(user);
             return {
                 user: this.getUserWithoutPassword(user),
-                token
+                accessToken: token
             };
         }
         catch (error) {
@@ -95,7 +95,7 @@ class AuthService {
             const token = this.generateToken(user);
             return {
                 user: this.getUserWithoutPassword(user),
-                token
+                accessToken: token
             };
         }
         catch (error) {

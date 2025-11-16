@@ -64,7 +64,7 @@ module.exports = {
       role: UserRole.ADMIN,
       isActive: true,
       isEmailVerified: true,
-      createdAt: new Date(),
+      created_at: new Date(),
       updatedAt: new Date(),
     });
 
@@ -80,7 +80,7 @@ module.exports = {
       role: UserRole.SELLER,
       isActive: true,
       isEmailVerified: true,
-      createdAt: new Date(),
+      created_at: new Date(),
       updatedAt: new Date(),
     });
 
@@ -102,7 +102,7 @@ module.exports = {
         businessAddress: '123 Main St, City, Country',
         businessPhone: '+1234567890',
         isVerified: true,
-        createdAt: new Date(),
+        created_at: new Date(),
         updatedAt: new Date(),
       }]);
     }
@@ -119,7 +119,7 @@ module.exports = {
       role: UserRole.DELIVERY_PERSON,
       isActive: true,
       isEmailVerified: true,
-      createdAt: new Date(),
+      created_at: new Date(),
       updatedAt: new Date(),
     });
 
@@ -138,7 +138,7 @@ module.exports = {
         userId: deliveryPersonId,
         vehicleType: 'bike',
         status: 'active',
-        createdAt: new Date(),
+        created_at: new Date(),
         updatedAt: new Date(),
       }]);
     }
@@ -155,7 +155,7 @@ module.exports = {
       role: UserRole.SALESMAN,
       isActive: true,
       isEmailVerified: true,
-      createdAt: new Date(),
+      created_at: new Date(),
       updatedAt: new Date(),
     });
 
@@ -177,7 +177,7 @@ module.exports = {
         department: 'Sales',
         designation: 'Sales Executive',
         isActive: true,
-        createdAt: new Date(),
+        created_at: new Date(),
         updatedAt: new Date(),
       }]);
     }
@@ -193,7 +193,7 @@ module.exports = {
       role: UserRole.CUSTOMER,
       isActive: true,
       isEmailVerified: true,
-      createdAt: new Date(),
+      created_at: new Date(),
       updatedAt: new Date(),
     });
 

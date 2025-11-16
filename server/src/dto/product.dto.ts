@@ -33,7 +33,7 @@ export interface ProductResponseDto {
   images?: string[];
   status: ProductStatus;
   metadata?: Record<string, any>;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }
 

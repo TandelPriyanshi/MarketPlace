@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { logout } from '@/app/slices/authSlice';
 import { RootState } from '@/app/store';
 import { getRoleName } from '@/utils/roles';
+import NotificationBell from '@/components/notifications/NotificationBell';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,6 +47,7 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
         </div>
 
         <div className="flex items-center gap-4">
+          <NotificationBell />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="gap-2">

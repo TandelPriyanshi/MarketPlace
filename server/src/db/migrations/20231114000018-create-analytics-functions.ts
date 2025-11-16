@@ -29,7 +29,7 @@ module.exports = {
         IF p_group_by = 'hour' THEN
           INSERT INTO temp_sales_analytics
           SELECT
-            DATE_FORMAT(o.createdAt, '%Y-%m-%d %H:00:00') as period,
+            DATE_FORMAT(o.created_at, '%Y-%m-%d %H:00:00') as period,
             COUNT(DISTINCT o.id) as total_orders,
             CASE WHEN SUM(o.totalAmount) IS NULL THEN 0 ELSE SUM(o.totalAmount) END as total_sales,
             CASE 
@@ -40,16 +40,16 @@ module.exports = {
             orders o
           WHERE 
             o.status NOT IN ('cancelled', 'refunded')
-            AND o.createdAt BETWEEN p_start_date AND p_end_date
+            AND o.created_at BETWEEN p_start_date AND p_end_date
           GROUP BY 
-            DATE_FORMAT(o.createdAt, '%Y-%m-%d %H:00:00')
+            DATE_FORMAT(o.created_at, '%Y-%m-%d %H:00:00')
           ORDER BY 
             period;
             
         ELSEIF p_group_by = 'day' THEN
           INSERT INTO temp_sales_analytics
           SELECT
-            DATE(o.createdAt) as period,
+            DATE(o.created_at) as period,
             COUNT(DISTINCT o.id) as total_orders,
             CASE WHEN SUM(o.totalAmount) IS NULL THEN 0 ELSE SUM(o.totalAmount) END as total_sales,
             CASE 
@@ -60,9 +60,9 @@ module.exports = {
             orders o
           WHERE 
             o.status NOT IN ('cancelled', 'refunded')
-            AND o.createdAt BETWEEN p_start_date AND p_end_date
+            AND o.created_at BETWEEN p_start_date AND p_end_date
           GROUP BY 
-            DATE(o.createdAt)
+            DATE(o.created_at)
           ORDER BY 
             period;
             
@@ -70,9 +70,9 @@ module.exports = {
           INSERT INTO temp_sales_analytics
           SELECT
             CONCAT(
-              DATE_FORMAT(DATE_SUB(o.createdAt, INTERVAL WEEKDAY(o.createdAt) DAY), '%Y-%m-%d'),
+              DATE_FORMAT(DATE_SUB(o.created_at, INTERVAL WEEKDAY(o.created_at) DAY), '%Y-%m-%d'),
               ' to ',
-              DATE_FORMAT(DATE_ADD(DATE_SUB(o.createdAt, INTERVAL WEEKDAY(o.createdAt) DAY), INTERVAL 6 DAY), '%Y-%m-%d')
+              DATE_FORMAT(DATE_ADD(DATE_SUB(o.created_at, INTERVAL WEEKDAY(o.created_at) DAY), INTERVAL 6 DAY), '%Y-%m-%d')
             ) as period,
             COUNT(DISTINCT o.id) as total_orders,
             CASE WHEN SUM(o.totalAmount) IS NULL THEN 0 ELSE SUM(o.totalAmount) END as total_sales,
@@ -84,16 +84,16 @@ module.exports = {
             orders o
           WHERE 
             o.status NOT IN ('cancelled', 'refunded')
-            AND o.createdAt BETWEEN p_start_date AND p_end_date
+            AND o.created_at BETWEEN p_start_date AND p_end_date
           GROUP BY 
-            YEARWEEK(o.createdAt)
+            YEARWEEK(o.created_at)
           ORDER BY 
-            MIN(o.createdAt);
+            MIN(o.created_at);
             
         ELSEIF p_group_by = 'month' THEN
           INSERT INTO temp_sales_analytics
           SELECT
-            DATE_FORMAT(o.createdAt, '%Y-%m') as period,
+            DATE_FORMAT(o.created_at, '%Y-%m') as period,
             COUNT(DISTINCT o.id) as total_orders,
             CASE WHEN SUM(o.totalAmount) IS NULL THEN 0 ELSE SUM(o.totalAmount) END as total_sales,
             CASE 
@@ -104,16 +104,16 @@ module.exports = {
             orders o
           WHERE 
             o.status NOT IN ('cancelled', 'refunded')
-            AND o.createdAt BETWEEN p_start_date AND p_end_date
+            AND o.created_at BETWEEN p_start_date AND p_end_date
           GROUP BY 
-            YEAR(o.createdAt), MONTH(o.createdAt)
+            YEAR(o.created_at), MONTH(o.created_at)
           ORDER BY 
             period;
             
         ELSEIF p_group_by = 'year' THEN
           INSERT INTO temp_sales_analytics
           SELECT
-            YEAR(o.createdAt) as period,
+            YEAR(o.created_at) as period,
             COUNT(DISTINCT o.id) as total_orders,
             CASE WHEN SUM(o.totalAmount) IS NULL THEN 0 ELSE SUM(o.totalAmount) END as total_sales,
             CASE 
@@ -124,9 +124,9 @@ module.exports = {
             orders o
           WHERE 
             o.status NOT IN ('cancelled', 'refunded')
-            AND o.createdAt BETWEEN p_start_date AND p_end_date
+            AND o.created_at BETWEEN p_start_date AND p_end_date
           GROUP BY 
-            YEAR(o.createdAt)
+            YEAR(o.created_at)
           ORDER BY 
             period;
             
@@ -134,7 +134,7 @@ module.exports = {
           -- Default to daily grouping
           INSERT INTO temp_sales_analytics
           SELECT
-            DATE(o.createdAt) as period,
+            DATE(o.created_at) as period,
             COUNT(DISTINCT o.id) as total_orders,
             CASE WHEN SUM(o.totalAmount) IS NULL THEN 0 ELSE SUM(o.totalAmount) END as total_sales,
             CASE 
@@ -145,9 +145,9 @@ module.exports = {
             orders o
           WHERE 
             o.status NOT IN ('cancelled', 'refunded')
-            AND o.createdAt BETWEEN p_start_date AND p_end_date
+            AND o.created_at BETWEEN p_start_date AND p_end_date
           GROUP BY 
-            DATE(o.createdAt)
+            DATE(o.created_at)
           ORDER BY 
             period;
         END IF;
@@ -206,7 +206,7 @@ module.exports = {
           orders o ON oi.orderId = o.id
         WHERE
           o.status NOT IN ('cancelled', 'refunded')
-          AND o.createdAt BETWEEN p_start_date AND p_end_date
+          AND o.created_at BETWEEN p_start_date AND p_end_date
         GROUP BY
           p.id, p.name, p.category
         ORDER BY

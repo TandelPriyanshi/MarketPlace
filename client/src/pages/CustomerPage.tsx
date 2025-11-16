@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { ShoppingCart, Package, MessageSquare, LayoutDashboard } from 'lucide-react';
 import { Navbar } from '@/components/common/Navbar';
 import { Sidebar } from '@/components/common/Sidebar';
 import { CustomerDashboard } from '@/components/customer/CustomerDashboard';
+import { OrderHistory } from '@/components/customer/OrderHistory';
+import { CustomerProductsPage } from '@/components/customer/CustomerProductsPage';
+import { CustomerComplaintsPage } from '@/components/customer/CustomerComplaintsPage';
 
 const sidebarItems = [
   { title: 'Dashboard', href: '/customer/dashboard', icon: LayoutDashboard },
@@ -20,11 +24,13 @@ const CustomerPage = () => {
       <Sidebar items={sidebarItems} isOpen={isSidebarOpen} />
       <main className="md:pl-64 pt-16">
         <div className="container mx-auto p-6">
-          <CustomerDashboard />
+          <Outlet />
         </div>
       </main>
     </div>
   );
 };
+
+export { CustomerDashboard, OrderHistory, CustomerProductsPage, CustomerComplaintsPage };
 
 export default CustomerPage;

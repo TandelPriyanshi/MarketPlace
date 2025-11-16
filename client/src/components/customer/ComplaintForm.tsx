@@ -29,7 +29,7 @@ export const ComplaintForm = () => {
       subject: data.subject,
       description: data.description,
       status: 'pending',
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
       imageUrl: file ? `https://storage.example.com/complaints/${file.name}` : undefined,
     };
 

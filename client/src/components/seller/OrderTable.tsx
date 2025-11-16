@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,33 +10,94 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { formatCurrency, formatDate, getStatusColor } from '@/utils/helpers';
-import { RootState } from '@/app/store';
-import { updateOrderStatus } from '@/app/slices/sellerSlice';
+import { formatCurrency, formatDate } from '@/utils/helpers';
+import { getSellerOrders, updateOrderStatus } from '../../api/order.api';
+import { Order, OrderStatus } from '../../api/order.api';
 import { AssignDeliveryModal } from './AssignDeliveryModal';
 import { toast } from 'sonner';
 
 export const OrderTable = () => {
-  const dispatch = useDispatch();
-  const { orders } = useSelector((state: RootState) => state.seller);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    totalPages: 1,
+    limit: 10,
+  });
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
-  const handleAccept = (orderId: string) => {
-    dispatch(updateOrderStatus({ orderId, status: 'accepted' }));
-    toast.success('Order accepted successfully');
+  useEffect(() => {
+    fetchOrders();
+  }, [pagination.page]);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await getSellerOrders({
+        page: pagination.page,
+        limit: pagination.limit,
+      });
+      setOrders(response.orders);
+      setPagination(prev => ({
+        ...prev,
+        total: response.pagination.total,
+        totalPages: response.pagination.totalPages,
+      }));
+    } catch (error: any) {
+      toast.error('Failed to fetch orders: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = (orderId: string) => {
+  const handleAccept = async (orderId: string) => {
+    try {
+      await updateOrderStatus(orderId, { status: OrderStatus.CONFIRMED });
+      toast.success('Order accepted successfully');
+      fetchOrders();
+    } catch (error: any) {
+      toast.error('Failed to accept order: ' + error.message);
+    }
+  };
+
+  const handleReject = async (orderId: string) => {
     if (confirm('Are you sure you want to reject this order?')) {
-      dispatch(updateOrderStatus({ orderId, status: 'rejected' }));
-      toast.success('Order rejected');
+      try {
+        await updateOrderStatus(orderId, { status: OrderStatus.CANCELLED });
+        toast.success('Order rejected');
+        fetchOrders();
+      } catch (error: any) {
+        toast.error('Failed to reject order: ' + error.message);
+      }
     }
   };
 
   const handleAssignDelivery = (orderId: string) => {
     setSelectedOrderId(orderId);
     setAssignModalOpen(true);
+  };
+
+  const getStatusColor = (status: OrderStatus): string => {
+    const colors = {
+      [OrderStatus.PENDING]: 'bg-yellow-100 text-yellow-800',
+      [OrderStatus.CONFIRMED]: 'bg-blue-100 text-blue-800',
+      [OrderStatus.PROCESSING]: 'bg-purple-100 text-purple-800',
+      [OrderStatus.SHIPPED]: 'bg-indigo-100 text-indigo-800',
+      [OrderStatus.DELIVERED]: 'bg-green-100 text-green-800',
+      [OrderStatus.CANCELLED]: 'bg-red-100 text-red-800',
+      [OrderStatus.RETURN_REQUESTED]: 'bg-orange-100 text-orange-800',
+      [OrderStatus.RETURN_APPROVED]: 'bg-teal-100 text-teal-800',
+      [OrderStatus.RETURN_REJECTED]: 'bg-gray-100 text-gray-800',
+      [OrderStatus.RETURN_COMPLETED]: 'bg-cyan-100 text-cyan-800',
+      [OrderStatus.COMPLETED]: 'bg-emerald-100 text-emerald-800',
+    };
+    return colors[status] || 'bg-gray-100 text-gray-800';
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPagination(prev => ({ ...prev, page: newPage }));
   };
 
   return (
@@ -50,6 +110,7 @@ export const OrderTable = () => {
             <TableRow>
               <TableHead>Order ID</TableHead>
               <TableHead>Customer</TableHead>
+              <TableHead>Items</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Total Amount</TableHead>
               <TableHead>Date</TableHead>
@@ -57,9 +118,15 @@ export const OrderTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.length === 0 ? (
+            {loading && orders.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={7} className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                </TableCell>
+              </TableRow>
+            ) : orders.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                   No orders yet.
                 </TableCell>
               </TableRow>
@@ -67,7 +134,12 @@ export const OrderTable = () => {
               orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="font-mono text-sm">{order.id}</TableCell>
-                  <TableCell className="font-medium">{order.customerName}</TableCell>
+                  <TableCell className="font-medium">
+                    {order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : 'N/A'}
+                  </TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {order.items?.map(item => `${item.quantity}x ${item.product?.name || item.productName}`).join(', ')}
+                  </TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(order.status)}>
                       {order.status.replace(/_/g, ' ').toUpperCase()}
@@ -77,7 +149,7 @@ export const OrderTable = () => {
                   <TableCell>{formatDate(order.createdAt)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      {order.status === 'pending' && (
+                      {order.status === OrderStatus.PENDING && (
                         <>
                           <Button
                             size="sm"
@@ -99,7 +171,7 @@ export const OrderTable = () => {
                           </Button>
                         </>
                       )}
-                      {(order.status === 'accepted' || order.status === 'packed') && (
+                      {order.status === OrderStatus.CONFIRMED && (
                         <Button
                           size="sm"
                           onClick={() => handleAssignDelivery(order.id)}
@@ -118,13 +190,47 @@ export const OrderTable = () => {
         </Table>
       </div>
 
-      {selectedOrderId && (
-        <AssignDeliveryModal
-          isOpen={assignModalOpen}
-          onClose={() => { setAssignModalOpen(false); setSelectedOrderId(null); }}
-          orderId={selectedOrderId}
-        />
+      {/* Pagination */}
+      {pagination.totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-gray-700">
+            Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
+            {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
+            {pagination.total} results
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={pagination.page === 1}
+              variant="outline"
+              size="sm"
+            >
+              Previous
+            </Button>
+            <span className="px-3 py-1 text-sm text-gray-700">
+              Page {pagination.page} of {pagination.totalPages}
+            </span>
+            <Button
+              onClick={() => handlePageChange(pagination.page + 1)}
+              disabled={pagination.page === pagination.totalPages}
+              variant="outline"
+              size="sm"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       )}
+
+      <AssignDeliveryModal
+        isOpen={assignModalOpen}
+        onClose={() => { 
+          setAssignModalOpen(false); 
+          setSelectedOrderId(null); 
+          fetchOrders();
+        }}
+        orderId={selectedOrderId}
+      />
     </div>
   );
 };

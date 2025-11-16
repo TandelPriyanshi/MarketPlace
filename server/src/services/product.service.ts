@@ -2,7 +2,8 @@ import { Op, Transaction } from 'sequelize';
 import { Product, ProductStatus } from '../models/product.model';
 import { Category } from '../models/category.model';
 import { Review } from '../models/review.model';
-import { Order, OrderItem } from '../models/order.model';
+import { Order } from '../models/order.model';
+import { OrderItem } from '../models/orderItem.model';
 import { sequelize } from '../db';
 import { NotFoundError, ValidationError, DatabaseError } from '../utils/errors';
 
@@ -319,7 +320,7 @@ class ProductService {
     });
     
     // Transform the raw data to match the expected type
-    const topSelling = topSellingRaw.map(item => {
+    const topSelling = topSellingRaw.map((item: any) => {
       // Type assertion for the raw query result
       const typedItem = item as unknown as {
         productId: string;
@@ -366,7 +367,13 @@ class ProductService {
     const { page = 1, limit = 10, status, sellerId, search } = options;
     const where: any = {};
 
-    if (status) where.status = status;
+    // By default, exclude archived products unless explicitly requested
+    if (status) {
+      where.status = status;
+    } else {
+      where.status = { [Op.ne]: ProductStatus.ARCHIVED };
+    }
+    
     if (sellerId) where.sellerId = sellerId;
     if (search) {
       where[Op.or] = [

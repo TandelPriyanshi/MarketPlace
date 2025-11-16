@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, MapPin } from 'lucide-react';
+import { Eye, MapPin, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -11,12 +11,11 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from '@/utils/helpers';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store';
+import { useSalesmanBeats } from '@/hooks/use-salesman-beats';
 import { StoreVisitForm } from './StoreVisitForm';
 
 export const BeatTable = () => {
-  const { beats } = useSelector((state: RootState) => state.salesman);
+  const { data: beatsData, isLoading, isError, error } = useSalesmanBeats();
   const [visitFormOpen, setVisitFormOpen] = useState(false);
   const [selectedBeat, setSelectedBeat] = useState<any>(null);
 
@@ -24,6 +23,34 @@ export const BeatTable = () => {
     setSelectedBeat(beat);
     setVisitFormOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">My Beats</h2>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="ml-2 text-muted-foreground">Loading beats...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">My Beats</h2>
+        <div className="flex items-center justify-center py-12">
+          <AlertCircle className="h-8 w-8 text-destructive" />
+          <span className="ml-2 text-destructive">
+            {error instanceof Error ? error.message : 'Failed to load beats'}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  const beats = beatsData?.data || [];
 
   return (
     <div className="space-y-4">
@@ -54,7 +81,7 @@ export const BeatTable = () => {
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
-                      {beat.areaName}
+                      {beat.area}
                     </div>
                   </TableCell>
                   <TableCell>

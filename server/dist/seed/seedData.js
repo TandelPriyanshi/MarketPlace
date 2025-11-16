@@ -14,7 +14,7 @@ exports.seedData = {
         {
             id: (0, uuid_1.v4)(),
             email: 'seller1@example.com',
-            passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+            password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
             name: 'Seller One',
             phone: '+1234567890',
             role: user_model_1.UserRole.SELLER,
@@ -23,7 +23,7 @@ exports.seedData = {
         {
             id: (0, uuid_1.v4)(),
             email: 'seller2@example.com',
-            passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+            password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
             name: 'Seller Two',
             phone: '+1234567891',
             role: user_model_1.UserRole.SELLER,
@@ -32,7 +32,7 @@ exports.seedData = {
         {
             id: (0, uuid_1.v4)(),
             email: 'customer1@example.com',
-            passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+            password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
             name: 'Customer One',
             phone: '+1234567892',
             role: user_model_1.UserRole.CUSTOMER,
@@ -41,7 +41,7 @@ exports.seedData = {
         {
             id: (0, uuid_1.v4)(),
             email: 'customer2@example.com',
-            passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+            password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
             name: 'Customer Two',
             phone: '+1234567893',
             role: user_model_1.UserRole.CUSTOMER,
@@ -50,7 +50,7 @@ exports.seedData = {
         {
             id: (0, uuid_1.v4)(),
             email: 'delivery@example.com',
-            passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+            password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
             name: 'Delivery Person',
             phone: '+1234567894',
             role: user_model_1.UserRole.DELIVERY_PERSON,
@@ -59,7 +59,7 @@ exports.seedData = {
         {
             id: (0, uuid_1.v4)(),
             email: 'salesman@example.com',
-            passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+            password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
             name: 'Salesman One',
             phone: '+1234567895',
             role: user_model_1.UserRole.SALESMAN, // Using SALESMAN as placeholder for salesman

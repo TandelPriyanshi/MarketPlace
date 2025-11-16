@@ -1,56 +1,41 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { setCredentials } from '@/app/slices/authSlice';
-import { getRoleDashboardPath } from '@/utils/roles';
-import { RootState } from '@/app/store';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
-// Mock users for demonstration
-const mockUsers = {
-  'seller@demo.com': { role: 'seller', name: 'Rajesh Kumar', password: 'demo123' },
-  'delivery@demo.com': { role: 'delivery', name: 'Amit Singh', password: 'demo123' },
-  'salesman@demo.com': { role: 'salesman', name: 'Vikram Patel', password: 'demo123' },
-  'customer@demo.com': { role: 'customer', name: 'Ravi Merchant', password: 'demo123' },
-};
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const { login, isAuthenticated, isLoading, error, user } = useAuth();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
+  
   useEffect(() => {
     if (isAuthenticated && user) {
-      navigate(getRoleDashboardPath(user.role));
+      // Redirect is handled by useAuth hook
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, user]);
 
-  const onSubmit = (data: any) => {
-    const mockUser = mockUsers[data.email as keyof typeof mockUsers];
-    
-    if (mockUser && mockUser.password === data.password) {
-      const userData = {
-        id: `USER-${Date.now()}`,
-        name: mockUser.name,
-        email: data.email,
-        role: mockUser.role as any,
-      };
-      
-      dispatch(setCredentials({
-        user: userData,
-        token: 'mock-jwt-token-' + Date.now(),
-      }));
-      
-      toast.success(`Welcome back, ${mockUser.name}!`);
-      navigate(getRoleDashboardPath(mockUser.role as any));
-    } else {
-      toast.error('Invalid email or password');
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await login(data.email, data.password);
+      // Success toast and redirect are handled by useAuth hook
+    } catch (error: any) {
+      toast.error(error || 'Login failed');
     }
   };
 
@@ -76,7 +61,8 @@ const LoginPage = () => {
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                {...register('email', { 
+                disabled={isLoading}
+                {...register('email', {
                   required: 'Email is required',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -85,7 +71,7 @@ const LoginPage = () => {
                 })}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message as string}</p>
+                <p className="text-sm text-destructive">{errors.email.message}</p>
               )}
             </div>
 
@@ -95,6 +81,7 @@ const LoginPage = () => {
                 id="password"
                 type="password"
                 placeholder="Enter your password"
+                disabled={isLoading}
                 {...register('password', { 
                   required: 'Password is required',
                   minLength: {
@@ -104,12 +91,12 @@ const LoginPage = () => {
                 })}
               />
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message as string}</p>
+                <p className="text-sm text-destructive">{errors.password.message}</p>
               )}
             </div>
 
-            <Button type="submit" className="w-full">
-              Sign In
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
 

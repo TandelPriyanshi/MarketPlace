@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Order } from './order.model';
-import { OrderItem } from './order.model';
+import { OrderItem } from './orderItem.model';
 import { User } from './user.model';
 import { Product } from './product.model';
 import { Seller } from './seller.model';
@@ -11,6 +11,7 @@ import { Store } from './store.model';
 import { Visit } from './visit.model';
 import { Complaint } from './complaint.model';
 import { Attachment } from './attachment.model';
+import { Notification } from './notification.model';
 import { currentConfig } from '../config/config';
 
 // Use the db configuration directly from config
@@ -30,6 +31,7 @@ interface DatabaseModels {
   Visit: typeof Visit;
   Complaint: typeof Complaint;
   Attachment: typeof Attachment;
+  Notification: typeof Notification;
 }
 
 // Initialize Sequelize with proper typing
@@ -57,6 +59,7 @@ sequelize.addModels([
   `${__dirname}/user.model`,
   `${__dirname}/product.model`,
   `${__dirname}/order.model`,
+  `${__dirname}/orderItem.model`,
   `${__dirname}/seller.model`,
   `${__dirname}/deliveryPerson.model`,
   `${__dirname}/salesman.model`,
@@ -64,7 +67,8 @@ sequelize.addModels([
   `${__dirname}/store.model`,
   `${__dirname}/visit.model`,
   `${__dirname}/complaint.model`,
-  `${__dirname}/attachment.model`
+  `${__dirname}/attachment.model`,
+  `${__dirname}/notification.model`
 ]);
 
 // Export models with proper typing
@@ -80,7 +84,8 @@ const models: DatabaseModels = {
   Store,
   Visit,
   Complaint,
-  Attachment
+  Attachment,
+  Notification
 };
 
 export { sequelize, models, DatabaseModels };

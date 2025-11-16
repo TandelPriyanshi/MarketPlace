@@ -70,7 +70,7 @@ This confirms the server is running and routes are properly mounted.
       "phone": "+1234567890",
       "role": "customer",
       "isActive": true,
-      "createdAt": "2024-01-01T00:00:00.000Z",
+      "created_at": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     "token": "jwt-token-here"
@@ -461,7 +461,7 @@ This confirms the server is running and routes are properly mounted.
         "type": "order_issue",
         "title": "Product not as described",
         "status": "open",
-        "createdAt": "2025-11-15T10:00:00Z"
+        "created_at": "2025-11-15T10:00:00Z"
       }
     ],
     "pagination": {
@@ -542,7 +542,7 @@ This confirms the server is running and routes are properly mounted.
         "status": "pending"
       }
     ],
-    "createdAt": "2025-11-15T10:00:00Z"
+    "created_at": "2025-11-15T10:00:00Z"
   }
 }
 ```

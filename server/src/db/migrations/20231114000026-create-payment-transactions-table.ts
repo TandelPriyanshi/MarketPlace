@@ -73,7 +73,7 @@ module.exports = {
         type: Sequelize.JSON,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -94,7 +94,7 @@ module.exports = {
       where: { gatewayTransactionId: { [Sequelize.Op.ne]: null } },
       unique: true
     });
-    await queryInterface.addIndex('payment_transactions', ['createdAt']);
+    await queryInterface.addIndex('payment_transactions', ['created_at']);
 
     // Add check constraint for positive amount
     await queryInterface.sequelize.query(`

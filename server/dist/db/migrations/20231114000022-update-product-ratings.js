@@ -1,54 +1,77 @@
-// server/src/db/migrations/20231114000022-update-product-ratings.js
+// server/src/db/migrations/20231114000022-update-product-ratings.ts
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
-        // Create a function to update product ratings
+    up: async (queryInterface) => {
+        // Drop existing triggers and procedures first
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS after_review_insert');
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS after_review_update');
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS after_review_delete');
+        await queryInterface.sequelize.query('DROP PROCEDURE IF EXISTS update_product_rating');
+        // Create a stored procedure to update product ratings
         await queryInterface.sequelize.query(`
-      CREATE OR REPLACE FUNCTION update_product_ratings()
-      RETURNS TRIGGER AS $$
+      CREATE PROCEDURE update_product_rating(IN product_id_param INT)
       BEGIN
-        -- Update product rating and total ratings count
-        UPDATE products p
-        SET 
-          rating = subquery.avg_rating,
-          total_ratings = subquery.total_ratings,
-          updated_at = NOW()
-        FROM (
-          SELECT 
-            product_id,
-            AVG(rating) as avg_rating,
-            COUNT(*) as total_ratings
-          FROM 
-            reviews
-          WHERE 
-            product_id = NEW.product_id
-            AND is_approved = true
-          GROUP BY 
-            product_id
-        ) as subquery
+        DECLARE avg_rating DECIMAL(3,2);
+        DECLARE total_ratings_count INT;
+        
+        -- Calculate average rating and count of approved reviews
+        SELECT 
+          IFNULL(AVG(rating), 0) as avg_rating,
+          COUNT(*) as total_ratings
+        INTO 
+          avg_rating,
+          total_ratings_count
+        FROM 
+          reviews
         WHERE 
-          p.id = subquery.product_id;
-
-        RETURN NEW;
+          productId = product_id_param
+          AND isApproved = TRUE;
+        
+        -- Update the product with new rating and count
+        UPDATE products 
+        SET 
+          rating = avg_rating,
+          total_ratings = total_ratings_count,
+          updatedAt = NOW()
+        WHERE 
+          id = product_id_param;
       END;
-      $$ LANGUAGE plpgsql;
     `);
-        // Create trigger for review insert/update
+        // Create trigger for review insert
         await queryInterface.sequelize.query(`
-      DROP TRIGGER IF EXISTS trigger_update_product_ratings ON reviews;
-      CREATE TRIGGER trigger_update_product_ratings
-      AFTER INSERT OR UPDATE OF rating, is_approved OR DELETE
-      ON reviews
+      CREATE TRIGGER after_review_insert
+      AFTER INSERT ON reviews
       FOR EACH ROW
-      EXECUTE FUNCTION update_product_ratings();
+      BEGIN
+        CALL update_product_rating(NEW.productId);
+      END;
+    `);
+        // Create trigger for review update
+        await queryInterface.sequelize.query(`
+      CREATE TRIGGER after_review_update
+      AFTER UPDATE ON reviews
+      FOR EACH ROW
+      BEGIN
+        IF OLD.rating != NEW.rating OR OLD.isApproved != NEW.isApproved THEN
+          CALL update_product_rating(NEW.productId);
+        END IF;
+      END;
+    `);
+        // Create trigger for review delete
+        await queryInterface.sequelize.query(`
+      CREATE TRIGGER after_review_delete
+      AFTER DELETE ON reviews
+      FOR EACH ROW
+      BEGIN
+        CALL update_product_rating(OLD.productId);
+      END;
     `);
     },
-    down: async (queryInterface, Sequelize) => {
-        await queryInterface.sequelize.query(`
-      DROP TRIGGER IF EXISTS trigger_update_product_ratings ON reviews;
-    `);
-        await queryInterface.sequelize.query(`
-      DROP FUNCTION IF EXISTS update_product_ratings();
-    `);
+    down: async (queryInterface) => {
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS after_review_insert');
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS after_review_update');
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS after_review_delete');
+        await queryInterface.sequelize.query('DROP PROCEDURE IF EXISTS update_product_rating');
     },
 };

@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Store = exports.StoreType = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const beat_model_1 = require("./beat.model");
-const visit_model_1 = require("./visit.model");
 var StoreType;
 (function (StoreType) {
     StoreType["RETAIL"] = "retail";
@@ -38,16 +37,9 @@ __decorate([
     __metadata("design:type", String)
 ], Store.prototype, "name", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.TEXT),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
     __metadata("design:type", String)
-], Store.prototype, "address", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
-        allowNull: false,
-    }),
-    __metadata("design:type", String)
-], Store.prototype, "contactPerson", void 0);
+], Store.prototype, "email", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
@@ -56,9 +48,17 @@ __decorate([
     __metadata("design:type", String)
 ], Store.prototype, "phone", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.TEXT),
     __metadata("design:type", String)
-], Store.prototype, "email", void 0);
+], Store.prototype, "address", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false,
+        field: 'contact_person'
+    }),
+    __metadata("design:type", String)
+], Store.prototype, "contactPerson", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.DECIMAL(10, 8),
@@ -82,15 +82,11 @@ __decorate([
     __metadata("design:type", String)
 ], Store.prototype, "type", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.BOOLEAN,
-        defaultValue: true,
-    }),
-    __metadata("design:type", Boolean)
-], Store.prototype, "isActive", void 0);
-__decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => beat_model_1.Beat),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.UUID),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.UUID,
+        field: 'beat_id'
+    }),
     __metadata("design:type", String)
 ], Store.prototype, "beatId", void 0);
 __decorate([
@@ -98,25 +94,16 @@ __decorate([
     __metadata("design:type", beat_model_1.Beat)
 ], Store.prototype, "beat", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => visit_model_1.Visit),
-    __metadata("design:type", Array)
-], Store.prototype, "visits", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.DATE,
+        field: 'last_visited_at'
+    }),
     __metadata("design:type", Date)
 ], Store.prototype, "lastVisitedAt", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
-    __metadata("design:type", Date)
-], Store.prototype, "createdAt", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
-    __metadata("design:type", Date)
-], Store.prototype, "updatedAt", void 0);
 exports.Store = Store = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'stores',
-        timestamps: true,
+        timestamps: false,
         underscored: true
     })
 ], Store);

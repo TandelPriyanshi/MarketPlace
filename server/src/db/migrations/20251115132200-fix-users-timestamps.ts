@@ -3,7 +3,7 @@ import { QueryInterface, DataTypes } from 'sequelize';
 module.exports = {
   async up(queryInterface: QueryInterface) {
     // Check if columns exist before adding them
-    const [createdAtResult] = await queryInterface.sequelize.query(`
+    const [created_atResult] = await queryInterface.sequelize.query(`
       SELECT COLUMN_NAME 
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
@@ -28,7 +28,7 @@ module.exports = {
     `);
 
     // Add created_at column if it doesn't exist
-    if (createdAtResult.length === 0) {
+    if (created_atResult.length === 0) {
       await queryInterface.addColumn('users', 'created_at', {
         type: DataTypes.DATE,
         allowNull: true, // Allow null initially to handle existing data

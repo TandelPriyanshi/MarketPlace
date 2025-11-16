@@ -12,7 +12,7 @@ export declare class Attachment extends Model {
     notes?: string;
     order: Order;
     uploadedBy: User;
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
 }
 //# sourceMappingURL=attachment.model.d.ts.map

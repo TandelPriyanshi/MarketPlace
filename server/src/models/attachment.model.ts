@@ -19,7 +19,7 @@ export interface IAttachmentAttributes {
   originalName?: string;
   notes?: string;
   metadata?: Record<string, any>;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 }
 
@@ -122,7 +122,7 @@ export class Attachment extends Model<IAttachmentAttributes> implements IAttachm
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  declare createdAt: Date;
+  declare created_at: Date;
 
   @Column({
     type: DataType.DATE,

@@ -3,71 +3,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Package, ShoppingCart, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RootState } from '@/app/store';
-import { setProducts, setOrders, setAnalytics } from '@/app/slices/sellerSlice';
+import { fetchSellerDashboard, fetchSellerProducts, fetchSellerOrders } from '@/app/slices/sellerSlice';
 import { formatCurrency } from '@/utils/helpers';
 import { ProductTable } from './ProductTable';
 import { OrderTable } from './OrderTable';
 
-// Mock data
-const mockProducts = [
-  {
-    id: 'PROD-1',
-    name: 'Premium Rice',
-    sku: 'SKU-RICE-001',
-    description: 'High quality basmati rice',
-    price: 120,
-    stock: 500,
-    unit: 'kg',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 'PROD-2',
-    name: 'Wheat Flour',
-    sku: 'SKU-WHEAT-001',
-    description: 'Fresh wheat flour',
-    price: 45,
-    stock: 200,
-    unit: 'kg',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-  },
-];
-
-const mockOrders = [
-  {
-    id: 'ORD-1001',
-    customerId: 'CUST-1',
-    customerName: 'Ravi Merchant',
-    status: 'pending',
-    totalAmount: 2500,
-    createdAt: new Date().toISOString(),
-    items: [],
-  },
-  {
-    id: 'ORD-1002',
-    customerId: 'CUST-2',
-    customerName: 'Suresh Store',
-    status: 'accepted',
-    totalAmount: 4800,
-    createdAt: new Date().toISOString(),
-    items: [],
-  },
-];
-
 export const SellerDashboard = () => {
   const dispatch = useDispatch();
-  const { analytics } = useSelector((state: RootState) => state.seller);
+  const { analytics, isLoading, error } = useSelector((state: RootState) => state.seller);
 
   useEffect(() => {
-    // Simulate API calls
-    dispatch(setProducts(mockProducts));
-    dispatch(setOrders(mockOrders));
-    dispatch(setAnalytics({
-      totalSales: 125000,
-      totalOrders: 45,
-      activeProducts: mockProducts.filter(p => p.isActive).length,
-    }));
+    // Fetch dashboard data, products, and orders
+    dispatch(fetchSellerDashboard() as any);
+    dispatch(fetchSellerProducts({}) as any);
+    dispatch(fetchSellerOrders({}) as any);
   }, [dispatch]);
 
   return (
@@ -77,7 +26,21 @@ export const SellerDashboard = () => {
         <p className="text-muted-foreground">Manage your products and orders</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      {isLoading && (
+        <div className="text-center py-8">
+          <p>Loading dashboard data...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="text-center py-8 text-red-600">
+          <p>Error: {error}</p>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <>
+          <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
@@ -120,6 +83,8 @@ export const SellerDashboard = () => {
 
       <ProductTable />
       <OrderTable />
+        </>
+      )}
     </div>
   );
 };

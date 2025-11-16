@@ -15,12 +15,12 @@ type ComplaintAttributes = {
   resolutionNotes: string | null;
   resolvedById: string | null;
   resolvedAt: Date | null;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
 type CreateComplaintData = Omit<ComplaintAttributes, 
-  'id' | 'status' | 'resolutionNotes' | 'resolvedById' | 'resolvedAt' | 'createdAt' | 'updatedAt'
+  'id' | 'status' | 'resolutionNotes' | 'resolvedById' | 'resolvedAt' | 'created_at' | 'updatedAt'
 > & {
   attachments?: string[];
 };
@@ -73,7 +73,7 @@ class ComplaintRepository {
       ],
       limit,
       offset,
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
@@ -84,7 +84,7 @@ class ComplaintRepository {
         { model: User, as: 'user' },
         { model: User, as: 'resolvedBy' }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
@@ -111,9 +111,9 @@ class ComplaintRepository {
       if (filter.resolvedById !== undefined) where.resolvedById = filter.resolvedById;
       
       if (filter.startDate || filter.endDate) {
-        where.createdAt = {};
-        if (filter.startDate) where.createdAt[Op.gte] = filter.startDate;
-        if (filter.endDate) where.createdAt[Op.lte] = filter.endDate;
+        where.created_at = {};
+        if (filter.startDate) where.created_at[Op.gte] = filter.startDate;
+        if (filter.endDate) where.created_at[Op.lte] = filter.endDate;
       }
     }
     
@@ -126,7 +126,7 @@ class ComplaintRepository {
       ],
       limit,
       offset,
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 

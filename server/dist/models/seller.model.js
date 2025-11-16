@@ -129,11 +129,11 @@ __decorate([
     __metadata("design:type", Object)
 ], Seller.prototype, "metadata", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User),
+    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User, 'userId'),
     __metadata("design:type", user_model_1.User)
 ], Seller.prototype, "user", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => product_model_1.Product),
+    (0, sequelize_typescript_1.HasMany)(() => product_model_1.Product, 'sellerId'),
     __metadata("design:type", Array)
 ], Seller.prototype, "products", void 0);
 __decorate([
@@ -144,7 +144,6 @@ exports.Seller = Seller = Seller_1 = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'sellers',
         timestamps: true,
-        underscored: true,
         paranoid: true,
         modelName: 'Seller'
     })

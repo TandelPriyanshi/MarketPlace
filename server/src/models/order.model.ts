@@ -1,4 +1,5 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import { OrderItem } from './orderItem.model';
 import { User } from './user.model';
 import { Product } from './product.model';
 import { Seller } from './seller.model';
@@ -41,8 +42,7 @@ export enum OrderStatus {
 
 @Table({
   tableName: 'orders',
-  timestamps: true,
-  underscored: true
+  timestamps: true
 })
 export class Order extends Model {
   @Column({
@@ -162,104 +162,6 @@ export class Order extends Model {
 
   @HasMany(() => OrderItem)
   items?: OrderItem[];
-
-  // Timestamps
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-  })
-  createdAt?: Date;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-  })
-  updatedAt?: Date;
-}
-
-// Explicitly export OrderItem
-export { OrderItem as OrderItemModel };
-
-@Table({ tableName: 'order_items', timestamps: true, underscored: true })
-export class OrderItem extends Model {
-  @Column({
-    type: DataType.UUID,
-    defaultValue: DataType.UUIDV4,
-    primaryKey: true,
-  })
-  declare id: string;
-
-  @ForeignKey(() => Order)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  orderId?: string;
-
-  @ForeignKey(() => Product)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  productId?: string;
-
-  @ForeignKey(() => User)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  sellerId?: string;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-    validate: {
-      min: 1
-    }
-  })
-  declare quantity: number;
-
-  @Column({
-    type: DataType.DECIMAL(10, 2),
-    allowNull: false,
-    validate: {
-      min: 0.01
-    }
-  })
-  declare price: number;
-
-  @Column({
-    type: DataType.ENUM(...Object.values(OrderStatus) as [string, ...string[]]),
-    defaultValue: OrderStatus.PENDING,
-    allowNull: false,
-    validate: {
-      isIn: [Object.values(OrderStatus)]
-    }
-  })
-  declare status: OrderStatus;
-
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
-  declare isCancelled: boolean;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: true,
-  })
-  cancellationReason?: string;
-
-  @BelongsTo(() => Order)
-  order?: Order;
-
-  @BelongsTo(() => Product)
-  product?: Product;
-
-  @BelongsTo(() => User, 'sellerId')
-  seller?: User;
 
   // Timestamps
   @Column({

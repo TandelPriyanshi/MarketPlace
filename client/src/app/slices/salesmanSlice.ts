@@ -37,6 +37,7 @@ interface SalesmanState {
   attendance: {
     checkedIn: boolean;
     checkInTime?: string;
+    checkOutTime?: string;
   };
   isLoading: boolean;
 }
@@ -77,6 +78,7 @@ const salesmanSlice = createSlice({
     },
     checkOut: (state) => {
       state.attendance.checkedIn = false;
+      state.attendance.checkOutTime = new Date().toISOString();
       state.attendance.checkInTime = undefined;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {

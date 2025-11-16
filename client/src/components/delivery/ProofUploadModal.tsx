@@ -1,23 +1,30 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { uploadProof } from '@/app/slices/deliverySlice';
+import { Textarea } from '@/components/ui/textarea';
+import { uploadProof } from '../../api/delivery.api';
 import { toast } from 'sonner';
-import { Upload } from 'lucide-react';
+import { Upload, Loader2 } from 'lucide-react';
 
 interface ProofUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  routeId: string;
+  deliveryId: string;
+  onSuccess?: () => void;
 }
 
-export const ProofUploadModal = ({ isOpen, onClose, routeId }: ProofUploadModalProps) => {
-  const dispatch = useDispatch();
+export const ProofUploadModal: React.FC<ProofUploadModalProps> = ({
+  isOpen,
+  onClose,
+  deliveryId,
+  onSuccess,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>('');
+  const [notes, setNotes] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -31,31 +38,59 @@ export const ProofUploadModal = ({ isOpen, onClose, routeId }: ProofUploadModalP
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!file) {
       toast.error('Please select a file');
       return;
     }
 
-    // In real app, upload to server/cloud storage
-    // For now, use a mock URL
-    const mockUrl = `https://storage.example.com/proof/${Date.now()}-${file.name}`;
-    
-    dispatch(uploadProof({ routeId, proofUrl: mockUrl }));
-    toast.success('Proof uploaded successfully');
-    onClose();
+    try {
+      setUploading(true);
+
+      // Determine proof type based on file
+      const proofType: 'photo' | 'signature' = file.type.includes('image') ? 'photo' : 'signature';
+
+      await uploadProof(deliveryId, {
+        proofType,
+        file,
+        notes: notes || undefined,
+      });
+
+      toast.success('Proof uploaded successfully');
+      onSuccess?.();
+      onClose();
+      
+      // Reset form
+      setFile(null);
+      setPreview('');
+      setNotes('');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to upload proof');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (!uploading) {
+      onClose();
+      // Reset form
+      setFile(null);
+      setPreview('');
+      setNotes('');
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Upload Delivery Proof</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label>Route ID</Label>
-            <div className="text-sm font-mono text-muted-foreground">{routeId}</div>
+            <Label>Delivery ID</Label>
+            <div className="text-sm font-mono text-muted-foreground">{deliveryId}</div>
           </div>
 
           <div className="space-y-2">
@@ -63,12 +98,25 @@ export const ProofUploadModal = ({ isOpen, onClose, routeId }: ProofUploadModalP
             <Input
               id="proof"
               type="file"
-              accept="image/*"
+              accept="image/*,application/pdf"
               onChange={handleFileChange}
+              disabled={uploading}
             />
             <p className="text-xs text-muted-foreground">
               Upload a photo of the delivery or customer signature
             </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes (Optional)</Label>
+            <Textarea
+              id="notes"
+              placeholder="Add any additional notes about the delivery..."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              disabled={uploading}
+              rows={3}
+            />
           </div>
 
           {preview && (
@@ -85,12 +133,16 @@ export const ProofUploadModal = ({ isOpen, onClose, routeId }: ProofUploadModalP
           )}
 
           <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outline" onClick={handleClose} disabled={uploading}>
               Cancel
             </Button>
-            <Button onClick={handleUpload} disabled={!file}>
-              <Upload className="mr-2 h-4 w-4" />
-              Upload
+            <Button onClick={handleUpload} disabled={!file || uploading}>
+              {uploading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Upload className="mr-2 h-4 w-4" />
+              )}
+              {uploading ? 'Uploading...' : 'Upload'}
             </Button>
           </div>
         </div>

@@ -1,22 +1,32 @@
-// server/src/db/migrations/20231114000017-create-search-functions.js
+// server/src/db/migrations/20231114000017-create-search-functions.ts
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        // Create a function for product search
+        // Drop the function if it exists
         await queryInterface.sequelize.query(`
-      CREATE OR REPLACE FUNCTION search_products(query text)
-      RETURNS TABLE (
-        id uuid,
-        name text,
-        description text,
-        category text,
-        brand text,
-        price decimal(10,2),
-        seller_name text,
-        rank float
-      ) AS $$
+      DROP PROCEDURE IF EXISTS search_products;
+    `);
+        // Create a stored procedure for product search using MySQL full-text search
+        await queryInterface.sequelize.query(`
+      CREATE PROCEDURE search_products(IN search_query TEXT)
       BEGIN
-        RETURN QUERY
+        SET @search_query = search_query;
+        
+        -- Create a temporary table to store results
+        DROP TEMPORARY TABLE IF EXISTS temp_search_results;
+        CREATE TEMPORARY TABLE temp_search_results (
+          id CHAR(36),
+          name TEXT,
+          description TEXT,
+          category TEXT,
+          brand TEXT,
+          price DECIMAL(10,2),
+          seller_name TEXT,
+          relevance INT
+        );
+        
+        -- Insert matching products with relevance score
+        INSERT INTO temp_search_results
         SELECT 
           p.id,
           p.name,
@@ -24,112 +34,91 @@ module.exports = {
           p.category,
           p.brand,
           p.price,
-          s.business_name as seller_name,
-          ts_rank(
-            to_tsvector('english', 
-              COALESCE(p.name, '') || ' ' || 
-              COALESCE(p.description, '') || ' ' || 
-              COALESCE(p.category, '') || ' ' || 
-              COALESCE(p.brand, '') || ' ' || 
-              COALESCE(s.business_name, '')
-            ),
-            plainto_tsquery('english', query)
-          ) as rank
+          s.businessName as seller_name,
+          MATCH(p.name, p.description, p.category, p.brand) 
+            AGAINST(@search_query IN NATURAL LANGUAGE MODE) as relevance
         FROM 
           products p
-          JOIN sellers s ON p.seller_id = s.id
+          JOIN sellers s ON p.sellerId = s.id
         WHERE 
-          to_tsvector('english', 
-            COALESCE(p.name, '') || ' ' || 
-            COALESCE(p.description, '') || ' ' || 
-            COALESCE(p.category, '') || ' ' || 
-            COALESCE(p.brand, '') || ' ' || 
-            COALESCE(s.business_name, '')
-          ) @@ plainto_tsquery('english', query)
-          AND p.is_active = true
+          MATCH(p.name, p.description, p.category, p.brand) 
+            AGAINST(@search_query IN NATURAL LANGUAGE MODE)
+          AND p.isActive = TRUE
           AND p.deleted_at IS NULL
-        ORDER BY 
-          rank DESC;
+        ORDER BY relevance DESC;
+        
+        -- Return the results
+        SELECT * FROM temp_search_results;
+        
+        -- Clean up
+        DROP TEMPORARY TABLE IF EXISTS temp_search_results;
       END;
-      $$ LANGUAGE plpgsql;
     `);
-        // Create a function for order search
+        // Drop the function if it exists
         await queryInterface.sequelize.query(`
-      CREATE OR REPLACE FUNCTION search_orders(query text, user_id uuid, user_role text)
-      RETURNS TABLE (
-        id uuid,
-        order_number text,
-        status text,
-        total_amount decimal(10,2),
-        createdAt timestamp with time zone,
-        customer_name text,
-        seller_name text,
-        rank float
-      ) AS $$
+      DROP PROCEDURE IF EXISTS search_orders;
+    `);
+        // Create a stored procedure for order search using MySQL full-text search
+        await queryInterface.sequelize.query(`
+      CREATE PROCEDURE search_orders(IN search_query TEXT, IN user_id CHAR(36), IN user_role TEXT)
       BEGIN
-        RETURN QUERY
-        WITH order_search AS (
-          SELECT 
-            o.id,
-            o.order_number,
-            o.status,
-            o.total_amount,
-            o.createdAt,
-            u.first_name || ' ' || u.last_name as customer_name,
-            s.business_name as seller_name,
-            ts_rank(
-              to_tsvector('english', 
-                COALESCE(o.order_number, '') || ' ' || 
-                COALESCE(o.status, '') || ' ' || 
-                COALESCE(u.first_name, '') || ' ' || 
-                COALESCE(u.last_name, '') || ' ' || 
-                COALESCE(s.business_name, '')
-              ),
-              plainto_tsquery('english', query)
-            ) as rank
-          FROM 
-            orders o
-            JOIN users u ON o.user_id = u.id
-            JOIN sellers s ON o.seller_id = s.id
-          WHERE 
-            to_tsvector('english', 
-              COALESCE(o.order_number, '') || ' ' || 
-              COALESCE(o.status, '') || ' ' || 
-              COALESCE(u.first_name, '') || ' ' || 
-              COALESCE(u.last_name, '') || ' ' || 
-              COALESCE(s.business_name, '')
-            ) @@ plainto_tsquery('english', query)
-            AND o.deleted_at IS NULL
-        )
+        SET @search_query = search_query;
+        SET @user_id = user_id;
+        SET @user_role = user_role;
+        
+        -- Create a temporary table to store results
+        DROP TEMPORARY TABLE IF EXISTS temp_search_results;
+        CREATE TEMPORARY TABLE temp_search_results (
+          id CHAR(36),
+          order_number TEXT,
+          status TEXT,
+          total_amount DECIMAL(10,2),
+          created_at TIMESTAMP,
+          customer_name TEXT,
+          seller_name TEXT,
+          relevance INT
+        );
+        
+        -- Insert matching orders with relevance score
+        INSERT INTO temp_search_results
         SELECT 
-          os.id,
-          os.order_number,
-          os.status,
-          os.total_amount,
-          os.createdAt,
-          os.customer_name,
-          os.seller_name,
-          os.rank
+          o.id,
+          o.order_number,
+          o.status,
+          o.total_amount,
+          o.created_at,
+          u.firstName || ' ' || u.lastName as customer_name,
+          s.businessName as seller_name,
+          MATCH(o.order_number, o.status, u.firstName, u.lastName, s.businessName) 
+            AGAINST(@search_query IN NATURAL LANGUAGE MODE) as relevance
         FROM 
-          order_search os
-          JOIN orders o ON os.id = o.id
+          orders o
+          JOIN users u ON o.userId = u.id
+          JOIN sellers s ON o.sellerId = s.id
         WHERE 
-          -- Admin can see all orders
-          (user_role = 'admin') OR
-          -- Sellers can see their own orders
-          (user_role = 'seller' AND o.seller_id = user_id) OR
-          -- Customers can see their own orders
-          (user_role = 'customer' AND o.user_id = user_id) OR
-          -- Delivery persons can see orders assigned to them
-          (user_role = 'delivery_person' AND o.delivery_person_id = user_id)
-        ORDER BY 
-          os.rank DESC;
+          MATCH(o.order_number, o.status, u.firstName, u.lastName, s.businessName) 
+            AGAINST(@search_query IN NATURAL LANGUAGE MODE)
+          AND o.deleted_at IS NULL
+        ORDER BY relevance DESC;
+        
+        -- Filter results based on user role
+        IF @user_role = 'admin' THEN
+          SELECT * FROM temp_search_results;
+        ELSEIF @user_role = 'seller' THEN
+          SELECT * FROM temp_search_results WHERE sellerId = @user_id;
+        ELSEIF @user_role = 'customer' THEN
+          SELECT * FROM temp_search_results WHERE userId = @user_id;
+        ELSEIF @user_role = 'delivery_person' THEN
+          SELECT * FROM temp_search_results WHERE deliveryPersonId = @user_id;
+        END IF;
+        
+        -- Clean up
+        DROP TEMPORARY TABLE IF EXISTS temp_search_results;
       END;
-      $$ LANGUAGE plpgsql;
     `);
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.sequelize.query('DROP FUNCTION IF EXISTS search_products(text)');
-        await queryInterface.sequelize.query('DROP FUNCTION IF EXISTS search_orders(text, uuid, text)');
+        await queryInterface.sequelize.query('DROP PROCEDURE IF EXISTS search_products;');
+        await queryInterface.sequelize.query('DROP PROCEDURE IF EXISTS search_orders;');
     },
 };

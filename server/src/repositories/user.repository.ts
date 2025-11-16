@@ -4,13 +4,13 @@ import { User, UserRole } from '../models/user.model';
 type UserAttributes = {
   id: string;
   email: string;
-  passwordHash: string;
+  password_hash: string;
   name: string | null;
   phone: string | null;
   role: UserRole;
   isActive: boolean;
   lastLogin: Date | null;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
@@ -26,7 +26,7 @@ class UserRepository {
     return UserRepository.instance;
   }
 
-  async create(userData: Omit<UserAttributes, 'id' | 'createdAt' | 'updatedAt' | 'lastLogin'>): Promise<User> {
+  async create(userData: Omit<UserAttributes, 'id' | 'created_at' | 'updatedAt' | 'lastLogin'>): Promise<User> {
     return await User.create(userData);
   }
 
@@ -44,11 +44,11 @@ class UserRepository {
       where,
       limit,
       offset,
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
-  async update(id: string, userData: Partial<Omit<UserAttributes, 'id' | 'createdAt' | 'updatedAt'>>): Promise<[number, User[]]> {
+  async update(id: string, userData: Partial<Omit<UserAttributes, 'id' | 'created_at' | 'updatedAt'>>): Promise<[number, User[]]> {
     return await User.update(userData, {
       where: { id },
       returning: true

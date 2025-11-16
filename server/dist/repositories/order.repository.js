@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderRepository = void 0;
 const sequelize_1 = require("sequelize");
 const order_model_1 = require("../models/order.model");
-const order_model_2 = require("../models/order.model");
+const orderItem_model_1 = require("../models/orderItem.model");
 class OrderRepository {
     async createOrder(orderData, items, transaction) {
         const order = await order_model_1.Order.create(orderData, { transaction });
@@ -12,14 +12,14 @@ class OrderRepository {
             ...item,
             orderId: order.id,
         }));
-        await order_model_2.OrderItem.bulkCreate(orderItems, { transaction });
+        await orderItem_model_1.OrderItem.bulkCreate(orderItems, { transaction });
         // We just created this order, so it should exist
         return (await this.findById(order.id, transaction));
     }
     async findById(id, transaction) {
         return order_model_1.Order.findByPk(id, {
             include: [
-                { model: order_model_2.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 { association: 'user' },
                 { association: 'seller' },
                 { association: 'deliveryPerson' },
@@ -60,10 +60,10 @@ class OrderRepository {
         return order_model_1.Order.findAndCountAll({
             where,
             include: [
-                { model: order_model_2.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 { association: 'seller' },
             ],
-            order: [['createdAt', 'DESC']],
+            order: [['created_at', 'DESC']],
             limit,
             offset: (page - 1) * limit,
         });
@@ -76,10 +76,10 @@ class OrderRepository {
         return order_model_1.Order.findAndCountAll({
             where,
             include: [
-                { model: order_model_2.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 { association: 'user' },
             ],
-            order: [['createdAt', 'DESC']],
+            order: [['created_at', 'DESC']],
             limit,
             offset: (page - 1) * limit,
         });
@@ -94,11 +94,11 @@ class OrderRepository {
                 deliveryPersonId: null
             },
             include: [
-                { model: order_model_2.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 { association: 'user' },
                 { association: 'seller' },
             ],
-            order: [['createdAt', 'ASC']],
+            order: [['created_at', 'ASC']],
             limit,
             offset: (page - 1) * limit,
         });
@@ -111,7 +111,7 @@ class OrderRepository {
         return order_model_1.Order.findAndCountAll({
             where,
             include: [
-                { model: order_model_2.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 { association: 'user' },
                 { association: 'seller' },
             ],

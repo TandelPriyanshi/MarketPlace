@@ -117,7 +117,7 @@ class AttachmentService {
             where,
             limit,
             offset: (page - 1) * limit,
-            order: [['createdAt', 'DESC']],
+            order: [['created_at', 'DESC']],
             include: [
                 { model: user_model_1.User, as: 'uploadedBy', attributes: ['id', 'name', 'email'] }
             ]

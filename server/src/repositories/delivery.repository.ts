@@ -12,7 +12,7 @@ type DeliveryAttributes = {
   deliveredAt: Date | null;
   pickupAt: Date | null;
   notes: string | null;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
@@ -28,7 +28,7 @@ class DeliveryRepository {
     return DeliveryRepository.instance;
   }
 
-  async create(deliveryData: Omit<DeliveryAttributes, 'id' | 'createdAt' | 'updatedAt' | 'deliveredAt' | 'pickupAt'>): Promise<DeliveryAttributes> {
+  async create(deliveryData: Omit<DeliveryAttributes, 'id' | 'created_at' | 'updatedAt' | 'deliveredAt' | 'pickupAt'>): Promise<DeliveryAttributes> {
     const delivery = await Order.update(
       {
         deliveryStatus: deliveryData.status,
@@ -69,7 +69,7 @@ class DeliveryRepository {
       include: [
         { model: User, as: 'user' }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 

@@ -11,8 +11,7 @@ export enum UserRole {
 
 @Table({
   tableName: 'users',
-  timestamps: true,
-  underscored: true
+  timestamps: true
 })
 export class User extends Model {
   @Column({
@@ -33,6 +32,7 @@ export class User extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false,
+    field: 'password_hash'
   })
   declare passwordHash: string;
 
@@ -59,10 +59,25 @@ export class User extends Model {
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
+    field: 'is_active'
   })
   declare isActive: boolean;
 
   // Associations
   @HasMany(() => Product, 'sellerId')
   declare products?: Product[];
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+  })
+  declare createdAt?: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+  })
+  declare updatedAt?: Date;
 }

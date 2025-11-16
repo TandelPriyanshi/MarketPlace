@@ -1,6 +1,6 @@
 import { Op, Transaction } from 'sequelize';
 import { Order, OrderStatus, PaymentStatus, DeliveryStatus } from '../models/order.model';
-import { OrderItem } from '../models/order.model';
+import { OrderItem } from '../models/orderItem.model';
 
 export class OrderRepository {
   async createOrder(orderData: Partial<Order>, items: Array<Partial<OrderItem>>, transaction?: Transaction): Promise<Order> {
@@ -100,7 +100,7 @@ export class OrderRepository {
         { model: OrderItem, as: 'items' },
         { association: 'seller' },
       ],
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
       limit,
       offset: (page - 1) * limit,
     });
@@ -124,7 +124,7 @@ export class OrderRepository {
         { model: OrderItem, as: 'items' },
         { association: 'user' },
       ],
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
       limit,
       offset: (page - 1) * limit,
     });
@@ -147,7 +147,7 @@ export class OrderRepository {
         { association: 'user' },
         { association: 'seller' },
       ],
-      order: [['createdAt', 'ASC']],
+      order: [['created_at', 'ASC']],
       limit,
       offset: (page - 1) * limit,
     });

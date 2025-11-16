@@ -14,7 +14,6 @@ export enum SellerStatus {
 @Table({
   tableName: 'sellers',
   timestamps: true,
-  underscored: true,
   paranoid: true,
   modelName: 'Seller'
 })

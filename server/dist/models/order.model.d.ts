@@ -41,7 +41,7 @@ export declare class Order extends Model {
     metadata: Record<string, unknown>;
     user?: User;
     items?: OrderItem[];
-    createdAt?: Date;
+    created_at?: Date;
     updatedAt?: Date;
 }
 export declare class OrderItem extends Model {
@@ -57,7 +57,7 @@ export declare class OrderItem extends Model {
     order?: Order;
     product?: Product;
     seller?: User;
-    createdAt?: Date;
+    created_at?: Date;
     updatedAt?: Date;
 }
 //# sourceMappingURL=order.model.d.ts.map

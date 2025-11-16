@@ -71,7 +71,7 @@ module.exports = {
                 type: Sequelize.JSON,
                 allowNull: true,
             },
-            createdAt: {
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -82,47 +82,66 @@ module.exports = {
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
         });
-        // Add indexes
-        await queryInterface.addIndex('addresses', ['userId']);
-        await queryInterface.addIndex('addresses', ['type']);
-        await queryInterface.addIndex('addresses', ['isDefault']);
-        await queryInterface.addIndex('addresses', ['city']);
-        await queryInterface.addIndex('addresses', ['state']);
-        await queryInterface.addIndex('addresses', ['postalCode']);
-        await queryInterface.addIndex('addresses', ['country']);
-        await queryInterface.addIndex('addresses', ['location'], { type: 'SPATIAL' });
-        // Add a function to ensure only one default address per user
+        // Add indexes with specific names to avoid conflicts
+        const indexes = [
+            { fields: ['userId'], name: 'idx_addresses_user_id' },
+            { fields: ['type'], name: 'idx_addresses_type' },
+            { fields: ['isDefault'], name: 'idx_addresses_is_default' },
+            { fields: ['city'], name: 'idx_addresses_city' },
+            { fields: ['state'], name: 'idx_addresses_state' },
+            { fields: ['postalCode'], name: 'idx_addresses_postal_code' },
+            { fields: ['country'], name: 'idx_addresses_country' }
+        ];
+        // Check if indexes exist before creating them
+        for (const index of indexes) {
+            try {
+                await queryInterface.addIndex('addresses', index.fields, { name: index.name });
+            }
+            catch (error) {
+                console.log(`Index ${index.name} already exists, skipping...`);
+            }
+        }
+        // Spatial index removed as we're using separate latitude and longitude columns
+        // Drop existing triggers if they exist
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS before_address_insert');
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS before_address_update');
+        // Drop the procedure if it exists
+        await queryInterface.sequelize.query('DROP PROCEDURE IF EXISTS ensure_single_default_address');
+        // Create a stored procedure to ensure only one default address per user
         await queryInterface.sequelize.query(`
-      CREATE OR REPLACE FUNCTION ensure_single_default_address()
-      RETURNS TRIGGER AS $$
+      CREATE PROCEDURE ensure_single_default_address(IN user_id_param VARCHAR(36), IN address_id_param VARCHAR(36))
+      MODIFIES SQL DATA
       BEGIN
-        IF NEW.is_default = true THEN
-          UPDATE addresses
-          SET is_default = false
-          WHERE user_id = NEW.user_id
-          AND id != NEW.id;
-        END IF;
-        RETURN NEW;
-      END;
-      $$ LANGUAGE plpgsql;
-    `);
-        // Create trigger for default address
+        UPDATE addresses
+        SET isDefault = false
+        WHERE userId = user_id_param
+        AND id != address_id_param;
+      END`);
+        // Create trigger for insert
         await queryInterface.sequelize.query(`
-      DROP TRIGGER IF EXISTS trigger_ensure_single_default_address ON addresses;
-      CREATE TRIGGER trigger_ensure_single_default_address
-      BEFORE INSERT OR UPDATE OF is_default
-      ON addresses
+      CREATE TRIGGER before_address_insert
+      BEFORE INSERT ON addresses
       FOR EACH ROW
-      EXECUTE FUNCTION ensure_single_default_address();
-    `);
+      BEGIN
+        IF NEW.isDefault = 1 THEN
+          CALL ensure_single_default_address(NEW.userId, NEW.id);
+        END IF;
+      END`);
+        // Create trigger for update
+        await queryInterface.sequelize.query(`
+      CREATE TRIGGER before_address_update
+      BEFORE UPDATE ON addresses
+      FOR EACH ROW
+      BEGIN
+        IF NEW.isDefault = 1 AND (OLD.isDefault = 0 OR OLD.isDefault IS NULL) THEN
+          CALL ensure_single_default_address(NEW.userId, NEW.id);
+        END IF;
+      END`);
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.sequelize.query(`
-      DROP TRIGGER IF EXISTS trigger_ensure_single_default_address ON addresses;
-    `);
-        await queryInterface.sequelize.query(`
-      DROP FUNCTION IF EXISTS ensure_single_default_address();
-    `);
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS before_address_insert');
+        await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS before_address_update');
+        await queryInterface.sequelize.query('DROP PROCEDURE IF EXISTS ensure_single_default_address');
         await queryInterface.dropTable('addresses');
     },
 };

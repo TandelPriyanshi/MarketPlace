@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const product_model_1 = require("../models/product.model");
 const order_model_1 = require("../models/order.model");
+const orderItem_model_1 = require("../models/orderItem.model");
 const user_model_1 = require("../models/user.model");
 const db_1 = require("../db");
 const logger_1 = require("../utils/logger");
@@ -98,7 +99,7 @@ class SellerService {
             if (status) {
                 where.status = status;
             }
-            const { count, rows } = await order_model_1.OrderItem.findAndCountAll({
+            const { count, rows } = await orderItem_model_1.OrderItem.findAndCountAll({
                 where,
                 include: [
                     {
@@ -134,7 +135,7 @@ class SellerService {
     async updateOrderStatus(sellerId, orderItemId, status, reason) {
         const transaction = await db_1.sequelize.transaction();
         try {
-            const orderItem = await order_model_1.OrderItem.findOne({
+            const orderItem = await orderItem_model_1.OrderItem.findOne({
                 where: { id: orderItemId, sellerId },
                 include: [{ model: order_model_1.Order, as: 'order' }],
                 transaction,
@@ -142,21 +143,14 @@ class SellerService {
             if (!orderItem) {
                 throw new Error('Order item not found or not owned by seller');
             }
-            // Validate status transition
-            this.validateStatusTransition(orderItem.status, status);
-            // Update order item status
-            await orderItem.update({ status, ...(reason && { cancellationReason: reason }) }, { transaction });
-            // Check if all items in the order have the same status
-            const orderItems = await order_model_1.OrderItem.findAll({
-                where: { orderId: orderItem.orderId },
-                transaction,
-            });
-            const allItemsHaveSameStatus = orderItems.every(item => item.status === status);
-            if (allItemsHaveSameStatus && orderItem.order) {
+            // Validate status transition using the order's current status
+            this.validateStatusTransition(orderItem.order?.status || order_model_1.OrderStatus.PENDING, status);
+            // Update the order status (not the order item)
+            if (orderItem.order) {
                 await orderItem.order.update({ status }, { transaction });
             }
             await transaction.commit();
-            return await order_model_1.OrderItem.findByPk(orderItemId, {
+            return await orderItem_model_1.OrderItem.findByPk(orderItemId, {
                 include: [
                     { model: order_model_1.Order, as: 'order' },
                     { model: product_model_1.Product, as: 'product' },
@@ -174,7 +168,7 @@ class SellerService {
         try {
             const [totalProducts, totalOrders, totalRevenueResult] = await Promise.all([
                 product_model_1.Product.count({ where: { sellerId } }),
-                order_model_1.OrderItem.count({ where: { sellerId } }),
+                orderItem_model_1.OrderItem.count({ where: { sellerId } }),
                 // Get total revenue using a raw query for better type safety
                 (async () => {
                     const result = await db_1.sequelize.query(`SELECT COALESCE(SUM(oi.price), 0) as total 
@@ -196,7 +190,7 @@ class SellerService {
             const totalRevenue = typeof totalRevenueResult === 'object' && totalRevenueResult !== null
                 ? totalRevenueResult.total
                 : 0;
-            const recentOrders = await order_model_1.OrderItem.findAll({
+            const recentOrders = await orderItem_model_1.OrderItem.findAll({
                 where: { sellerId },
                 limit: 5,
                 order: [['createdAt', 'DESC']],

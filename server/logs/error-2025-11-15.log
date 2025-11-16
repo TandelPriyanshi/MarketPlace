@@ -94,8 +94,8 @@
 [31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
 [31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
 [31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
-2025-11-15 21:06:53:653 [31merror[39m: [31mError in registerUser: Unknown column 'createdAt' in 'field list'[39m
-2025-11-15 21:06:53:653 [31merror[39m: [31mRegistration error: Unknown column 'createdAt' in 'field list'[39m
+2025-11-15 21:06:53:653 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 21:06:53:653 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
 2025-11-15 21:12:31:1231 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
 2025-11-15 21:12:31:1231 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
 2025-11-15 21:16:55:1655 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
@@ -128,3 +128,516 @@
 2025-11-15 21:35:29:3529 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
 2025-11-15 21:41:41:4141 [31merror[39m: [31mError in registerUser: Unknown column 'created_at' in 'field list'[39m
 2025-11-15 21:41:41:4141 [31merror[39m: [31mRegistration error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 22:27:58:2758 [31merror[39m: [31m[POST] /api/v1/api/auth/register >> StatusCode:: 404, Message:: Not Found - /api/v1/api/auth/register[39m
+2025-11-15 22:27:58:2758 [31merror[39m: [31mError: Not Found - /api/v1/api/auth/register[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 22:29:00:290 [31merror[39m: [31m[POST] /api/v1/register >> StatusCode:: 404, Message:: Not Found - /api/v1/register[39m
+2025-11-15 22:29:00:290 [31merror[39m: [31mError: Not Found - /api/v1/register[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 22:34:07:347 [31merror[39m: [31mError in loginUser: Invalid credentials[39m
+2025-11-15 22:34:07:347 [31merror[39m: [31mLogin error: Invalid credentials[39m
+2025-11-15 22:35:47:3547 [31merror[39m: [31mError in loginUser: Invalid credentials[39m
+2025-11-15 22:35:47:3547 [31merror[39m: [31mLogin error: Invalid credentials[39m
+2025-11-15 22:36:10:3610 [31merror[39m: [31mError in loginUser: Invalid credentials[39m
+2025-11-15 22:36:10:3610 [31merror[39m: [31mLogin error: Invalid credentials[39m
+2025-11-15 22:38:36:3836 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 22:38:36:3836 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 22:38:36:3836 [31merror[39m: [31m[POST] /api/v1/auth/refresh >> StatusCode:: 404, Message:: Not Found - /api/v1/auth/refresh[39m
+2025-11-15 22:38:36:3836 [31merror[39m: [31mError: Not Found - /api/v1/auth/refresh[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 22:38:37:3837 [31merror[39m: [31m[POST] /api/v1/auth/logout >> StatusCode:: 404, Message:: Not Found - /api/v1/auth/logout[39m
+2025-11-15 22:38:37:3837 [31merror[39m: [31mError: Not Found - /api/v1/auth/logout[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 22:38:52:3852 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 22:38:52:3852 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 22:38:52:3852 [31merror[39m: [31m[POST] /api/v1/auth/refresh >> StatusCode:: 404, Message:: Not Found - /api/v1/auth/refresh[39m
+2025-11-15 22:38:52:3852 [31merror[39m: [31mError: Not Found - /api/v1/auth/refresh[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 22:38:52:3852 [31merror[39m: [31m[POST] /api/v1/auth/logout >> StatusCode:: 404, Message:: Not Found - /api/v1/auth/logout[39m
+2025-11-15 22:38:52:3852 [31merror[39m: [31mError: Not Found - /api/v1/auth/logout[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 22:58:44:5844 [31merror[39m: [31m[GET] /api/v1/seller/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/dashboard[39m
+2025-11-15 22:58:44:5844 [31merror[39m: [31mError: Not Found - /api/v1/seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 22:58:44:5844 [31merror[39m: [31m[GET] /api/v1/seller/products >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/products[39m
+2025-11-15 22:58:44:5844 [31merror[39m: [31mError: Not Found - /api/v1/seller/products[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 22:58:44:5844 [31merror[39m: [31m[GET] /api/v1/seller/orders >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/orders[39m
+2025-11-15 22:58:44:5844 [31merror[39m: [31mError: Not Found - /api/v1/seller/orders[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 22:59:19:5919 [31merror[39m: [31m[GET] /api/v1/seller/products >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/products[39m
+2025-11-15 22:59:19:5919 [31merror[39m: [31mError: Not Found - /api/v1/seller/products[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 22:59:19:5919 [31merror[39m: [31m[GET] /api/v1/seller/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/dashboard[39m
+2025-11-15 22:59:19:5919 [31merror[39m: [31mError: Not Found - /api/v1/seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 22:59:19:5919 [31merror[39m: [31m[GET] /api/v1/seller/orders >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/orders[39m
+2025-11-15 22:59:19:5919 [31merror[39m: [31mError: Not Found - /api/v1/seller/orders[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:03:55:355 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:03:55:355 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:05:30:530 [31merror[39m: [31m[POST] /api/v1/seller/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/dashboard[39m
+2025-11-15 23:05:30:530 [31merror[39m: [31mError: Not Found - /api/v1/seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:05:35:535 [31merror[39m: [31m[GET] /api/v1/api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/api/v1/sellers/dashboard[39m
+2025-11-15 23:05:35:535 [31merror[39m: [31mError: Not Found - /api/v1/api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:05:35:535 [31merror[39m: [31m[GET] /api/v1/api/v1/sellers/products >> StatusCode:: 404, Message:: Not Found - /api/v1/api/v1/sellers/products[39m
+2025-11-15 23:05:35:535 [31merror[39m: [31mError: Not Found - /api/v1/api/v1/sellers/products[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:05:35:535 [31merror[39m: [31m[GET] /api/v1/api/v1/sellers/orders >> StatusCode:: 404, Message:: Not Found - /api/v1/api/v1/sellers/orders[39m
+2025-11-15 23:05:35:535 [31merror[39m: [31mError: Not Found - /api/v1/api/v1/sellers/orders[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:05:47:547 [31merror[39m: [31m[POST] /seller/dashboard >> StatusCode:: 404, Message:: Not Found - /seller/dashboard[39m
+2025-11-15 23:05:47:547 [31merror[39m: [31mError: Not Found - /seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:06:07:67 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:06:07:67 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:06:53:653 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:06:53:653 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:06:57:657 [31merror[39m: [31m[POST] /api/v1/seller/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/dashboard[39m
+2025-11-15 23:06:57:657 [31merror[39m: [31mError: Not Found - /api/v1/seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:08:14:814 [31merror[39m: [31m[POST] /api/v1/seller/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/dashboard[39m
+2025-11-15 23:08:14:814 [31merror[39m: [31mError: Not Found - /api/v1/seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31m[POST] /api/v1/auth/refresh >> StatusCode:: 404, Message:: Not Found - /api/v1/auth/refresh[39m
+2025-11-15 23:10:43:1043 [31merror[39m: [31mError: Not Found - /api/v1/auth/refresh[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31m[POST] /api/v1/auth/refresh >> StatusCode:: 404, Message:: Not Found - /api/v1/auth/refresh[39m
+2025-11-15 23:11:21:1121 [31merror[39m: [31mError: Not Found - /api/v1/auth/refresh[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:11:41:1141 [31merror[39m: [31m[POST] /api/v1/seller/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/dashboard[39m
+2025-11-15 23:11:41:1141 [31merror[39m: [31mError: Not Found - /api/v1/seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:12:32:1232 [31merror[39m: [31m[POST] /api/v1/seller/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/seller/dashboard[39m
+2025-11-15 23:12:32:1232 [31merror[39m: [31mError: Not Found - /api/v1/seller/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at Function.handle (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:175:3)[39m
+[31m    at router (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:47:12)[39m
+2025-11-15 23:13:38:1338 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:13:38:1338 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:14:52:1452 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:14:52:1452 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:19:48:1948 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:19:48:1948 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:21:17:2117 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:21:17:2117 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:23:19:2319 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:23:19:2319 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:27:08:278 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:27:08:278 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31m[POST] /api/v1/auth/refresh >> StatusCode:: 404, Message:: Not Found - /api/v1/auth/refresh[39m
+2025-11-15 23:27:44:2744 [31merror[39m: [31mError: Not Found - /api/v1/auth/refresh[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:31:15:3115 [31merror[39m: [31mError seeding database: Validation error[39m
+2025-11-15 23:31:22:3122 [31merror[39m: [31m[POST] /api/v1/auth/login >> StatusCode:: 400, Message:: Bad escaped character in JSON at position 9 (line 1 column 10)[39m
+2025-11-15 23:31:22:3122 [31merror[39m: [31mSyntaxError: Bad escaped character in JSON at position 9 (line 1 column 10)[39m
+[31m    at JSON.parse (<anonymous>)[39m
+[31m    at parse (D:\React\Project\marketplace\server\node_modules\body-parser\lib\types\json.js:92:19)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\body-parser\lib\read.js:128:18[39m
+[31m    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)[39m
+[31m    at invokeCallback (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:238:16)[39m
+[31m    at done (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:227:7)[39m
+[31m    at IncomingMessage.onEnd (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:287:7)[39m
+[31m    at IncomingMessage.emit (node:events:518:28)[39m
+[31m    at IncomingMessage.emit (node:domain:489:12)[39m
+[31m    at endReadableNT (node:internal/streams/readable:1698:12)[39m
+2025-11-15 23:31:35:3135 [31merror[39m: [31m[POST] /api/v1/auth/login >> StatusCode:: 400, Message:: Bad escaped character in JSON at position 9 (line 1 column 10)[39m
+2025-11-15 23:31:35:3135 [31merror[39m: [31mSyntaxError: Bad escaped character in JSON at position 9 (line 1 column 10)[39m
+[31m    at JSON.parse (<anonymous>)[39m
+[31m    at parse (D:\React\Project\marketplace\server\node_modules\body-parser\lib\types\json.js:92:19)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\body-parser\lib\read.js:128:18[39m
+[31m    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)[39m
+[31m    at invokeCallback (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:238:16)[39m
+[31m    at done (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:227:7)[39m
+[31m    at IncomingMessage.onEnd (D:\React\Project\marketplace\server\node_modules\raw-body\index.js:287:7)[39m
+[31m    at IncomingMessage.emit (node:events:518:28)[39m
+[31m    at IncomingMessage.emit (node:domain:489:12)[39m
+[31m    at endReadableNT (node:internal/streams/readable:1698:12)[39m
+2025-11-15 23:32:19:3219 [31merror[39m: [31mError validating token: jwt malformed[39m
+2025-11-15 23:32:19:3219 [31merror[39m: [31mAuthentication error: Invalid or expired token[39m
+2025-11-15 23:32:53:3253 [31merror[39m: [31mError fetching seller dashboard: Unknown column 'OrderItem.seller_id' in 'where clause'[39m
+2025-11-15 23:32:53:3253 [31merror[39m: [31mError in getDashboard controller: Unknown column 'OrderItem.seller_id' in 'where clause'[39m
+2025-11-15 23:32:53:3253 [31merror[39m: [31m[GET] /api/v1/sellers/dashboard >> StatusCode:: 500, Message:: Unknown column 'OrderItem.seller_id' in 'where clause'[39m
+2025-11-15 23:32:53:3253 [31merror[39m: [31mError[39m
+[31m    at Query.run (D:\React\Project\marketplace\server\node_modules\sequelize\src\dialects\mysql\query.js:46:25)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\sequelize\src\sequelize.js:650:28[39m
+[31m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[31m    at async MySQLQueryInterface.rawSelect (D:\React\Project\marketplace\server\node_modules\sequelize\src\dialects\abstract\query-interface.js:1043:18)[39m
+[31m    at async Function.aggregate (D:\React\Project\marketplace\server\node_modules\sequelize\src\model.js:2067:19)[39m
+[31m    at async Function.count (D:\React\Project\marketplace\server\node_modules\sequelize\src\model.js:2124:20)[39m
+[31m    at async Promise.all (index 1)[39m
+[31m    at async SellerService.getSellerDashboard (D:\React\Project\marketplace\server\src\services\seller.service.ts:204:64)[39m
+[31m    at async SellerController.getDashboard (D:\React\Project\marketplace\server\src\controllers\seller.controller.ts:119:25)[39m
+2025-11-15 23:37:18:3718 [31merror[39m: [31mError in loginUser: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 23:37:18:3718 [31merror[39m: [31mLogin error: Unknown column 'created_at' in 'field list'[39m
+2025-11-15 23:38:10:3810 [31merror[39m: [31mError in loginUser: Unknown column 'password_hash' in 'field list'[39m
+2025-11-15 23:38:10:3810 [31merror[39m: [31mLogin error: Unknown column 'password_hash' in 'field list'[39m
+2025-11-15 23:39:19:3919 [31merror[39m: [31mError fetching seller dashboard: Unknown column 'o.paymentStatus' in 'where clause'[39m
+2025-11-15 23:39:19:3919 [31merror[39m: [31mError in getDashboard controller: Unknown column 'o.paymentStatus' in 'where clause'[39m
+2025-11-15 23:39:19:3919 [31merror[39m: [31m[GET] /api/v1/sellers/dashboard >> StatusCode:: 500, Message:: Unknown column 'o.paymentStatus' in 'where clause'[39m
+2025-11-15 23:39:19:3919 [31merror[39m: [31mError[39m
+[31m    at Query.run (D:\React\Project\marketplace\server\node_modules\sequelize\src\dialects\mysql\query.js:46:25)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\sequelize\src\sequelize.js:650:28[39m
+[31m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[31m    at async D:\React\Project\marketplace\server\src\services\seller.service.ts:209:26[39m
+[31m    at async Promise.all (index 2)[39m
+[31m    at async SellerService.getSellerDashboard (D:\React\Project\marketplace\server\src\services\seller.service.ts:204:64)[39m
+[31m    at async SellerController.getDashboard (D:\React\Project\marketplace\server\src\controllers\seller.controller.ts:119:25)[39m
+2025-11-15 23:42:19:4219 [31merror[39m: [31mError fetching seller dashboard: Unknown column 'OrderItem.isCancelled' in 'field list'[39m
+2025-11-15 23:42:19:4219 [31merror[39m: [31mError in getDashboard controller: Unknown column 'OrderItem.isCancelled' in 'field list'[39m
+2025-11-15 23:42:19:4219 [31merror[39m: [31m[GET] /api/v1/sellers/dashboard >> StatusCode:: 500, Message:: Unknown column 'OrderItem.isCancelled' in 'field list'[39m
+2025-11-15 23:42:19:4219 [31merror[39m: [31mError[39m
+[31m    at Query.run (D:\React\Project\marketplace\server\node_modules\sequelize\src\dialects\mysql\query.js:46:25)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\sequelize\src\sequelize.js:650:28[39m
+[31m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[31m    at async MySQLQueryInterface.select (D:\React\Project\marketplace\server\node_modules\sequelize\src\dialects\abstract\query-interface.js:1001:12)[39m
+[31m    at async Function.findAll (D:\React\Project\marketplace\server\node_modules\sequelize\src\model.js:1824:21)[39m
+[31m    at async SellerService.getSellerDashboard (D:\React\Project\marketplace\server\src\services\seller.service.ts:233:28)[39m
+[31m    at async SellerController.getDashboard (D:\React\Project\marketplace\server\src\controllers\seller.controller.ts:119:25)[39m
+2025-11-15 23:46:59:4659 [31merror[39m: [31m[POST] /api/v1/sellers/dashboard >> StatusCode:: 404, Message:: Not Found - /api/v1/sellers/dashboard[39m
+2025-11-15 23:46:59:4659 [31merror[39m: [31mError: Not Found - /api/v1/sellers/dashboard[39m
+[31m    at notFoundHandler (D:\React\Project\marketplace\server\src\middleware\error.middleware.ts:5:17)[39m
+[31m    at Layer.handle [as handle_request] (D:\React\Project\marketplace\server\node_modules\express\lib\router\layer.js:95:5)[39m
+[31m    at trim_prefix (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:328:13)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:286:9[39m
+[31m    at Function.process_params (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:346:12)[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:280:10)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:646:15[39m
+[31m    at next (D:\React\Project\marketplace\server\node_modules\express\lib\router\index.js:265:14)[39m
+2025-11-15 23:48:18:4818 [31merror[39m: [31mError fetching seller dashboard: Unknown column 'product.created_at' in 'field list'[39m
+2025-11-15 23:48:18:4818 [31merror[39m: [31mError in getDashboard controller: Unknown column 'product.created_at' in 'field list'[39m
+2025-11-15 23:48:18:4818 [31merror[39m: [31m[GET] /api/v1/sellers/dashboard >> StatusCode:: 500, Message:: Unknown column 'product.created_at' in 'field list'[39m
+2025-11-15 23:48:18:4818 [31merror[39m: [31mError[39m
+[31m    at Query.run (D:\React\Project\marketplace\server\node_modules\sequelize\src\dialects\mysql\query.js:46:25)[39m
+[31m    at D:\React\Project\marketplace\server\node_modules\sequelize\src\sequelize.js:650:28[39m
+[31m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[31m    at async MySQLQueryInterface.select (D:\React\Project\marketplace\server\node_modules\sequelize\src\dialects\abstract\query-interface.js:1001:12)[39m
+[31m    at async Function.findAll (D:\React\Project\marketplace\server\node_modules\sequelize\src\model.js:1824:21)[39m
+[31m    at async SellerService.getSellerDashboard (D:\React\Project\marketplace\server\src\services\seller.service.ts:233:28)[39m
+[31m    at async SellerController.getDashboard (D:\React\Project\marketplace\server\src\controllers\seller.controller.ts:119:25)[39m

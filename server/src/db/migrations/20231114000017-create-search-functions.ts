@@ -77,7 +77,7 @@ module.exports = {
           order_number TEXT,
           status TEXT,
           total_amount DECIMAL(10,2),
-          createdAt TIMESTAMP,
+          created_at TIMESTAMP,
           customer_name TEXT,
           seller_name TEXT,
           relevance INT
@@ -90,7 +90,7 @@ module.exports = {
           o.order_number,
           o.status,
           o.total_amount,
-          o.createdAt,
+          o.created_at,
           u.firstName || ' ' || u.lastName as customer_name,
           s.businessName as seller_name,
           MATCH(o.order_number, o.status, u.firstName, u.lastName, s.businessName) 

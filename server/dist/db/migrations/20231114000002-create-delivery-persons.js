@@ -1,4 +1,4 @@
-// server/src/db/migrations/20231114000002-create-delivery-persons.js
+// server/src/db/migrations/20231114000002-create-delivery-persons.ts
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
@@ -50,7 +50,7 @@ module.exports = {
                 type: Sequelize.JSON,
                 allowNull: true,
             },
-            createdAt: {
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

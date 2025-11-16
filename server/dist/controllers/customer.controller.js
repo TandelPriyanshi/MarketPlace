@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.customerController = exports.CustomerController = void 0;
-const customer_service_1 = require("../services/customer.service");
+const customer_service_1 = __importDefault(require("../services/customer.service"));
 const logger_1 = require("../utils/logger");
 const express_validator_1 = require("express-validator");
 class CustomerController {
@@ -9,7 +12,7 @@ class CustomerController {
     async getSellers(req, res) {
         try {
             const { city, area, pincode } = req.query;
-            const sellers = await customer_service_1.customerService.getSellers({
+            const sellers = await customer_service_1.default.getSellers({
                 city: city,
                 area: area,
                 pincode: pincode,
@@ -35,7 +38,7 @@ class CustomerController {
         }
         try {
             const userId = req.user.id; // From auth middleware
-            const order = await customer_service_1.customerService.placeOrder(userId, req.body);
+            const order = await customer_service_1.default.placeOrder(userId, req.body);
             res.status(201).json({
                 success: true,
                 data: order,
@@ -55,7 +58,7 @@ class CustomerController {
         try {
             const userId = req.user.id;
             const { id } = req.params;
-            const order = await customer_service_1.customerService.getOrderDetails(userId, id);
+            const order = await customer_service_1.default.getOrderDetails(userId, id);
             if (!order) {
                 return res.status(404).json({
                     success: false,
@@ -87,7 +90,7 @@ class CustomerController {
         try {
             const userId = req.user.id;
             const files = req.files;
-            const complaint = await customer_service_1.customerService.createComplaint(userId, req.body, files);
+            const complaint = await customer_service_1.default.createComplaint(userId, req.body, files);
             res.status(201).json({
                 success: true,
                 data: complaint,
@@ -107,7 +110,7 @@ class CustomerController {
         try {
             const userId = req.user.id;
             const { status } = req.query;
-            const complaints = await customer_service_1.customerService.getUserComplaints(userId, {
+            const complaints = await customer_service_1.default.getUserComplaints(userId, {
                 status: status,
             });
             res.json({

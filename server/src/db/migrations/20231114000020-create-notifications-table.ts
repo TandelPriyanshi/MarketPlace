@@ -43,7 +43,7 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -59,7 +59,7 @@ module.exports = {
     await queryInterface.addIndex('notifications', ['userId']);
     await queryInterface.addIndex('notifications', ['type']);
     await queryInterface.addIndex('notifications', ['isRead']);
-    await queryInterface.addIndex('notifications', ['createdAt']);
+    await queryInterface.addIndex('notifications', ['created_at']);
   },
 
   down: async (queryInterface: any, Sequelize: any) => {

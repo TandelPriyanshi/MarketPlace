@@ -144,7 +144,7 @@ class ComplaintService {
       ],
       limit,
       offset: (page - 1) * limit,
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
 
     return {
@@ -335,7 +335,7 @@ class ComplaintService {
       Complaint.findAll({
         where,
         limit: 5,
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         include: [
           { model: User, as: 'user', attributes: ['id', 'name', 'email'] }
         ]

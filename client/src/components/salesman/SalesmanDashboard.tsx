@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MapPin, TrendingUp, CheckCircle, LogIn } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,70 +8,94 @@ import { setBeats, setPerformance, checkIn, checkOut } from '@/app/slices/salesm
 import { BeatTable } from './BeatTable';
 import { PerformanceCard } from './PerformanceCard';
 import { toast } from 'sonner';
-
-// Mock data
-const mockBeats = [
-  {
-    id: 'BEAT-001',
-    areaName: 'Jayanagar',
-    storeCount: 12,
-    assignedAt: new Date().toISOString(),
-    stores: [
-      {
-        id: 'STORE-1',
-        name: 'Raghavendra Stores',
-        address: '4th Block, Jayanagar',
-        ownerName: 'Raghavendra',
-        phone: '9876543210',
-      },
-      {
-        id: 'STORE-2',
-        name: 'Lakshmi Super Market',
-        address: '9th Block, Jayanagar',
-        ownerName: 'Lakshmi',
-        phone: '9876543211',
-      },
-    ],
-  },
-  {
-    id: 'BEAT-002',
-    areaName: 'Koramangala',
-    storeCount: 8,
-    assignedAt: new Date().toISOString(),
-    stores: [
-      {
-        id: 'STORE-3',
-        name: 'Metro Mart',
-        address: '5th Block, Koramangala',
-        ownerName: 'Suresh',
-        phone: '9876543212',
-      },
-    ],
-  },
-];
+import { getBeats, markAttendance, getSalesmanPerformance } from '@/api/salesman.api';
+import { Beat, SalesmanPerformance } from '@/api/salesman.api';
 
 export const SalesmanDashboard = () => {
   const dispatch = useDispatch();
   const { performance, attendance } = useSelector((state: RootState) => state.salesman);
+  const [loading, setLoading] = useState(true);
+  const [beats, setBeatsData] = useState<Beat[]>([]);
+  const [performanceData, setPerformanceData] = useState<SalesmanPerformance | null>(null);
 
   useEffect(() => {
-    // Simulate API calls
-    dispatch(setBeats(mockBeats));
-    dispatch(setPerformance({
-      totalVisits: 32,
-      ordersGenerated: 18,
-      beatsCompleted: 3,
-    }));
-  }, [dispatch]);
+    fetchData();
+  }, []);
 
-  const handleCheckIn = () => {
-    dispatch(checkIn());
-    toast.success('Checked in successfully');
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [beatsResponse, performanceResponse] = await Promise.all([
+        getBeats(),
+        getSalesmanPerformance(),
+      ]);
+      
+      setBeatsData(beatsResponse.data);
+      setPerformanceData(performanceResponse.data);
+      
+      // Transform API beats to match Redux store format
+      const transformedBeats = beatsResponse.data.map((beat: any) => ({
+        id: beat.id,
+        areaName: beat.name || beat.area,
+        storeCount: beat.stores?.length || 0,
+        assignedAt: beat.created_at || new Date().toISOString(),
+        stores: beat.stores?.map((store: any) => ({
+          id: store.id,
+          name: store.name,
+          address: store.address,
+          ownerName: store.owner || store.contactPerson,
+          phone: store.phone,
+          lastVisitDate: store.lastVisitedAt,
+        })) || [],
+      }));
+      
+      // Update Redux store
+      dispatch(setBeats(transformedBeats));
+      dispatch(setPerformance({
+        totalVisits: performanceResponse.data.visitsCompleted,
+        ordersGenerated: performanceResponse.data.totalOrders,
+        beatsCompleted: performanceResponse.data.storesCovered,
+      }));
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      toast.error('Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCheckOut = () => {
-    dispatch(checkOut());
-    toast.success('Checked out successfully');
+  const handleCheckIn = async () => {
+    try {
+      await markAttendance({
+        date: new Date().toISOString(),
+        status: 'present',
+        checkInTime: new Date().toISOString(),
+        location: {
+          latitude: 12.9716, // Default Bangalore coordinates
+          longitude: 77.5946,
+        },
+      });
+      dispatch(checkIn());
+      toast.success('Checked in successfully');
+      // Refresh data after check-in
+      fetchData();
+    } catch (error) {
+      console.error('Error checking in:', error);
+      toast.error('Failed to check in');
+    }
+  };
+
+  const handleCheckOut = async () => {
+    try {
+      // You might need to update the attendance record with check-out time
+      dispatch(checkOut());
+      toast.success('Checked out successfully');
+      // Refresh data after check-out
+      fetchData();
+    } catch (error) {
+      console.error('Error checking out:', error);
+      toast.error('Failed to check out');
+    }
   };
 
   return (

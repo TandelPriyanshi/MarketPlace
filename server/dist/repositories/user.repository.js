@@ -24,7 +24,7 @@ class UserRepository {
             where,
             limit,
             offset,
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async update(id, userData) {

@@ -12,7 +12,7 @@ export const seedData = {
     {
       id: uuidv4(),
       email: 'seller1@example.com',
-      passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+      password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
       name: 'Seller One',
       phone: '+1234567890',
       role: UserRole.SELLER as any,
@@ -21,7 +21,7 @@ export const seedData = {
     {
       id: uuidv4(),
       email: 'seller2@example.com',
-      passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+      password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
       name: 'Seller Two',
       phone: '+1234567891',
       role: UserRole.SELLER as any,
@@ -30,7 +30,7 @@ export const seedData = {
     {
       id: uuidv4(),
       email: 'customer1@example.com',
-      passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+      password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
       name: 'Customer One',
       phone: '+1234567892',
       role: UserRole.CUSTOMER as any,
@@ -39,7 +39,7 @@ export const seedData = {
     {
       id: uuidv4(),
       email: 'customer2@example.com',
-      passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+      password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
       name: 'Customer Two',
       phone: '+1234567893',
       role: UserRole.CUSTOMER as any,
@@ -48,7 +48,7 @@ export const seedData = {
     {
       id: uuidv4(),
       email: 'delivery@example.com',
-      passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+      password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
       name: 'Delivery Person',
       phone: '+1234567894',
       role: UserRole.DELIVERY_PERSON as any,
@@ -57,7 +57,7 @@ export const seedData = {
     {
       id: uuidv4(),
       email: 'salesman@example.com',
-      passwordHash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
+      password_hash: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOeJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJqJq',
       name: 'Salesman One',
       phone: '+1234567895',
       role: UserRole.SALESMAN as any, // Using SALESMAN as placeholder for salesman

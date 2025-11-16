@@ -26,7 +26,7 @@ export declare class Beat extends Model {
     };
     salesman: Salesman;
     stores: Store[];
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
 }
 //# sourceMappingURL=beat.model.d.ts.map

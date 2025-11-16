@@ -47,7 +47,7 @@ class SalesmanRepository {
             where,
             limit,
             offset,
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async update(id, salesmanData) {
@@ -77,7 +77,7 @@ class SalesmanRepository {
             visit_model_1.Visit.count({
                 where: {
                     salesmanId,
-                    createdAt: {
+                    created_at: {
                         [sequelize_1.Op.gte]: new Date(new Date().setDate(1)), // First day of current month
                         [sequelize_1.Op.lte]: new Date() // Now
                     }

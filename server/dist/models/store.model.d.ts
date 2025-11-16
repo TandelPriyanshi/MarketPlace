@@ -21,7 +21,7 @@ export declare class Store extends Model {
     beat: Beat;
     visits: Visit[];
     lastVisitedAt: Date;
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
 }
 //# sourceMappingURL=store.model.d.ts.map

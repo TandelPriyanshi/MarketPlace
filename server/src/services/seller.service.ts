@@ -1,6 +1,7 @@
 import { Op, QueryTypes, Transaction } from 'sequelize';
 import { Product, ProductStatus } from '../models/product.model';
-import { Order, OrderItem, OrderStatus, PaymentStatus } from '../models/order.model';
+import { Order, OrderStatus, PaymentStatus } from '../models/order.model';
+import { OrderItem } from '../models/orderItem.model';
 import { User } from '../models/user.model';
 import { sequelize } from '../db';
 import { logger } from '../utils/logger';
@@ -166,21 +167,11 @@ class SellerService {
         throw new Error('Order item not found or not owned by seller');
       }
 
-      // Validate status transition
-      this.validateStatusTransition(orderItem.status, status);
+      // Validate status transition using the order's current status
+      this.validateStatusTransition(orderItem.order?.status || OrderStatus.PENDING, status);
 
-      // Update order item status
-      await orderItem.update({ status, ...(reason && { cancellationReason: reason }) }, { transaction });
-
-      // Check if all items in the order have the same status
-      const orderItems = await OrderItem.findAll({
-        where: { orderId: orderItem.orderId },
-        transaction,
-      });
-
-      const allItemsHaveSameStatus = orderItems.every(item => item.status === status);
-      
-      if (allItemsHaveSameStatus && orderItem.order) {
+      // Update the order status (not the order item)
+      if (orderItem.order) {
         await orderItem.order.update({ status }, { transaction });
       }
 

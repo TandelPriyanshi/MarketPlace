@@ -51,7 +51,8 @@ router.post('/register', [
     (0, express_validator_1.check)('email', 'Please include a valid email').isEmail(),
     (0, express_validator_1.check)('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
     (0, express_validator_1.check)('name', 'Name is required').not().isEmpty(),
-    (0, express_validator_1.check)('phone', 'Please include a valid phone number').optional().isMobilePhone('any')
+    (0, express_validator_1.check)('phone', 'Please include a valid phone number').optional().isMobilePhone('any'),
+    (0, express_validator_1.check)('role', 'Valid role is required').isIn(['customer', 'seller', 'delivery_person', 'salesman', 'admin'])
 ], auth_controller_1.default.register);
 /**
  * @swagger

@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = exports.UserRole = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const product_model_1 = require("./product.model");
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
@@ -43,6 +44,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
         allowNull: false,
+        field: 'password_hash'
     }),
     __metadata("design:type", String)
 ], User.prototype, "passwordHash", void 0);
@@ -73,9 +75,14 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.BOOLEAN,
         allowNull: false,
+        field: 'is_active'
     }),
     __metadata("design:type", Boolean)
 ], User.prototype, "isActive", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => product_model_1.Product, 'sellerId'),
+    __metadata("design:type", Array)
+], User.prototype, "products", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.DATE,
@@ -95,7 +102,6 @@ __decorate([
 exports.User = User = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'users',
-        timestamps: true,
-        underscored: true
+        timestamps: true
     })
 ], User);

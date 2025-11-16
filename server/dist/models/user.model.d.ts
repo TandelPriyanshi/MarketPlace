@@ -8,12 +8,12 @@ export declare enum UserRole {
 export declare class User extends Model {
     id: string;
     email: string;
-    passwordHash: string;
+    password_hash: string;
     name: string;
     role: UserRole;
     phone: string;
     isActive: boolean;
-    createdAt: Date;
+    created_at: Date;
     updatedAt: Date;
 }
 //# sourceMappingURL=user.model.d.ts.map

@@ -46,6 +46,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.UUID,
         allowNull: false,
+        field: 'salesman_id'
     }),
     __metadata("design:type", String)
 ], Beat.prototype, "salesmanId", void 0);
@@ -83,14 +84,6 @@ __decorate([
     (0, sequelize_typescript_1.HasMany)(() => store_model_1.Store),
     __metadata("design:type", Array)
 ], Beat.prototype, "stores", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
-    __metadata("design:type", Date)
-], Beat.prototype, "createdAt", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
-    __metadata("design:type", Date)
-], Beat.prototype, "updatedAt", void 0);
 exports.Beat = Beat = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'beats',

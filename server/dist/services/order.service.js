@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.orderService = void 0;
 const sequelize_1 = require("sequelize");
 const order_model_1 = require("../models/order.model");
+const orderItem_model_1 = require("../models/orderItem.model");
 const product_model_1 = require("../models/product.model");
 const user_model_1 = require("../models/user.model");
 const db_1 = require("../db");
@@ -110,7 +110,7 @@ class OrderService {
                 paymentMethod: orderData.paymentMethod,
                 items: orderItems
             }, {
-                include: [{ model: order_model_1.OrderItem, as: 'items' }],
+                include: [{ model: orderItem_model_1.OrderItem, as: 'items' }],
                 transaction
             });
             // Update product stock
@@ -126,7 +126,7 @@ class OrderService {
             await transaction.commit();
             return order.reload({
                 include: [
-                    { model: order_model_1.OrderItem, as: 'items' },
+                    { model: orderItem_model_1.OrderItem, as: 'items' },
                     { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] }
                 ]
             });
@@ -152,7 +152,7 @@ class OrderService {
         const order = await order_model_1.Order.findOne({
             where,
             include: [
-                { model: order_model_1.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 {
                     model: user_model_1.User,
                     as: 'user',
@@ -177,20 +177,20 @@ class OrderService {
         if (paymentStatus)
             where.paymentStatus = paymentStatus;
         if (startDate || endDate) {
-            where.createdAt = {};
+            where.created_at = {};
             if (startDate)
-                where.createdAt[sequelize_1.Op.gte] = startDate;
+                where.created_at[sequelize_1.Op.gte] = startDate;
             if (endDate)
-                where.createdAt[sequelize_1.Op.lte] = endDate;
+                where.created_at[sequelize_1.Op.lte] = endDate;
         }
         // If sellerId is provided, only return orders containing seller's products
         let include = [
-            { model: order_model_1.OrderItem, as: 'items' },
+            { model: orderItem_model_1.OrderItem, as: 'items' },
             { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] }
         ];
         if (sellerId) {
             include[0] = {
-                model: order_model_1.OrderItem,
+                model: orderItem_model_1.OrderItem,
                 as: 'items',
                 include: [{
                         model: product_model_1.Product,
@@ -204,7 +204,7 @@ class OrderService {
             include,
             limit,
             offset: (page - 1) * limit,
-            order: [['createdAt', 'DESC']],
+            order: [['created_at', 'DESC']],
             distinct: true
         });
         return {
@@ -232,38 +232,6 @@ class OrderService {
         // - Initiate refund if applicable
         // - Update inventory
         console.log(`Handling return approval for order ${order.id}`);
-    }
-    async updateOrderStatus(orderId, status, userId) {
-        const order = await this.getOrderById(orderId, userId);
-        const allowedStatuses = this.validTransitions[order.status] || [];
-        if (!allowedStatuses.includes(status)) {
-            const allowedTransitionsList = this.validTransitions[order.status] || [];
-            throw new errors_1.ValidationError(`Invalid status transition from ${order.status} to ${status}. ` +
-                `Allowed transitions: ${allowedTransitionsList.join(', ') || 'none'}`);
-        }
-        // Additional validations based on status
-        if (status === order_model_1.OrderStatus.CANCELLED && order.status !== order_model_1.OrderStatus.PENDING) {
-            // Only allow cancellation if order is still pending
-            throw new errors_1.ValidationError('Cannot cancel order after it has been confirmed');
-        }
-        // Update order status
-        await order.update({ status });
-        // Trigger side effects based on status change
-        if (status === order_model_1.OrderStatus.CANCELLED) {
-            await this.handleOrderCancellation(order);
-        }
-        else if (status === order_model_1.OrderStatus.DELIVERED) {
-            await this.handleOrderDelivery(order);
-        }
-        else if (status === order_model_1.OrderStatus.RETURN_APPROVED) {
-            await this.handleReturnApproval(order);
-        }
-        return order.reload({
-            include: [
-                { model: order_model_1.OrderItem, as: 'items' },
-                { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] }
-            ]
-        });
     }
     /**
      * Update payment status with validation
@@ -298,7 +266,7 @@ class OrderService {
         }
         return order.reload({
             include: [
-                { model: order_model_1.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] }
             ]
         });
@@ -315,12 +283,12 @@ class OrderService {
         const { count, rows } = await order_model_1.Order.findAndCountAll({
             where,
             include: [
-                { model: order_model_1.OrderItem, as: 'items' },
+                { model: orderItem_model_1.OrderItem, as: 'items' },
                 { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] },
             ],
             limit,
             offset: (page - 1) * limit,
-            order: [['createdAt', 'DESC']],
+            order: [['created_at', 'DESC']],
         });
         return {
             orders: rows,
@@ -359,7 +327,7 @@ class OrderService {
             await transaction.commit();
             return order.reload({
                 include: [
-                    { model: order_model_1.OrderItem, as: 'items' },
+                    { model: orderItem_model_1.OrderItem, as: 'items' },
                     { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] },
                 ],
             });
@@ -373,6 +341,220 @@ class OrderService {
                 throw new errors_1.DatabaseError('Failed to cancel order', error);
             }
             throw new errors_1.DatabaseError('Failed to cancel order', new Error('Unknown error occurred'));
+        }
+    }
+    /**
+     * Place a new order (alias for createOrder)
+     */
+    async placeOrder(customerId, orderData) {
+        const transaction = await db_1.sequelize.transaction();
+        try {
+            // Get product details and prices
+            const productIds = orderData.items.map(item => item.productId);
+            const products = await product_model_1.Product.findAll({
+                where: { id: { [sequelize_1.Op.in]: productIds } },
+                transaction,
+            });
+            if (products.length !== productIds.length) {
+                throw new errors_1.ValidationError('Some products not found');
+            }
+            // Create items with prices
+            const itemsWithPrices = orderData.items.map(item => {
+                const product = products.find(p => p.id === item.productId);
+                if (!product)
+                    throw new errors_1.ValidationError(`Product ${item.productId} not found`);
+                return {
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    price: product.get('price'),
+                };
+            });
+            // Convert to the format expected by createOrder
+            const createOrderData = {
+                items: itemsWithPrices,
+                shippingAddress: JSON.stringify(orderData.shippingAddress),
+                paymentMethod: orderData.paymentMethod,
+            };
+            const order = await this.createOrder(customerId, createOrderData);
+            await transaction.commit();
+            return order;
+        }
+        catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    }
+    /**
+     * Update order status
+     */
+    async updateOrderStatus(userId, orderId, payload) {
+        const transaction = await db_1.sequelize.transaction();
+        try {
+            const order = await order_model_1.Order.findByPk(orderId, {
+                include: [
+                    { model: orderItem_model_1.OrderItem, as: 'items' },
+                    { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] },
+                ],
+                transaction,
+            });
+            if (!order) {
+                throw new errors_1.NotFoundError('Order not found');
+            }
+            // Verify user has permission to update this order
+            if (payload.userRole === 'customer' && order.userId !== userId) {
+                throw new errors_1.ForbiddenError('You can only update your own orders');
+            }
+            if (payload.userRole === 'seller' && order.sellerId !== userId) {
+                throw new errors_1.ForbiddenError('You can only update orders for your products');
+            }
+            // Validate status transitions
+            this.validateStatusTransition(order.status, payload.status);
+            const updateData = { status: payload.status };
+            if (payload.notes)
+                updateData.notes = payload.notes;
+            if (payload.trackingNumber)
+                updateData.trackingNumber = payload.trackingNumber;
+            if (payload.estimatedDelivery)
+                updateData.estimatedDelivery = payload.estimatedDelivery;
+            await order.update(updateData, { transaction });
+            await transaction.commit();
+            return order.reload();
+        }
+        catch (error) {
+            await transaction.rollback();
+            if (error instanceof errors_1.ValidationError || error instanceof errors_1.NotFoundError || error instanceof errors_1.ForbiddenError) {
+                throw error;
+            }
+            if (error instanceof Error) {
+                throw new errors_1.DatabaseError('Failed to update order status', error);
+            }
+            throw new errors_1.DatabaseError('Failed to update order status', new Error('Unknown error occurred'));
+        }
+    }
+    /**
+     * Get customer orders with pagination and filtering
+     */
+    async getCustomerOrders(userId, options) {
+        const { page = 1, limit = 10, status, startDate, endDate, search } = options;
+        const offset = (page - 1) * limit;
+        const where = { userId };
+        if (status)
+            where.status = status;
+        if (startDate || endDate) {
+            where.createdAt = {};
+            if (startDate)
+                where.createdAt[sequelize_1.Op.gte] = new Date(startDate);
+            if (endDate)
+                where.createdAt[sequelize_1.Op.lte] = new Date(endDate);
+        }
+        if (search) {
+            where[sequelize_1.Op.or] = [
+                { id: { [sequelize_1.Op.like]: `%${search}%` } },
+                { trackingNumber: { [sequelize_1.Op.like]: `%${search}%` } },
+            ];
+        }
+        const { count, rows } = await order_model_1.Order.findAndCountAll({
+            where,
+            include: [
+                {
+                    model: orderItem_model_1.OrderItem,
+                    as: 'items',
+                    include: [
+                        {
+                            model: product_model_1.Product,
+                            as: 'product',
+                            attributes: ['id', 'name', 'sku', 'images'],
+                        },
+                    ],
+                },
+                { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] },
+            ],
+            order: [['createdAt', 'DESC']],
+            limit,
+            offset,
+        });
+        return {
+            orders: rows,
+            pagination: {
+                total: count,
+                page,
+                totalPages: Math.ceil(count / limit),
+                limit,
+            },
+        };
+    }
+    /**
+     * Get seller orders with pagination and filtering
+     */
+    async getSellerOrders(sellerId, options) {
+        const { page = 1, limit = 10, status, startDate, endDate, search } = options;
+        const offset = (page - 1) * limit;
+        const where = { sellerId };
+        if (status)
+            where.status = status;
+        if (startDate || endDate) {
+            where.createdAt = {};
+            if (startDate)
+                where.createdAt[sequelize_1.Op.gte] = new Date(startDate);
+            if (endDate)
+                where.createdAt[sequelize_1.Op.lte] = new Date(endDate);
+        }
+        if (search) {
+            where[sequelize_1.Op.or] = [
+                { id: { [sequelize_1.Op.like]: `%${search}%` } },
+                { trackingNumber: { [sequelize_1.Op.like]: `%${search}%` } },
+            ];
+        }
+        const { count, rows } = await order_model_1.Order.findAndCountAll({
+            where,
+            include: [
+                {
+                    model: orderItem_model_1.OrderItem,
+                    as: 'items',
+                    include: [
+                        {
+                            model: product_model_1.Product,
+                            as: 'product',
+                            attributes: ['id', 'name', 'sku', 'images'],
+                        },
+                    ],
+                },
+                { model: user_model_1.User, as: 'user', attributes: ['id', 'name', 'email'] },
+            ],
+            order: [['createdAt', 'DESC']],
+            limit,
+            offset,
+        });
+        return {
+            orders: rows,
+            pagination: {
+                total: count,
+                page,
+                totalPages: Math.ceil(count / limit),
+                limit,
+            },
+        };
+    }
+    /**
+     * Validate order status transitions
+     */
+    validateStatusTransition(currentStatus, newStatus) {
+        const validTransitions = {
+            [order_model_1.OrderStatus.PENDING]: [order_model_1.OrderStatus.CONFIRMED, order_model_1.OrderStatus.CANCELLED],
+            [order_model_1.OrderStatus.CONFIRMED]: [order_model_1.OrderStatus.PROCESSING, order_model_1.OrderStatus.CANCELLED],
+            [order_model_1.OrderStatus.PROCESSING]: [order_model_1.OrderStatus.SHIPPED, order_model_1.OrderStatus.CANCELLED],
+            [order_model_1.OrderStatus.SHIPPED]: [order_model_1.OrderStatus.DELIVERED],
+            [order_model_1.OrderStatus.DELIVERED]: [order_model_1.OrderStatus.COMPLETED, order_model_1.OrderStatus.RETURN_REQUESTED],
+            [order_model_1.OrderStatus.COMPLETED]: [order_model_1.OrderStatus.RETURN_REQUESTED],
+            [order_model_1.OrderStatus.CANCELLED]: [],
+            [order_model_1.OrderStatus.REFUNDED]: [],
+            [order_model_1.OrderStatus.RETURN_REQUESTED]: [order_model_1.OrderStatus.RETURN_APPROVED, order_model_1.OrderStatus.RETURN_REJECTED],
+            [order_model_1.OrderStatus.RETURN_APPROVED]: [order_model_1.OrderStatus.RETURN_COMPLETED],
+            [order_model_1.OrderStatus.RETURN_REJECTED]: [],
+            [order_model_1.OrderStatus.RETURN_COMPLETED]: [],
+        };
+        if (!validTransitions[currentStatus].includes(newStatus)) {
+            throw new errors_1.ValidationError(`Cannot transition from ${currentStatus} to ${newStatus}`);
         }
     }
     /**
@@ -390,7 +572,7 @@ class OrderService {
                 where,
                 ...(sellerId ? {
                     include: [{
-                            model: order_model_1.OrderItem,
+                            model: orderItem_model_1.OrderItem,
                             as: 'items',
                             include: [{
                                     model: product_model_1.Product,
@@ -408,7 +590,7 @@ class OrderService {
                 },
                 ...(sellerId ? {
                     include: [{
-                            model: order_model_1.OrderItem,
+                            model: orderItem_model_1.OrderItem,
                             as: 'items',
                             include: [{
                                     model: product_model_1.Product,
@@ -426,7 +608,7 @@ class OrderService {
                 },
                 ...(sellerId ? {
                     include: [{
-                            model: order_model_1.OrderItem,
+                            model: orderItem_model_1.OrderItem,
                             as: 'items',
                             include: [{
                                     model: product_model_1.Product,
@@ -444,7 +626,7 @@ class OrderService {
                 },
                 ...(sellerId ? {
                     include: [{
-                            model: order_model_1.OrderItem,
+                            model: orderItem_model_1.OrderItem,
                             as: 'items',
                             include: [{
                                     model: product_model_1.Product,
@@ -462,7 +644,7 @@ class OrderService {
                 },
                 ...(sellerId ? {
                     include: [{
-                            model: order_model_1.OrderItem,
+                            model: orderItem_model_1.OrderItem,
                             as: 'items',
                             include: [{
                                     model: product_model_1.Product,
@@ -490,10 +672,10 @@ class OrderService {
             order_model_1.Order.findAll({
                 where,
                 limit: 5,
-                order: [['createdAt', 'DESC']],
+                order: [['created_at', 'DESC']],
                 include: [
                     {
-                        model: order_model_1.OrderItem,
+                        model: orderItem_model_1.OrderItem,
                         as: 'items',
                         ...(sellerId ? {
                             include: [{
@@ -518,4 +700,4 @@ class OrderService {
         };
     }
 }
-exports.orderService = new OrderService();
+exports.default = new OrderService();

@@ -1,9 +1,10 @@
 import { Op, Transaction } from 'sequelize';
-import { Order, OrderStatus, PaymentStatus, OrderItem } from '../models/order.model';
+import { Order, OrderStatus, PaymentStatus } from '../models/order.model';
+import { OrderItem } from '../models/orderItem.model';
 import { Product } from '../models/product.model';
 import { User } from '../models/user.model';
 import { sequelize } from '../db';
-import { NotFoundError, ValidationError, DatabaseError } from '../utils/errors';
+import { NotFoundError, ValidationError, DatabaseError, ForbiddenError } from '../utils/errors';
 
 const validTransitions: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatus.PENDING]: [OrderStatus.CONFIRMED, OrderStatus.CANCELLED],
@@ -202,9 +203,9 @@ class OrderService {
     if (paymentStatus) where.paymentStatus = paymentStatus;
     
     if (startDate || endDate) {
-      where.createdAt = {};
-      if (startDate) where.createdAt[Op.gte] = startDate;
-      if (endDate) where.createdAt[Op.lte] = endDate;
+      where.created_at = {};
+      if (startDate) where.created_at[Op.gte] = startDate;
+      if (endDate) where.created_at[Op.lte] = endDate;
     }
 
     // If sellerId is provided, only return orders containing seller's products
@@ -230,7 +231,7 @@ class OrderService {
       include,
       limit,
       offset: (page - 1) * limit,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
       distinct: true
     });
 
@@ -280,48 +281,6 @@ class OrderService {
     // - Initiate refund if applicable
     // - Update inventory
     console.log(`Handling return approval for order ${order.id}`);
-  }
-
-  async updateOrderStatus(
-    orderId: string, 
-    status: OrderStatus,
-    userId?: string
-  ): Promise<Order> {
-    const order = await this.getOrderById(orderId, userId);
-
-    const allowedStatuses = this.validTransitions[order.status] || [];
-    if (!allowedStatuses.includes(status)) {
-      const allowedTransitionsList = this.validTransitions[order.status] || [];
-      throw new ValidationError(
-        `Invalid status transition from ${order.status} to ${status}. ` +
-        `Allowed transitions: ${allowedTransitionsList.join(', ') || 'none'}`
-      );
-    }
-
-    // Additional validations based on status
-    if (status === OrderStatus.CANCELLED && order.status !== OrderStatus.PENDING) {
-      // Only allow cancellation if order is still pending
-      throw new ValidationError('Cannot cancel order after it has been confirmed');
-    }
-
-    // Update order status
-    await order.update({ status });
-
-    // Trigger side effects based on status change
-    if (status === OrderStatus.CANCELLED) {
-      await this.handleOrderCancellation(order);
-    } else if (status === OrderStatus.DELIVERED) {
-      await this.handleOrderDelivery(order);
-    } else if (status === OrderStatus.RETURN_APPROVED) {
-      await this.handleReturnApproval(order);
-    }
-
-    return order.reload({
-      include: [
-        { model: OrderItem, as: 'items' },
-        { model: User, as: 'user', attributes: ['id', 'name', 'email'] }
-      ]
-    });
   }
 
   /**
@@ -397,7 +356,7 @@ class OrderService {
       ],
       limit,
       offset: (page - 1) * limit,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
     });
 
     return {
@@ -459,6 +418,270 @@ class OrderService {
         throw new DatabaseError('Failed to cancel order', error);
       }
       throw new DatabaseError('Failed to cancel order', new Error('Unknown error occurred'));
+    }
+  }
+
+  /**
+   * Place a new order (alias for createOrder)
+   */
+  async placeOrder(customerId: string, orderData: {
+    items: Array<{ productId: string; quantity: number }>;
+    shippingAddress: {
+      street: string;
+      city: string;
+      state: string;
+      zipCode: string;
+      country: string;
+    };
+    paymentMethod: string;
+    notes?: string;
+  }): Promise<Order> {
+    const transaction = await sequelize.transaction();
+    
+    try {
+      // Get product details and prices
+      const productIds = orderData.items.map(item => item.productId);
+      const products = await Product.findAll({
+        where: { id: { [Op.in]: productIds } },
+        transaction,
+      });
+
+      if (products.length !== productIds.length) {
+        throw new ValidationError('Some products not found');
+      }
+
+      // Create items with prices
+      const itemsWithPrices = orderData.items.map(item => {
+        const product = products.find(p => p.id === item.productId);
+        if (!product) throw new ValidationError(`Product ${item.productId} not found`);
+        
+        return {
+          productId: item.productId,
+          quantity: item.quantity,
+          price: product.get('price') as number,
+        };
+      });
+
+      // Convert to the format expected by createOrder
+      const createOrderData = {
+        items: itemsWithPrices,
+        shippingAddress: JSON.stringify(orderData.shippingAddress),
+        paymentMethod: orderData.paymentMethod,
+      };
+
+      const order = await this.createOrder(customerId, createOrderData);
+      await transaction.commit();
+      return order;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  }
+
+  /**
+   * Update order status
+   */
+  async updateOrderStatus(userId: string, orderId: string, payload: {
+    status: OrderStatus;
+    notes?: string;
+    trackingNumber?: string;
+    estimatedDelivery?: string;
+    userRole: string;
+  }): Promise<Order> {
+    const transaction = await sequelize.transaction();
+    
+    try {
+      const order = await Order.findByPk(orderId, {
+        include: [
+          { model: OrderItem, as: 'items' },
+          { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+        ],
+        transaction,
+      });
+
+      if (!order) {
+        throw new NotFoundError('Order not found');
+      }
+
+      // Verify user has permission to update this order
+      if (payload.userRole === 'customer' && order.userId !== userId) {
+        throw new ForbiddenError('You can only update your own orders');
+      }
+      
+      if (payload.userRole === 'seller' && order.sellerId !== userId) {
+        throw new ForbiddenError('You can only update orders for your products');
+      }
+
+      // Validate status transitions
+      this.validateStatusTransition(order.status as OrderStatus, payload.status);
+
+      const updateData: any = { status: payload.status };
+      
+      if (payload.notes) updateData.notes = payload.notes;
+      if (payload.trackingNumber) updateData.trackingNumber = payload.trackingNumber;
+      if (payload.estimatedDelivery) updateData.estimatedDelivery = payload.estimatedDelivery;
+
+      await order.update(updateData, { transaction });
+
+      await transaction.commit();
+      return order.reload();
+    } catch (error) {
+      await transaction.rollback();
+      if (error instanceof ValidationError || error instanceof NotFoundError || error instanceof ForbiddenError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        throw new DatabaseError('Failed to update order status', error);
+      }
+      throw new DatabaseError('Failed to update order status', new Error('Unknown error occurred'));
+    }
+  }
+
+  /**
+   * Get customer orders with pagination and filtering
+   */
+  async getCustomerOrders(userId: string, options: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+    search?: string;
+  }): Promise<{ orders: Order[]; pagination: { total: number; page: number; totalPages: number; limit: number } }> {
+    const { page = 1, limit = 10, status, startDate, endDate, search } = options;
+    const offset = (page - 1) * limit;
+
+    const where: any = { userId };
+    
+    if (status) where.status = status;
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt[Op.gte] = new Date(startDate);
+      if (endDate) where.createdAt[Op.lte] = new Date(endDate);
+    }
+    
+    if (search) {
+      where[Op.or] = [
+        { id: { [Op.like]: `%${search}%` } },
+        { trackingNumber: { [Op.like]: `%${search}%` } },
+      ];
+    }
+
+    const { count, rows } = await Order.findAndCountAll({
+      where,
+      include: [
+        {
+          model: OrderItem,
+          as: 'items',
+          include: [
+            {
+              model: Product,
+              as: 'product',
+              attributes: ['id', 'name', 'sku', 'images'],
+            },
+          ],
+        },
+        { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+      ],
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+    });
+
+    return {
+      orders: rows,
+      pagination: {
+        total: count,
+        page,
+        totalPages: Math.ceil(count / limit),
+        limit,
+      },
+    };
+  }
+
+  /**
+   * Get seller orders with pagination and filtering
+   */
+  async getSellerOrders(sellerId: string, options: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+    search?: string;
+  }): Promise<{ orders: Order[]; pagination: { total: number; page: number; totalPages: number; limit: number } }> {
+    const { page = 1, limit = 10, status, startDate, endDate, search } = options;
+    const offset = (page - 1) * limit;
+
+    const where: any = { sellerId };
+    
+    if (status) where.status = status;
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt[Op.gte] = new Date(startDate);
+      if (endDate) where.createdAt[Op.lte] = new Date(endDate);
+    }
+    
+    if (search) {
+      where[Op.or] = [
+        { id: { [Op.like]: `%${search}%` } },
+        { trackingNumber: { [Op.like]: `%${search}%` } },
+      ];
+    }
+
+    const { count, rows } = await Order.findAndCountAll({
+      where,
+      include: [
+        {
+          model: OrderItem,
+          as: 'items',
+          include: [
+            {
+              model: Product,
+              as: 'product',
+              attributes: ['id', 'name', 'sku', 'images'],
+            },
+          ],
+        },
+        { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+      ],
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+    });
+
+    return {
+      orders: rows,
+      pagination: {
+        total: count,
+        page,
+        totalPages: Math.ceil(count / limit),
+        limit,
+      },
+    };
+  }
+
+  /**
+   * Validate order status transitions
+   */
+  private validateStatusTransition(currentStatus: OrderStatus, newStatus: OrderStatus): void {
+    const validTransitions: Record<OrderStatus, OrderStatus[]> = {
+      [OrderStatus.PENDING]: [OrderStatus.CONFIRMED, OrderStatus.CANCELLED],
+      [OrderStatus.CONFIRMED]: [OrderStatus.PROCESSING, OrderStatus.CANCELLED],
+      [OrderStatus.PROCESSING]: [OrderStatus.SHIPPED, OrderStatus.CANCELLED],
+      [OrderStatus.SHIPPED]: [OrderStatus.DELIVERED],
+      [OrderStatus.DELIVERED]: [OrderStatus.COMPLETED, OrderStatus.RETURN_REQUESTED],
+      [OrderStatus.COMPLETED]: [OrderStatus.RETURN_REQUESTED],
+      [OrderStatus.CANCELLED]: [],
+      [OrderStatus.REFUNDED]: [],
+      [OrderStatus.RETURN_REQUESTED]: [OrderStatus.RETURN_APPROVED, OrderStatus.RETURN_REJECTED],
+      [OrderStatus.RETURN_APPROVED]: [OrderStatus.RETURN_COMPLETED],
+      [OrderStatus.RETURN_REJECTED]: [],
+      [OrderStatus.RETURN_COMPLETED]: [],
+    };
+
+    if (!validTransitions[currentStatus].includes(newStatus)) {
+      throw new ValidationError(`Cannot transition from ${currentStatus} to ${newStatus}`);
     }
   }
 
@@ -594,7 +817,7 @@ class OrderService {
       Order.findAll({
         where,
         limit: 5,
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         include: [
           { 
             model: OrderItem, 

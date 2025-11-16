@@ -48,7 +48,7 @@ interface Complaint {
   subject: string;
   description: string;
   status: string;
-  createdAt: string;
+  created_at: string;
   imageUrl?: string;
 }
 

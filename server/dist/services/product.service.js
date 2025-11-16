@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.productService = void 0;
 const sequelize_1 = require("sequelize");
 const product_model_1 = require("../models/product.model");
 const category_model_1 = require("../models/category.model");
 const review_model_1 = require("../models/review.model");
 const order_model_1 = require("../models/order.model");
+const orderItem_model_1 = require("../models/orderItem.model");
 const db_1 = require("../db");
 const errors_1 = require("../utils/errors");
 class ProductService {
@@ -231,7 +231,7 @@ class ProductService {
             }),
         ]);
         // Get top selling products
-        const topSellingRaw = await order_model_1.OrderItem.findAll({
+        const topSellingRaw = await orderItem_model_1.OrderItem.findAll({
             attributes: [
                 'productId',
                 [db_1.sequelize.fn('SUM', db_1.sequelize.col('quantity')), 'totalSold']
@@ -249,7 +249,7 @@ class ProductService {
             nest: true
         });
         // Transform the raw data to match the expected type
-        const topSelling = topSellingRaw.map(item => {
+        const topSelling = topSellingRaw.map((item) => {
             // Type assertion for the raw query result
             const typedItem = item;
             return {
@@ -280,8 +280,13 @@ class ProductService {
     async getAllProducts(options) {
         const { page = 1, limit = 10, status, sellerId, search } = options;
         const where = {};
-        if (status)
+        // By default, exclude archived products unless explicitly requested
+        if (status) {
             where.status = status;
+        }
+        else {
+            where.status = { [sequelize_1.Op.ne]: product_model_1.ProductStatus.ARCHIVED };
+        }
         if (sellerId)
             where.sellerId = sellerId;
         if (search) {
@@ -314,7 +319,7 @@ class ProductService {
         const transaction = await db_1.sequelize.transaction();
         try {
             // Check if there are any active orders for this product
-            const activeOrderItems = await order_model_1.OrderItem.count({
+            const activeOrderItems = await orderItem_model_1.OrderItem.count({
                 where: { productId },
                 include: [
                     {
@@ -352,4 +357,4 @@ class ProductService {
         }
     }
 }
-exports.productService = new ProductService();
+exports.default = new ProductService();

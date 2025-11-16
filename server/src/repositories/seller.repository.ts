@@ -13,7 +13,7 @@ type SellerAttributes = {
   isVerified: boolean;
   rating: number;
   totalSales: number;
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
 };
 
@@ -29,7 +29,7 @@ class SellerRepository {
     return SellerRepository.instance;
   }
 
-  async create(sellerData: Omit<SellerAttributes, 'id' | 'createdAt' | 'updatedAt' | 'rating' | 'totalSales'>): Promise<Seller> {
+  async create(sellerData: Omit<SellerAttributes, 'id' | 'created_at' | 'updatedAt' | 'rating' | 'totalSales'>): Promise<Seller> {
     const seller = new Seller();
     Object.assign(seller, {
       ...sellerData,
@@ -58,11 +58,11 @@ class SellerRepository {
       limit,
       offset,
       include: [User],
-      order: [['createdAt', 'DESC']]
+      order: [['created_at', 'DESC']]
     });
   }
 
-  async update(id: string, sellerData: Partial<Omit<SellerAttributes, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>): Promise<[number, Seller[]]> {
+  async update(id: string, sellerData: Partial<Omit<SellerAttributes, 'id' | 'userId' | 'created_at' | 'updatedAt'>>): Promise<[number, Seller[]]> {
     return await Seller.update(sellerData, {
       where: { id },
       returning: true

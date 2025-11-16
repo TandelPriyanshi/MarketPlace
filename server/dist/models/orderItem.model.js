@@ -71,19 +71,9 @@ __decorate([
 ], OrderItem.prototype, "price", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.ENUM(...Object.values(order_model_1.OrderStatus)),
-        defaultValue: order_model_1.OrderStatus.PENDING,
-        allowNull: false,
-        validate: {
-            isIn: [Object.values(order_model_1.OrderStatus)],
-        },
-    }),
-    __metadata("design:type", String)
-], OrderItem.prototype, "status", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.BOOLEAN,
         defaultValue: false,
+        field: 'is_cancelled'
     }),
     __metadata("design:type", Boolean)
 ], OrderItem.prototype, "isCancelled", void 0);
@@ -91,6 +81,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.TEXT,
         allowNull: true,
+        field: 'cancellation_reason'
     }),
     __metadata("design:type", String)
 ], OrderItem.prototype, "cancellationReason", void 0);
@@ -126,6 +117,6 @@ exports.OrderItem = OrderItem = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'order_items',
         timestamps: true,
-        underscored: true,
+        underscored: false,
     })
 ], OrderItem);

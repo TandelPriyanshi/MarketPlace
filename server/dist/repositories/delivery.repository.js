@@ -47,7 +47,7 @@ class DeliveryRepository {
             include: [
                 { model: user_model_1.User, as: 'user' }
             ],
-            order: [['createdAt', 'DESC']]
+            order: [['created_at', 'DESC']]
         });
     }
     async updateStatus(orderId, status, deliveryPersonId) {
