@@ -27,10 +27,7 @@ const swaggerDefinition = {
   ],
   tags: [
     { name: 'Auth', description: 'Authentication and user management' },
-    { name: 'Sellers', description: 'Seller-specific operations' },
-    { name: 'Customers', description: 'Customer-specific operations' },
     { name: 'Delivery', description: 'Delivery management' },
-    { name: 'Sales', description: 'Sales and order management' },
     { name: 'Products', description: 'Product management' },
   ],
   components: {

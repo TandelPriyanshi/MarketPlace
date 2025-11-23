@@ -40,11 +40,13 @@ export const OrderTable = () => {
         limit: pagination.limit,
       });
       setOrders(response.orders);
-      setPagination(prev => ({
-        ...prev,
-        total: response.pagination.total,
-        totalPages: response.pagination.totalPages,
-      }));
+      if (response.pagination) {
+        setPagination(prev => ({
+          ...prev,
+          total: response.pagination.total,
+          totalPages: response.pagination.totalPages,
+        }));
+      }
     } catch (error: any) {
       toast.error('Failed to fetch orders: ' + error.message);
     } finally {
@@ -118,13 +120,13 @@ export const OrderTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading && orders.length === 0 ? (
+            {loading && (!orders || orders.length === 0) ? (
               <TableRow>
                 <TableCell colSpan={7} className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
                 </TableCell>
               </TableRow>
-            ) : orders.length === 0 ? (
+            ) : !orders || orders.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                   No orders yet.

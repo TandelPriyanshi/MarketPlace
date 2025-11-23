@@ -314,12 +314,14 @@ const sellerSlice = createSlice({
       .addCase(fetchSellerProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.products = action.payload.data;
-        state.pagination.products = {
-          page: action.payload.pagination.page,
-          limit: action.payload.pagination.limit,
-          total: action.payload.pagination.total,
-          totalPages: action.payload.pagination.totalPages,
-        };
+        if (action.payload.pagination) {
+          state.pagination.products = {
+            page: action.payload.pagination.page,
+            limit: action.payload.pagination.limit,
+            total: action.payload.pagination.total,
+            totalPages: action.payload.pagination.totalPages,
+          };
+        }
       })
       .addCase(fetchSellerProducts.rejected, (state, action) => {
         state.isLoading = false;
@@ -362,12 +364,14 @@ const sellerSlice = createSlice({
       .addCase(fetchSellerOrders.fulfilled, (state, action) => {
         state.isLoading = false;
         state.orders = action.payload.data;
-        state.pagination.orders = {
-          page: action.payload.pagination.page,
-          limit: action.payload.pagination.limit,
-          total: action.payload.pagination.total,
-          totalPages: action.payload.pagination.totalPages,
-        };
+        if (action.payload.pagination) {
+          state.pagination.orders = {
+            page: action.payload.pagination.page,
+            limit: action.payload.pagination.limit,
+            total: action.payload.pagination.total,
+            totalPages: action.payload.pagination.totalPages,
+          };
+        }
       })
       .addCase(fetchSellerOrders.rejected, (state, action) => {
         state.isLoading = false;

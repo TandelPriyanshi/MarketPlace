@@ -108,16 +108,6 @@ const LoginPage = () => {
               </Link>
             </p>
           </div>
-
-          <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-            <p className="text-xs font-semibold mb-2">Demo Accounts:</p>
-            <div className="space-y-1 text-xs text-muted-foreground">
-              <p>Seller: seller@demo.com / demo123</p>
-              <p>Delivery: delivery@demo.com / demo123</p>
-              <p>Salesman: salesman@demo.com / demo123</p>
-              <p>Customer: customer@demo.com / demo123</p>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>
